@@ -8,7 +8,7 @@ class RipperToRubyNodesTest < Test::Unit::TestCase
     next if line =~ /^#/ || line.empty?
     define_method :"test: to_ruby(#{line}) compiles to the original src" do
       line.gsub!('\n', "\n")
-      statement = build(line).statements.first
+      statement = build(line).statements.first.statement
       assert_equal line, statement.to_ruby
     end
   end

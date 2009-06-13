@@ -1,17 +1,11 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class RipperRubyBuilderAssignmentTest < Test::Unit::TestCase
-  def build(src)
-    Ripper::RubyBuilder.build(src)
-  end
-  
-  def sexp(src)
-    Ripper::SexpBuilder.new(src).parse
-  end
+  include TestRubyBuilderHelper
 
   define_method :'test assignment: a = b' do
     src = 'a = b'
-    assignment = build(src).statements.first
+    assignment = node(src, Ruby::Assignment)
     assert_equal Ruby::Assignment, assignment.class
     assert_equal 'a', assignment.left.token
     assert_equal 'b', assignment.right.token
@@ -20,7 +14,7 @@ class RipperRubyBuilderAssignmentTest < Test::Unit::TestCase
   
   define_method :'test assignment: a, b = c' do
     src = 'a, b = c'
-    assignment = build(src).statements.first
+    assignment = node(src, Ruby::Assignment)
     assert_equal Ruby::Assignment, assignment.class
     assert_equal Ruby::MultiAssignment, assignment.left.class
     assert_equal :left, assignment.left.kind
@@ -33,7 +27,7 @@ class RipperRubyBuilderAssignmentTest < Test::Unit::TestCase
   define_method :'test assignment: a, b = c, d' do
     src = 'a, b = c, d'
 
-    assignment = build(src).statements.first
+    assignment = node(src, Ruby::Assignment)
     assert_equal Ruby::Assignment, assignment.class
 
     assert_equal Ruby::MultiAssignment, assignment.left.class
@@ -51,7 +45,7 @@ class RipperRubyBuilderAssignmentTest < Test::Unit::TestCase
   
   define_method :'test assignment: a, b = *c' do
     src = 'a, b = *c'
-    assignment = build(src).statements.first
+    assignment = node(src, Ruby::Assignment)
     assert_equal Ruby::Assignment, assignment.class
 
     assert_equal Ruby::MultiAssignment, assignment.left.class

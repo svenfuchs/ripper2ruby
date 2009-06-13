@@ -7,10 +7,9 @@ class RipperToRubyNumbersTest < Test::Unit::TestCase
   
   define_method :'test an integer: 1' do
     src = @@space + '1'
-    program = build(src)
-    int = program.statements.first
+    int = node(src, Ruby::Integer)
   
-    assert_equal program, int.parent
+    assert int.root.is_a?(Ruby::Program)
     assert_equal Ruby::Integer, int.class
     assert_equal 1, int.value
     assert_equal '1', int.to_ruby
@@ -25,10 +24,9 @@ class RipperToRubyNumbersTest < Test::Unit::TestCase
   
   define_method :'test an float: 1.1' do
     src = @@space + '1.1'
-    program = build(src)
-    float = program.statements.first
+    float = node(src, Ruby::Float)
   
-    assert_equal program, float.parent
+    assert float.root.is_a?(Ruby::Program)
     assert_equal Ruby::Float, float.class
     assert_equal 1.1, float.value
     assert_equal '1.1', float.to_ruby

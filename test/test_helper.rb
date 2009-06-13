@@ -18,6 +18,10 @@ module TestRubyBuilderHelper
     build(src).statement { |n| n.is_a?(klass) } or nil
   end
 
+  def string(src)
+    node(src, Ruby::String)
+  end
+
   def array(src)
     node(src, Ruby::Array)
   end

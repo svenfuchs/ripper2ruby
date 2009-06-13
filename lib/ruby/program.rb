@@ -12,8 +12,8 @@ module Ruby
       super([0, 0])
     end
     
-    def statement(&block)
-      @statements.each { |s| return s if yield(s) }
+    def statement(&block) # TODO remove this
+      @statements.each { |s| return s.statement if yield(s.statement) } or nil
     end
     
     def replace_src(row, column, length, src)

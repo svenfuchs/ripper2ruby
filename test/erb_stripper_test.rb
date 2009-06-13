@@ -4,7 +4,7 @@ require 'ripper/erb/stripper'
 
 class ErbStripperTest < Test::Unit::TestCase
   def test_sexp_filename
-    erb = File.read("#{File.dirname(__FILE__)}/../fixtures/template.html.erb")
+    erb = File.read("#{File.dirname(__FILE__)}/fixtures/template.html.erb")
     ruby = Ripper::Erb::Stripper.new.to_ruby(erb)
     expected = <<-src
    f.field_set do

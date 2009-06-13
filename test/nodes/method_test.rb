@@ -5,15 +5,17 @@ class RipperRubyBuilderMethodTest < Test::Unit::TestCase
 
   define_method :"test a method" do
     src = <<-eoc
-      def foo(a, b = nil, &block)
+      def foo(a, b = nil, c = :foo, *d, &block)
         bar
+        baz
       end
     eoc
+  
     src = src.strip
     method = method(src)
     bar = method.body.statements.first
   
-    assert method.parent.is_a?(Ruby::Program)
+    assert method.root.is_a?(Ruby::Program)
     assert_equal method, method.params.parent
     assert_equal method, method.body.parent
   
@@ -24,16 +26,21 @@ class RipperRubyBuilderMethodTest < Test::Unit::TestCase
     assert_equal src, method.to_ruby
   end
   
-  # TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-  
   define_method :"test method definition: def t(a = []); end" do
-    src = "def t(a = []); end"
+    src = "def t(a = []) end"
     method = build(src).statements.first
-    # assert_equal 1, method.params.first
+    assert_equal src, method.to_ruby
   end
   
   define_method :"test method definition: def <<()" do
-    src = "def <<(arg); end"
+    src = "def <<(arg) end"
     method = build(src).statements.first
+    assert_equal src, method.to_ruby
+  end
+  
+  define_method :"test method body w/ statements separated by semicolon" do
+    src = "def <<(arg) foo; bar; end"
+    method = build(src).statements.first
+    assert_equal src, method.to_ruby
   end
 end

@@ -28,6 +28,20 @@ class Ripper
       def on_block_var(params, something)
         params
       end
+
+      def on_stmts_add(target, statement)
+        statement = Ruby::Statement.new(statement, pop_delim(:@semicolon))
+        target << statement
+        target
+      end
+
+      def on_stmts_new
+        Ruby::Composite::Array.new
+      end
+    
+      def on_void_stmt
+        nil # what's this?
+      end
     end
   end
 end

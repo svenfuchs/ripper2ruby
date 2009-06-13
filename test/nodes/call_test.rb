@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class RipperRubyBuilderCallsTest < Test::Unit::TestCase
+class RipperRubyBuilderCallTest < Test::Unit::TestCase
   include TestRubyBuilderHelper
 
   define_method :"test identifier on no target without arguments and without parantheses" do
@@ -11,7 +11,7 @@ class RipperRubyBuilderCallsTest < Test::Unit::TestCase
   
     assert_equal 't', identifier.token
   
-    assert_equal program, identifier.parent
+    assert identifier.root.is_a?(Ruby::Program)
     assert_equal src, identifier.root.src
     assert_equal src, identifier.to_ruby
     assert_equal src, identifier.src
@@ -25,7 +25,7 @@ class RipperRubyBuilderCallsTest < Test::Unit::TestCase
     assert_equal 't', call.identifier.token
     assert !call.arguments
   
-    assert_equal program, call.parent
+    assert call.root.is_a?(Ruby::Program)
     assert_equal src, call.root.src
     assert_equal src, call.to_ruby
     assert_equal src, call.src
@@ -39,7 +39,7 @@ class RipperRubyBuilderCallsTest < Test::Unit::TestCase
     assert_equal 't', call.identifier.token
     assert call.arguments.empty?
   
-    assert_equal program, call.parent
+    assert call.root.is_a?(Ruby::Program)
     assert_equal src, call.root.src
     assert_equal src, call.to_ruby
     assert_equal src, call.src
@@ -55,7 +55,7 @@ class RipperRubyBuilderCallsTest < Test::Unit::TestCase
     assert_equal 'I18n', call.target.token
     assert_equal 'foo', arg.first.value
   
-    assert_equal program, call.parent
+    assert call.root.is_a?(Ruby::Program)
     assert_equal src, call.root.src
     assert_equal src, call.to_ruby
     assert_equal src, call.src
@@ -71,7 +71,7 @@ class RipperRubyBuilderCallsTest < Test::Unit::TestCase
     assert_equal 'I18n', call.target.token
     assert_equal 'foo', arg.first.value
   
-    assert_equal program, call.parent
+    assert call.root.is_a?(Ruby::Program)
     assert_equal src, call.root.src
     assert_equal src, call.to_ruby
     assert_equal src, call.src
@@ -85,7 +85,7 @@ class RipperRubyBuilderCallsTest < Test::Unit::TestCase
     assert_equal 'a', call.target.token
     assert_equal :foo, call.arguments.first.value
   
-    assert call.parent.is_a?(Ruby::Program)
+    assert call.root.is_a?(Ruby::Program)
     assert_equal src, call.root.src
     assert_equal src, call.to_ruby
     assert_equal src, call.src
@@ -104,7 +104,7 @@ class RipperRubyBuilderCallsTest < Test::Unit::TestCase
   end
   
   define_method :"test two method calls: t('foo'); t 'bar' (no target)" do
-    calls = build("t('foo', 'bar'); t 'baz'").statements
+    calls = build("t('foo', 'bar'); t 'baz'").statements.map { |s| s.statement }
   
     assert !calls[0].target
     assert_equal 't', calls[0].identifier.token
@@ -125,7 +125,7 @@ class RipperRubyBuilderCallsTest < Test::Unit::TestCase
     assert_equal 't', call.identifier.token
     assert !call.target
   
-    assert_equal program, call.parent
+    assert call.root.is_a?(Ruby::Program)
     assert_equal src, call.root.src
     assert_equal src, call.to_ruby
     assert_equal src, call.src
@@ -140,7 +140,7 @@ class RipperRubyBuilderCallsTest < Test::Unit::TestCase
     assert !call.target
     assert_equal Ruby::Block, call.block.class
   
-    assert_equal program, call.parent
+    assert call.root.is_a?(Ruby::Program)
     assert_equal src, call.root.src
     assert_equal src, call.to_ruby
     assert_equal src, call.src
@@ -155,7 +155,7 @@ class RipperRubyBuilderCallsTest < Test::Unit::TestCase
     assert !call.target
     assert_equal Ruby::Block, call.block.class
   
-    assert_equal program, call.parent
+    assert call.root.is_a?(Ruby::Program)
     assert_equal src, call.root.src
     assert_equal src, call.to_ruby
     assert_equal src, call.src

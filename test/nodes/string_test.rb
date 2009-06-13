@@ -7,9 +7,8 @@ class RipperToRubyStringTest < Test::Unit::TestCase
 
   define_method :'test an empty string: ""' do
     src = @@space + '""'
-    program = build(src)
-    string = program.statements.first
-  
+    string = string(src)
+
     assert_equal Ruby::String, string.class
     assert_equal '', string.value
     assert_equal '""', string.to_ruby
@@ -22,10 +21,10 @@ class RipperToRubyStringTest < Test::Unit::TestCase
 
   def test_single_quoted_string
     src = "    \n  \n 'foo'"
-    string = node(src, Ruby::String)
+    string = string(src)
 
     assert_equal Ruby::String, string.class
-    assert string.parent.is_a?(Ruby::Program)
+    assert string.root.is_a?(Ruby::Program)
     assert_equal string, string.first.parent
 
     assert_equal src, string.root.src
@@ -55,10 +54,10 @@ class RipperToRubyStringTest < Test::Unit::TestCase
   
   def test_double_quoted_string
     src = "    \n  \n \"foo\""
-    string = node(src, Ruby::String)
+    string = string(src)
   
     assert_equal Ruby::String, string.class
-    assert string.parent.is_a?(Ruby::Program)
+    assert string.root.is_a?(Ruby::Program)
     assert_equal string, string.first.parent
 
     assert_equal src, string.root.src
@@ -88,7 +87,7 @@ class RipperToRubyStringTest < Test::Unit::TestCase
   
   def test_percent_parens_delimited_string
     src = "    \n  \n %(foo)"
-    string = node(src, Ruby::String)
+    string = string(src)
   
     assert_equal 'foo', string.value
     assert_equal "    \n  \n ", string.ldelim.whitespace
@@ -109,7 +108,7 @@ class RipperToRubyStringTest < Test::Unit::TestCase
   
   def test_percent_dot_delimited_string
     src = "    \n  \n %.foo."
-    string = node(src, Ruby::String)
+    string = string(src)
   
     assert_equal 'foo', string.value
     assert_equal "    \n  \n ", string.ldelim.whitespace

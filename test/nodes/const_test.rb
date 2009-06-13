@@ -7,10 +7,9 @@ class RipperRubyBuilderConstTest < Test::Unit::TestCase
 
   define_method :'test a const: I18n' do
     src = @@space + 'I18n'
-    program = build(src)
-    const = program.statements.first
+    const = const(src)
   
-    assert_equal program, const.parent
+    assert const.root.is_a?(Ruby::Program)
     assert_equal Ruby::Const, const.class
     assert_equal 'I18n', const.token
     assert_equal 'I18n', const.to_ruby
@@ -30,19 +29,18 @@ class RipperRubyBuilderConstTest < Test::Unit::TestCase
         end
       end
     eoc
+    klass = node(src, Ruby::Class)
 
-    klass = const(src).first
-
-    assert klass.parent.is_a?(Ruby::Program)
+    assert klass.root.is_a?(Ruby::Program)
     assert_equal klass, klass.super_class.parent
     assert_equal klass, klass.body.parent
-
+  
     assert_equal 'A', klass.const.token
     assert_equal 'B', klass.super_class.token
     assert_equal 'foo', klass.body.statements.first.identifier.token
-
+  
     assert_equal src.strip, klass.to_ruby
-
+  
     assert_equal [0, 6], klass.position
   end
   

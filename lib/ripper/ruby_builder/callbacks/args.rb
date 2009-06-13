@@ -37,6 +37,11 @@ class Ripper
         args << arg
         args
       end
+      
+      def on_blockarg(identifier)
+        operator = pop_delim(:@op, :value => '&')
+        Ruby::BlockArg.new(identifier, operator)
+      end
 
       def on_args_new
         Ruby::ArgsList.new

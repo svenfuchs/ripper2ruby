@@ -10,7 +10,7 @@ class RipperToRubyArrayTest < Test::Unit::TestCase
     assert_equal Ruby::Array, array.class
     assert_equal :foo, array.first.value
 
-    assert array.parent.is_a?(Ruby::Program)
+    assert array.root.is_a?(Ruby::Program)
     assert_equal array, array.first.parent
 
     assert_equal src, array.root.src
@@ -38,7 +38,7 @@ class RipperToRubyArrayTest < Test::Unit::TestCase
     assert_equal 'foo', array[0].value
     assert_equal 'bar', array[1].value
 
-    assert array.parent.is_a?(Ruby::Program)
+    assert array.root.is_a?(Ruby::Program)
     assert_equal array, array.first.parent
 
     assert_equal src, array.root.src
@@ -92,7 +92,7 @@ class RipperToRubyArrayTest < Test::Unit::TestCase
   
   define_method :"test array assignment" do
     src = "result[0] = :value"
-    assignment = build(src).statements.first
+    assignment = node(src, Ruby::Assignment)
     assert_equal Ruby::Assignment, assignment.class
     assert_equal src, assignment.to_ruby
   end

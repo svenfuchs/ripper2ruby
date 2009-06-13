@@ -1,12 +1,17 @@
 class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     module Params
-      def on_params(params, optional_params, rest_param, *something) # block_param?
-        params = (Array(params) + Array(optional_params) << rest_param).flatten.compact
+      def on_params(params, optional_params, rest_param, something, block_param)
+        optional_params.map! do |left, right|
+          operator = stack_ignore(:@rparen, :@comma) { pop_delim(:@op, :value => '=') }
+          Ruby::Assignment.new(left, right, operator)
+        end if optional_params
+        
+        params = (Array(params) + Array(optional_params) << rest_param << block_param).flatten.compact
 
         rdelim = pop_delim(:@rparen) || pop_delim(:@op, :value => '|')
         separators = pop_delims(:@comma)
-        ldelim = pop_delim(:@lparen) ||pop_delim(:@op, :value => '|')
+        ldelim = pop_delim(:@lparen) || pop_delim(:@op, :value => '|')
 
         Ruby::ParamsList.new(params, '', ldelim, rdelim, separators)
       end
@@ -17,6 +22,8 @@ class Ripper
       end
 
       def on_paren(params)
+        rdelim = pop_delim(:@rparen) || pop_delim(:@op, :value => '|')
+        params.rdelim = rdelim if rdelim
         params
       end
     end

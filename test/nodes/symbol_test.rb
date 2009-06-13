@@ -10,7 +10,7 @@ class RipperToRubySymbolTest < Test::Unit::TestCase
     symbol = node(src, Ruby::Symbol)
 
     assert symbol.is_a?(Ruby::Symbol)
-    assert symbol.parent.is_a?(Ruby::Program)
+    assert symbol.root.is_a?(Ruby::Program)
     
     assert_equal ":foo", symbol.to_ruby
     assert_equal :foo, symbol.value
@@ -42,7 +42,7 @@ class RipperToRubySymbolTest < Test::Unit::TestCase
     symbol = node(src, Ruby::DynaSymbol)
   
     assert symbol.is_a?(Ruby::DynaSymbol)
-    assert symbol.parent.is_a?(Ruby::Program)
+    assert symbol.root.is_a?(Ruby::Program)
     
     assert_equal :foo, symbol.value
     assert_equal src, symbol.root.src
@@ -71,7 +71,7 @@ class RipperToRubySymbolTest < Test::Unit::TestCase
     symbol = node(src, Ruby::DynaSymbol)
   
     assert symbol.is_a?(Ruby::DynaSymbol)
-    assert symbol.parent.is_a?(Ruby::Program)
+    assert symbol.root.is_a?(Ruby::Program)
     
     assert_equal :foo, symbol.value
     assert_equal src, symbol.root.src

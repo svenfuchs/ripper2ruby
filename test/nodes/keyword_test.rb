@@ -7,13 +7,12 @@ class RipperRubyBuilderBlockTest < Test::Unit::TestCase
 
   define_method :"test keyword: nil" do
     src = @@space + 'nil'
-    program = build(src)
-    keyword = program.statements.first
-  
+    keyword = node(src, Ruby::Keyword)
+
     assert_equal Ruby::Keyword, keyword.class
     assert_equal nil, keyword.value
   
-    assert_equal program, keyword.parent
+    assert keyword.root.is_a?(Ruby::Program)
     assert_equal src, keyword.root.src
   
     assert_equal 'nil', keyword.to_ruby
@@ -26,13 +25,12 @@ class RipperRubyBuilderBlockTest < Test::Unit::TestCase
   
   define_method :"test keyword: true" do
     src = @@space + 'true'
-    program = build(src)
-    keyword = program.statements.first
+    keyword = node(src, Ruby::Keyword)
   
     assert_equal Ruby::Keyword, keyword.class
     assert_equal true, keyword.value
   
-    assert_equal program, keyword.parent
+    assert keyword.root.is_a?(Ruby::Program)
     assert_equal src, keyword.root.src
   
     assert_equal 'true', keyword.to_ruby
@@ -45,13 +43,12 @@ class RipperRubyBuilderBlockTest < Test::Unit::TestCase
   
   define_method :"test keyword: false" do
     src = @@space + 'false'
-    program = build(src)
-    keyword = program.statements.first
+    keyword = node(src, Ruby::Keyword)
   
     assert_equal Ruby::Keyword, keyword.class
     assert_equal false, keyword.value
   
-    assert_equal program, keyword.parent
+    assert keyword.root.is_a?(Ruby::Program)
     assert_equal src, keyword.root.src
   
     assert_equal 'false', keyword.to_ruby
@@ -64,13 +61,12 @@ class RipperRubyBuilderBlockTest < Test::Unit::TestCase
   
   define_method :"test keyword: __FILE__" do
     src = @@space + '__FILE__'
-    program = build(src)
-    keyword = program.statements.first
+    keyword = node(src, Ruby::Keyword)
   
     assert_equal Ruby::Keyword, keyword.class
     assert_equal '__FILE__', keyword.value
   
-    assert_equal program, keyword.parent
+    assert keyword.root.is_a?(Ruby::Program)
     assert_equal src, keyword.root.src
   
     assert_equal '__FILE__', keyword.to_ruby
@@ -83,13 +79,12 @@ class RipperRubyBuilderBlockTest < Test::Unit::TestCase
   
   define_method :"test keyword: __LINE__" do
     src = @@space + '__LINE__'
-    program = build(src)
-    keyword = program.statements.first
+    keyword = node(src, Ruby::Keyword)
   
     assert_equal Ruby::Keyword, keyword.class
     assert_equal '__LINE__', keyword.value
   
-    assert_equal program, keyword.parent
+    assert keyword.root.is_a?(Ruby::Program)
     assert_equal src, keyword.root.src
   
     assert_equal '__LINE__', keyword.to_ruby

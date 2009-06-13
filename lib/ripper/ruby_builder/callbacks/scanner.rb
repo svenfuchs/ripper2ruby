@@ -68,6 +68,10 @@ class Ripper
       def on_period(*args)
         push(super)
       end
+      
+      def on_semicolon(*args)
+        push(super)
+      end
 
       # def on_words_beg(*args)
       #   super.tap { |result| p result }

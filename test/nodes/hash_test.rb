@@ -5,14 +5,13 @@ class RipperToRubyHashTest < Test::Unit::TestCase
 
   define_method :'test a hash: { :foo => :bar }' do
     src = '{ :foo => :bar }'
-    program = build(src)
-    hash = program.statements.first
+    hash = node(src, Ruby::Hash)
   
     assert_equal Ruby::Hash, hash.class
     assert_equal :foo, hash.first.key.value
     assert_equal :bar, hash.first.value.value
   
-    assert_equal program, hash.parent
+    assert hash.root.is_a?(Ruby::Program)
     assert_equal hash, hash.first.parent
     assert_equal hash.first, hash.first.key.parent
     assert_equal hash.first, hash.first.value.parent
@@ -33,7 +32,7 @@ class RipperToRubyHashTest < Test::Unit::TestCase
   define_method :'test a bare hash: t(:foo => :bar)' do
     src = 't(:a => :a, :b => :b)'
     hash = call(src).arguments.first
-  
+
     assert_equal Ruby::Hash, hash.class
     assert_equal :a, hash.assocs[0].key.value
     assert_equal :a, hash.assocs[0].value.value

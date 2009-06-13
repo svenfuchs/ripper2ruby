@@ -1,15 +1,14 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class RipperToRubyOperatorsTest < Test::Unit::TestCase
-  def build(code)
-    Ripper::RubyBuilder.build(code)
-  end
+  include TestRubyBuilderHelper
   
   def assert_operator(expr, src, options)
     row    = options[:row]    || 0
     column = options[:column] || 0
     length = options[:length] || src.length
 
+    assert expr.root.is_a?(Ruby::Program)
     assert_equal src, expr.to_ruby
     assert_equal src, expr.src
     assert_equal row, expr.row
@@ -19,10 +18,8 @@ class RipperToRubyOperatorsTest < Test::Unit::TestCase
   
   def assert_unary_operator(operator, options = {})
     src = options[:src] || "#{operator}1"
-    program = build(src)
-    expr = program.statements.first
+    expr = node(src, Ruby::Unary)
     
-    assert_equal program, expr.parent
     assert_equal Ruby::Unary, expr.class
     assert_equal operator.to_s, expr.operator.token
     assert_equal options[:value] || 1, expr.operand.value
@@ -32,10 +29,8 @@ class RipperToRubyOperatorsTest < Test::Unit::TestCase
 
   def assert_binary_operator(operator, options = {})
     src = options[:src] || "1 #{operator} 2"
-    program = build(src)
-    expr = program.statements.first
+    expr = node(src, Ruby::Binary)
 
-    assert_equal program, expr.parent
     assert_equal Ruby::Binary, expr.class
     assert_equal operator.to_s, expr.operator.token
     assert_equal options[:left]  || 1, expr.left.value
@@ -45,10 +40,8 @@ class RipperToRubyOperatorsTest < Test::Unit::TestCase
   end
   
   def assert_ternary_operator(src, options = {})
-    program = build(src)
-    expr = program.statements.first
+    expr = node(src, Ruby::IfOp)
 
-    assert_equal program, expr.parent
     assert_equal Ruby::IfOp, expr.class
     assert_equal 1, expr.condition.value
     assert_equal 2, expr.left.value

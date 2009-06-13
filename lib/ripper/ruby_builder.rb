@@ -51,8 +51,10 @@ class Ripper
         stack.pop(*types)
       end
       
-      def pop_delim(type, options = {})
-        pop_delims(type, options).first
+      def pop_delim(*types)
+        options = types.last.is_a?(::Hash) ? types.pop : {}
+        options[:max] = 1
+        pop_delims(*types, options).first
       end
     
       def pop_delims(*types)
