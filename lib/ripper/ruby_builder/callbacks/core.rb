@@ -49,14 +49,6 @@ class Ripper
         Ruby::Class.new(const, operator, super_class, body, ldelim, rdelim)
       end
 
-      def on_def(identifier, params, body)
-        identifier = identifier.to_identifier if identifier.respond_to?(:to_identifier)
-        rdelim, ldelim = stack_ignore(:@op, :@comma, :@lparen, :@rparen) do 
-          pop_delims(:@kw, :value => %w(def end))
-        end
-        Ruby::Method.new(identifier, params, body, ldelim, rdelim)
-      end
-
       def on_const_ref(const)
         const # not sure what to do here
       end
