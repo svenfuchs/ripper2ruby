@@ -1,0 +1,52 @@
+TODO
+- invent a StatementsList so that it can have params
+
+
+Ripper::SCANNER_EVENTS
+
+:CHAR
+:__end__
+:backref
+:backtick
+:comma
+:comment
+:const
+:cvar
+:embdoc
+:embdoc_beg
+:embdoc_end
+:embexpr_beg
+:embexpr_end
+:embvar
+:float
+:gvar
+:heredoc_beg
+:heredoc_end
+:ident
+:ignored_nl         "\n"        # => [:@ignored_nl, "\n", [1, 0]]
+:int
+:ivar
+:kw
+:label
+:lbrace
+:lbracket           "[a]"       # => [:@lbracket, "[", [1, 0]]
+:lparen             "foo(b)"    # => [:@lparen, "(", [1, 3]]
+:nl                 "a\n"       # => [:@nl, "\n", [1, 1]]
+:op
+:period
+:qwords_beg         "%w(a b c)" # => [:@qwords_beg, "%w(", [1, 0]]
+:rbrace
+:rbracket           "[a]"       # => [:@rbracket, "[", [1, 2]]
+:regexp_beg
+:regexp_end
+:rparen             "foo(b)"    # => [:@rparen, ")", [1, 5]]
+:semicolon
+:sp                 " a"        # => [:@sp, " ", [1, 0]]
+:symbeg             ":a"        # => [:@symbeg, ":'", [1, 1]]
+:tlambda
+:tlambeg
+:tstring_beg        "'a'; %(b)" # => [:@tstring_beg, "'", [1, 0]], [:@tstring_beg, "%(", [1, 5]]
+:tstring_content    '"a"'       # => [:@tstring_content, "a", [1, 1]]
+:tstring_end        "'a'; %(b)" # => [:@tstring_end, "'", [1, 2]], [:@tstring_end, ")", [1, 8]]
+:words_beg
+:words_sep
