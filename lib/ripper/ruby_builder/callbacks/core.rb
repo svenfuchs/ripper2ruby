@@ -6,7 +6,7 @@ class Ripper
       end
 
       def on_kw(token)
-        if %w(class def do end not and or).include?(token)
+        if %w(class module def do end not and or).include?(token)
           return push(super) 
         else
           Ruby::Keyword.new(token, position, pop_whitespace)
@@ -47,6 +47,12 @@ class Ripper
         operator = pop_delim(:@op)
         ldelim = pop_delim(:@kw, :value => 'class')
         Ruby::Class.new(const, operator, super_class, body, ldelim, rdelim)
+      end
+      
+      def on_module(const, body)
+        rdelim = pop_delim(:@kw, :value => 'end')
+        ldelim = pop_delim(:@kw, :value => 'module')
+        Ruby::Module.new(const, body, ldelim, rdelim)
       end
 
       def on_const_ref(const)

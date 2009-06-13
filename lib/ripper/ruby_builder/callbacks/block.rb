@@ -30,8 +30,7 @@ class Ripper
       end
 
       def on_stmts_add(target, statement)
-        statement = Ruby::Statement.new(statement, pop_delim(:@semicolon))
-        target << statement
+        target << Ruby::Statement.new(statement, pop_delim(:@semicolon)) if statement
         target
       end
 

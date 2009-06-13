@@ -21,7 +21,7 @@ class RipperRubyBuilderConstTest < Test::Unit::TestCase
     assert_equal 2, const.column
     assert_equal 4, const.length
   end
-
+  
   define_method :"test a class" do
     src = <<-eoc
       class A < B
@@ -30,7 +30,7 @@ class RipperRubyBuilderConstTest < Test::Unit::TestCase
       end
     eoc
     klass = node(src, Ruby::Class)
-
+  
     assert klass.root.is_a?(Ruby::Program)
     assert_equal klass, klass.super_class.parent
     assert_equal klass, klass.body.parent
@@ -42,6 +42,24 @@ class RipperRubyBuilderConstTest < Test::Unit::TestCase
     assert_equal src.strip, klass.to_ruby
   
     assert_equal [0, 6], klass.position
+  end
+
+  define_method :"test a module" do
+    src = <<-eoc
+      module A
+        def foo
+        end
+      end
+    eoc
+    mod = node(src, Ruby::Module)
+
+    assert mod.root.is_a?(Ruby::Program)
+    assert_equal mod, mod.body.parent
+  
+    assert_equal 'A', mod.const.token
+  
+    assert_equal src.strip, mod.to_ruby
+    assert_equal [0, 6], mod.position
   end
   
   define_method :"test a const path ref" do
