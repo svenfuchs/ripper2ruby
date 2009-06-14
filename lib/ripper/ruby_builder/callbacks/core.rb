@@ -6,7 +6,7 @@ class Ripper
       end
 
       def on_kw(token)
-        if %w(class module def if then else elsif while begin do end not and or defined?).include?(token)
+        if %w(class module def if unless then else elsif while begin do end not and or defined?).include?(token)
           return push(super) 
         else
           Ruby::Keyword.new(token, position, pop_whitespace)
@@ -53,18 +53,6 @@ class Ripper
         rdelim = pop_delim(:@kw, :value => 'end')
         ldelim = pop_delim(:@kw, :value => 'module')
         Ruby::Module.new(const, body, ldelim, rdelim)
-      end
-
-      def on_const_ref(const)
-        const # not sure what to do here
-      end
-
-      def on_var_ref(ref)
-        ref # not sure what to do here
-      end
-
-      def on_var_field(field)
-        field # not sure what to do here
       end
     end
   end
