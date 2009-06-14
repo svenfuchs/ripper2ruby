@@ -16,11 +16,16 @@ module Ruby
     end
   end
   
-  # class Rescue < Block
-  #   child_accessor :error_types, :error_var
-  #   
-  #   def initialize(error_types, error_var, statements, ldelim)
-  #     super(statements, nil, ldelim)
-  #   end
-  # end
+  class NamedBlock < Block
+    child_accessor :identifier
+    
+    def initialize(identifier, statements, ldelim = nil, rdelim = nil)
+      self.identifier = identifier
+      super(statements, nil, nil, nil, ldelim, rdelim)
+    end
+    
+    def nodes
+      [identifier, super].flatten.compact
+    end
+  end
 end

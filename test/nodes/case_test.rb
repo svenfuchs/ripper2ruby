@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class RipperToRubyControlCaseTest < Test::Unit::TestCase
+class RipperToRubyCaseTest < Test::Unit::TestCase
   include TestRubyBuilderHelper
 
   define_method :'test case block, semicolon separated' do

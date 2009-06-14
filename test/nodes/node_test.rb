@@ -43,8 +43,8 @@ class RipperRubyBuilderNodeTest < Test::Unit::TestCase
   def test_update_children_positions
     program = Ripper::RubyBuilder.build("a(:a); b(:b, ['b', 1], { :b => :'b' })")
     
-    a = program.statement { |s| s.identifier.token == 'a' }
-    b = program.statement { |s| s.identifier.token == 'b' }
+    a = program.statement { |s| s.identifier.token == 'a' if s }
+    b = program.statement { |s| s.identifier.token == 'b' if s }
     
     assert_equal [0, 0],  a.position
     assert_equal [0, 7],  b.position

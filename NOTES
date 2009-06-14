@@ -1,9 +1,12 @@
 http://web.njit.edu/all_topics/Prog_Lang_Docs/html/ruby/syntax.html
+http://web.njit.edu/all_topics/Prog_Lang_Docs/html/ruby/yacc.html
+
+
 
 # DONE
 
 	class module def
-	begin do end rescue ensure retry 
+	begin until while do end rescue ensure retry 
 	if unless then else elsif
 	when case
 	nil true false
@@ -12,15 +15,13 @@ http://web.njit.edu/all_topics/Prog_Lang_Docs/html/ruby/syntax.html
 	defined alias undef
 	super yield return
 	next redo break
-
-# MISSING KEYWORDS
-
-	BEGIN	END
 	for in
-	until while
+	BEGIN	END
+
 
 # MISSING SYNTAX
 
 	range: .. ...
 	hash:  [ ] [ ]=
+
 

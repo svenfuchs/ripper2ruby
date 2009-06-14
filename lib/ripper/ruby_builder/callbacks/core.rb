@@ -6,8 +6,9 @@ class Ripper
       end
 
       @@tokens = %w(class module def do begin rescue ensure retry end 
-                    if unless then else elsif case when while 
-                    not and or alias undef super yield return next redo break defined?)
+                    if unless then else elsif case when while until for in
+                    not and or alias undef super yield return next redo break 
+                    defined? BEGIN END)
 
       def on_kw(token)
         if @@tokens.include?(token)
@@ -57,6 +58,13 @@ class Ripper
         rdelim = pop_delim(:@kw, :value => 'end')
         ldelim = pop_delim(:@kw, :value => 'module')
         Ruby::Module.new(const, body, ldelim, rdelim)
+      end
+      
+      def on_BEGIN(statements)
+        rdelim = pop_delim(:@rbrace)
+        ldelim = pop_delim(:@lbrace)
+        identifier = pop_delim(:@kw, :value => 'BEGIN').to_identifier
+        Ruby::NamedBlock.new(identifier, statements, ldelim, rdelim)
       end
     end
   end
