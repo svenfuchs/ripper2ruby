@@ -18,6 +18,56 @@ class Ripper
       def on_fcall(identifier)
         Ruby::Call.new(nil, nil, identifier)
       end
+      
+      def on_zsuper(*args)
+        identifier = pop_delim(:@kw, :value => 'super').to_identifier
+        Ruby::Call.new(nil, nil, identifier)
+      end
+      
+      def on_yield(args)
+        identifier = pop_delim(:@kw, :value => 'yield').to_identifier
+        Ruby::Call.new(nil, nil, identifier, args)
+      end
+      
+      def on_yield0
+        identifier = pop_delim(:@kw, :value => 'yield').to_identifier
+        Ruby::Call.new(nil, nil, identifier)
+      end
+      
+      def on_alias(*args)
+        identifier = pop_delim(:@kw, :value => 'alias').to_identifier
+        Ruby::Alias.new(identifier, args)
+      end
+      
+      def on_undef(args)
+        identifier = pop_delim(:@kw, :value => 'undef').to_identifier
+        Ruby::Call.new(nil, nil, identifier, args)
+      end
+      
+      def on_return(args)
+        identifier = pop_delim(:@kw, :value => 'return').to_identifier
+        Ruby::Call.new(nil, nil, identifier, args)
+      end
+      
+      def on_next(args)
+        identifier = pop_delim(:@kw, :value => 'next').to_identifier
+        Ruby::Call.new(nil, nil, identifier, args)
+      end
+      
+      def on_break(args)
+        identifier = pop_delim(:@kw, :value => 'break').to_identifier
+        Ruby::Call.new(nil, nil, identifier, args)
+      end
+      
+      def on_redo
+        identifier = pop_delim(:@kw, :value => 'redo').to_identifier
+        Ruby::Call.new(nil, nil, identifier)
+      end
+      
+      def on_retry
+        identifier = pop_delim(:@kw, :value => 'retry').to_identifier
+        Ruby::Call.new(nil, nil, identifier)
+      end
 
       # assignment methods, e.g. a.b = :c
       def on_field(target, separator, identifier)

@@ -5,7 +5,7 @@ class Ripper
         ldelim = stack_ignore(:@kw) do 
           pop_delim(:@kw, :value => 'then') || pop_delim(:@semicolon)
         end
-        Ruby::Block.new(statements, nil, ldelim)
+        Ruby::Block.new(statements, nil, nil, nil, ldelim)
       end
 
       def on_if(expression, statements, else_block)
@@ -28,7 +28,7 @@ class Ripper
       
       def on_else(statements)
         ldelim = stack_ignore(:@kw) { pop_delim(:@kw, :value => 'else') }
-        block = Ruby::Block.new(statements, nil, ldelim)
+        block = Ruby::Else.new(statements, nil, nil, ldelim)
       end
       
       def on_if_mod(expression, statement)

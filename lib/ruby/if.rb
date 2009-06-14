@@ -4,7 +4,7 @@ module Ruby
   class If < Node 
     child_accessor :expression, :if_block, :else_block, :ldelim, :rdelim
     
-    def initialize(expression, if_block, else_block, ldelim, rdelim)
+    def initialize(expression, if_block, else_block = nil, ldelim = nil, rdelim = nil)
       self.expression = expression
       self.if_block = if_block
       self.else_block = else_block
@@ -18,6 +18,7 @@ module Ruby
   end
   
   class Unless < If; end
+  class Else < Block; end
 
   class IfMod < Node 
     child_accessor :expression, :statement, :ldelim

@@ -1,14 +1,26 @@
-# MISSING STUFF
+http://web.njit.edu/all_topics/Prog_Lang_Docs/html/ruby/syntax.html
 
-range
-  .. ...
+# DONE
 
-special:
-  defined?
+	class module def
+	begin do end rescue ensure retry 
+	if unless then else elsif
+	when case
+	nil true false
+	and or
+	self
+	defined alias undef
+	super yield return
+	next redo break
 
-hash:
-  [ ] [ ]=
+# MISSING KEYWORDS
 
-control flow:
-  if unless while until
-  begin/end
+	BEGIN	END
+	for in
+	until while
+
+# MISSING SYNTAX
+
+	range: .. ...
+	hash:  [ ] [ ]=
+

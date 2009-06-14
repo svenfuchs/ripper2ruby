@@ -1,14 +1,14 @@
 require 'ruby/identifier'
 
 module Ruby
-  class ParamsList < Node # join with ArgsList?
+  class Params < Node # join with ArgsList?
     child_accessor :params, :separators, :ldelim, :rdelim
 
-    def initialize(params, whitespace, ldelim, rdelim, separators)
+    def initialize(params, ldelim = nil, rdelim = nil, separators = [])
       self.ldelim = ldelim
       self.rdelim = rdelim
       self.separators = separators
-      self.params = params
+      self.params = Array(params)
     end
 
     def nodes

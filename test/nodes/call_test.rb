@@ -104,8 +104,9 @@ class RipperRubyBuilderCallTest < Test::Unit::TestCase
   end
   
   define_method :"test two method calls: t('foo'); t 'bar' (no target)" do
-    calls = build("t('foo', 'bar'); t 'baz'").statements.map { |s| s.statement }
-  
+    src = "t('foo', 'bar'); t 'baz'"
+    calls = build(src).statements.map {|s| s.statement}[1..2] # TODO wtf, why's there an empty statement?
+
     assert !calls[0].target
     assert_equal 't', calls[0].identifier.token
     assert_equal "t('foo', 'bar')", calls[0].to_ruby
@@ -167,6 +168,83 @@ class RipperRubyBuilderCallTest < Test::Unit::TestCase
     
     assert_equal src, call.to_ruby
     assert_equal [0, 8], call.arguments[1].position
+  end
+  
+  define_method :"test call to self" do
+    src = "self.b"
+    call = build(src).statements.first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
+  define_method :"test call super without arguments" do
+    src = "super"
+    call = build(src).statements.first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
+  define_method :"test call yield without arguments" do
+    src = "yield"
+    call = build(src).statements.first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
+  define_method :"test call yield with arguments" do
+    src = "yield(:foo)"
+    call = build(src).statements.first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
+  define_method :"test call alias" do
+    src = "alias :foo :bar"
+    call = build(src).statements.first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
+  define_method :"test call undef" do
+    src = "undef :foo"
+    call = build(src).statements.first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
+  define_method :"test call return" do
+    src = "return :foo"
+    call = build(src).statements.first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
+  define_method :"test call next" do
+    src = "next"
+    call = build(src).statements.first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
+  define_method :"test call redo" do
+    src = "redo"
+    call = build(src).statements.first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
+  define_method :"test call break" do
+    src = "break"
+    call = build(src).statements.first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
+  define_method :"test call retry" do
+    src = "retry"
+    call = build(src).statements.first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
   end
   
   define_method :"test call to an assignment method: a.b = :c" do
