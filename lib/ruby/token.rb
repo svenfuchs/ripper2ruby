@@ -12,5 +12,9 @@ module Ruby
     def to_ruby(include_whitespace = false)
       (include_whitespace ? whitespace : '') + token.to_s
     end
+      
+    def to_identifier
+      Ruby::Identifier.new(token, position, whitespace) 
+    end
   end
 end

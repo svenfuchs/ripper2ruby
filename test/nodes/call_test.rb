@@ -173,5 +173,13 @@ class RipperRubyBuilderCallTest < Test::Unit::TestCase
     src = "a.b = :c"
     call = build(src).statements.first
     assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
+  define_method :"test call to defined?" do
+    src = "defined?(A)"
+    call = build(src).statements.first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
   end
 end

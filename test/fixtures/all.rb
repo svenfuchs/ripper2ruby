@@ -55,6 +55,8 @@
 # constants
 
 I18n
+# class A; end
+# module B; end
 
 # assignments
 
@@ -73,6 +75,11 @@ a, b = c, d
 a, b = *c
 
 a, \n b = \n c, \n d
+
+# operators
+
+!a
+# ...
 
 # calls
 
@@ -104,3 +111,11 @@ t(:a, :b, { :c => :c }, &c)
 
 t( \n:a, \n :b, \n :c => \n :c, \n &d)
 
+# control structures
+
+# if true then a end
+# if true: a end
+
+# special
+
+# defined?(A)

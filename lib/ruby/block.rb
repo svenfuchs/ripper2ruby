@@ -14,10 +14,12 @@ module Ruby
   end
   
   class Block < Body
-    child_accessor :params, :rdelim, :ldelim
+    child_accessor :params, :ldelim, :rdelim
     
-    def initialize(statements, params)
+    def initialize(statements, params, ldelim = nil, rdelim = nil)
       self.params = params
+      self.ldelim = ldelim
+      self.rdelim = rdelim
       super(statements)
     end
     

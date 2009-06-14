@@ -4,18 +4,20 @@ module Ruby
   class ArgsList < Node
     child_accessor :args, :separators, :ldelim, :rdelim
 
-    def initialize
-      self.args = []
+    def initialize(args = nil, ldelim = nil, rdelim = nil)
+      self.args = Array(args) || []
       self.separators = []
+      self.ldelim = ldelim
+      self.rdelim = rdelim
     end
     
-    def <<(arg)
-      # unless arg.is_a?(Node)
-      #   arg = from_native(arg, nil, ' ') 
-      #   separators << from_native(' ,')
-      # end
-      super
-    end
+    # def <<(arg)
+    #   # unless arg.is_a?(Node)
+    #   #   arg = from_native(arg, nil, ' ') 
+    #   #   separators << from_native(' ,')
+    #   # end
+    #   super
+    # end
       
     def []=(ix, arg)
       arg = from_native(arg, nil, self[ix].whitespace) unless arg.is_a?(Node)

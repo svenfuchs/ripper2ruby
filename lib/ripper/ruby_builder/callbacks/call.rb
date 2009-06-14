@@ -24,6 +24,16 @@ class Ripper
         separator = stack_ignore(:@op) { pop_delim(:@period) }
         Ruby::Call.new(target, separator, identifier)
       end
+      
+      # TODO defined?(A), technically not a method call ... have Defined < Call for this?
+      def on_defined(ref)
+        rdelim = pop_delim(:@rparen)
+        ldelim = pop_delim(:@lparen)
+        token = pop_delim(:@kw, :value => 'defined?')
+
+        args = Ruby::ArgsList.new(ref, ldelim, rdelim)
+        Ruby::Call.new(nil, nil, token.to_identifier, args)
+      end
     end
   end
 end

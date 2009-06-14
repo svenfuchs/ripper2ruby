@@ -6,7 +6,7 @@ class Ripper
       end
 
       def on_kw(token)
-        if %w(class module def do end not and or).include?(token)
+        if %w(class module def if then else elsif while begin do end not and or defined?).include?(token)
           return push(super) 
         else
           Ruby::Keyword.new(token, position, pop_whitespace)

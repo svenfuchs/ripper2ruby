@@ -15,8 +15,8 @@ class Ripper
     
     WHITESPACE = [:@sp, :@nl, :@ignored_nl]
     
-    include Core, Program, Method, Block, Params, Call, String, Symbol, 
-            Hash, Array, Args, Assignment, Operator, Scanner
+    include Scanner, Core, Program, Structures, Method, Block, Params, Call, 
+            String, Symbol, Hash, Array, Args, Assignment, Operator
 
     attr_reader :src, :filename, :stack
 
