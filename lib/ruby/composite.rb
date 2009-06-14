@@ -12,7 +12,6 @@ module Ruby
       end
 
       def <<(object)
-        object = Unsupported.new(object) if object && !object.is_a?(Node)
         object.parent = self.parent unless object.parent == self.parent
         super
       end

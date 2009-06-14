@@ -5,8 +5,6 @@ module Ruby
     child_accessor :identifier, :separator, :target, :arguments, :block
 
     def initialize(target, separator, identifier, arguments = nil, block = nil)
-      target = Unsupported.new(target) if target && !target.is_a?(Node)
-
       self.target = target
       self.separator = separator
       self.identifier = identifier
