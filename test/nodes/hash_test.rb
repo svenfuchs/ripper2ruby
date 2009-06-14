@@ -101,6 +101,11 @@ class RipperToRubyHashTest < Test::Unit::TestCase
     assert_equal 1,  separators[1].length(true)
   end
   
+  define_method :'test hash assignment' do
+    src = "foo[:bar] = :baz"
+    assert_equal src, build(src).statements.first.to_ruby
+  end
+  
   def assert_whitespace(node, whitespace, length)
     assert_equal whitespace, node.whitespace
     assert_equal length, node.length

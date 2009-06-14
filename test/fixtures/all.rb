@@ -20,6 +20,8 @@
 %( a \n   b \n   c )
 %|a|
 %.a.
+`ls -a`
+%x(ls -a)
 
 
 # arrays
@@ -56,7 +58,7 @@
 
 I18n
 # class A; end
-# module B; end
+module B; end
 
 # assignments
 
@@ -113,9 +115,22 @@ t( \n:a, \n :b, \n :c => \n :c, \n &d)
 
 # control structures
 
-# if true then a end
-# if true: a end
+if true then a; else b; end
 
 # special
 
-# defined?(A)
+defined?(A)
+# return
+# return(1)
+break
+next
+redo
+retry
+
+begin ; end
+while true; foo; end
+begin; foo; end while true
+foo while true
+until true; foo; end
+begin; foo; end until true
+foo until true

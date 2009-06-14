@@ -47,8 +47,8 @@ class Ripper
         Ruby::Token.new(token.value, token.position, token.whitespace) if token
       end
       
-      def pop(*types)
-        stack.pop(*types)
+      def pop(*args)
+        stack.pop(*args)
       end
       
       def pop_delim(*types)

@@ -21,12 +21,8 @@ http://web.njit.edu/all_topics/Prog_Lang_Docs/html/ruby/yacc.html
 
 # MISSING
 
-	range: .. ...
-	hash:  [ ] [ ]=
-
-
-regexps
-heredoc
+	regexps
+	heredoc
 
 
 STRING		: `"' any_char* `"'

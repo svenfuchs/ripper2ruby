@@ -8,7 +8,7 @@ class RipperToRubyStringTest < Test::Unit::TestCase
   define_method :'test an empty string: ""' do
     src = @@space + '""'
     string = string(src)
-
+  
     assert_equal Ruby::String, string.class
     assert_equal '', string.value
     assert_equal '""', string.to_ruby
@@ -18,15 +18,15 @@ class RipperToRubyStringTest < Test::Unit::TestCase
     assert_equal 2, string.column
     assert_equal 2, string.length
   end
-
+  
   def test_single_quoted_string
     src = "    \n  \n 'foo'"
     string = string(src)
-
+  
     assert_equal Ruby::String, string.class
     assert string.root.is_a?(Ruby::Program)
     assert_equal string, string.first.parent
-
+  
     assert_equal src, string.root.src
     assert_equal src, string.first.root.src
   
@@ -36,8 +36,7 @@ class RipperToRubyStringTest < Test::Unit::TestCase
     
     assert_equal "'", string.ldelim.token
     assert_equal "'", string.rdelim.token
-
-    assert_equal 5, string.length
+  
     assert_equal 9, string.src_pos
     assert_equal "'foo'", string.src
     assert_equal "'foo'", string.to_ruby
@@ -45,7 +44,7 @@ class RipperToRubyStringTest < Test::Unit::TestCase
     assert_equal 14, string.length(true)
     assert_equal 0, string.src_pos(true)
     assert_equal src, string.src(true)
-
+  
     assert_equal [2, 1], string.position
     assert_equal 2, string.row
     assert_equal 1, string.column
@@ -55,11 +54,11 @@ class RipperToRubyStringTest < Test::Unit::TestCase
   def test_double_quoted_string
     src = "    \n  \n \"foo\""
     string = string(src)
-  
+
     assert_equal Ruby::String, string.class
     assert string.root.is_a?(Ruby::Program)
     assert_equal string, string.first.parent
-
+  
     assert_equal src, string.root.src
     assert_equal src, string.first.root.src
   
@@ -70,11 +69,33 @@ class RipperToRubyStringTest < Test::Unit::TestCase
     assert_equal "\"", string.ldelim.token
     assert_equal "\"", string.rdelim.token
   
-    assert_equal 5, string.length
     assert_equal 9, string.src_pos
     assert_equal "\"foo\"", string.src
     assert_equal "\"foo\"", string.to_ruby
     
+    assert_equal 14, string.length(true)
+    assert_equal 0, string.src_pos(true)
+    assert_equal src, string.src(true)
+  
+    assert_equal [2, 1], string.position
+    assert_equal 2, string.row
+    assert_equal 1, string.column
+    assert_equal 5, string.length
+  end
+  
+  def test_backtick_quoted_string
+    src = "    \n  \n `foo`"
+    string = string(src)
+  
+    assert_equal Ruby::String, string.class
+    assert string.root.is_a?(Ruby::Program)
+  
+    assert_equal 'foo', string.value
+
+    assert_equal 9, string.src_pos
+    assert_equal "`foo`", string.src
+    assert_equal "`foo`", string.to_ruby
+
     assert_equal 14, string.length(true)
     assert_equal 0, string.src_pos(true)
     assert_equal src, string.src(true)

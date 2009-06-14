@@ -65,6 +65,10 @@ class Ripper
         push(super)
       end
       
+      def on_backtick(*args)
+        push(super)
+      end
+      
       def on_period(*args)
         push(super)
       end
