@@ -19,9 +19,18 @@ http://web.njit.edu/all_topics/Prog_Lang_Docs/html/ruby/yacc.html
 	BEGIN	END
 
 
-# MISSING SYNTAX
+# MISSING
 
 	range: .. ...
 	hash:  [ ] [ ]=
 
 
+regexps
+heredoc
+
+
+STRING		: `"' any_char* `"'
+		| `'' any_char* `''
+		| ``' any_char* ``'
+
+STRING2		: `%'(`Q'|`q'|`x')char any_char* char

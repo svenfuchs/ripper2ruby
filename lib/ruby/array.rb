@@ -28,4 +28,18 @@ module Ruby
       elements.respond_to?(method) ? elements.send(method, *args, &block) : super
     end
   end
+  
+  class Range < Node
+    child_accessor :left, :operator, :right
+    
+    def initialize(left, operator, right)
+      self.left = left
+      self.operator = operator
+      self.right = right
+    end
+    
+    def nodes
+      [left, operator, right]
+    end
+  end
 end

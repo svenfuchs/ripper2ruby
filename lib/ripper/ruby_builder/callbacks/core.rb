@@ -37,6 +37,14 @@ class Ripper
       def on_float(token)
         Ruby::Float.new(token, position, pop_whitespace)
       end
+      
+      def on_dot2(left, right)
+        Ruby::Range.new(left, pop_delim(:@op, :value => '..'), right)
+      end
+      
+      def on_dot3(left, right)
+        Ruby::Range.new(left, pop_delim(:@op, :value => '...'), right)
+      end
 
       def on_const(token)
         Ruby::Const.new(token, position, pop_whitespace)
