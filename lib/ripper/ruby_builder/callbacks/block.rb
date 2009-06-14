@@ -30,8 +30,12 @@ class Ripper
       end
 
       def on_stmts_add(target, statement)
-        rdelim = pop_delim(:@semicolon)
-        target << Ruby::Statement.new(statement, rdelim) if statement
+        case statement
+        when Ruby::Statement # from on_void_stmt
+          target << statement
+        when Ruby::Node
+          target << Ruby::Statement.new(statement, pop_delim(:@semicolon)) 
+        end
         target
       end
 
@@ -40,7 +44,8 @@ class Ripper
       end
     
       def on_void_stmt
-        nil # what's this?
+        rdelim = pop_delim(:@semicolon)
+        Ruby::Statement.new(nil, rdelim) if rdelim
       end
     end
   end

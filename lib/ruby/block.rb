@@ -1,18 +1,6 @@
-require 'ruby/params'
+require 'ruby/body'
 
 module Ruby
-  class Body < Node
-    child_accessor :statements
-    
-    def initialize(statements)
-      self.statements = statements
-    end
-    
-    def nodes
-      statements
-    end
-  end
-  
   class Block < Body
     child_accessor :params, :ldelim, :rdelim
     
