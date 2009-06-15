@@ -90,6 +90,11 @@ class RipperToRubyArrayTest < Test::Unit::TestCase
     end
   end
   
+  define_method :"test array access" do
+    src = "foo[1]"
+    assert_equal src, build(src).to_ruby
+  end
+  
   define_method :"test array assignment" do
     src = "result[0] = :value"
     assignment = node(src, Ruby::Assignment)

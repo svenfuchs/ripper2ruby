@@ -1,7 +1,33 @@
+Node
+Token < Node            # holds any matched characters including parentheses, brackets, etc.
+Identifier < Token      # holds any sequence of characters matching /[a-zA-Z_][a-zA-Z0-9_]*/
+
+String < Node           # container holding several StringContents and delimiters
+Symbol < Node           # container holding a Token and a lefthand delimiter
+DynaSymbol < Node       # container holding a String and a lefthand delimiter
+
+Expression < Node       # Container that holds one/many identifiers/calls and one/many operators
+Call < Node             # Container that holds a target, separator, identifier, arguments, block
+ArgsList < Node         # Container that holds arguments
+
+Unary < Expression      # Expression that holds one variable/call and one operator
+Binary < Expression     # Expression that holds two variable/call and one operator
+Ternary < Expression    # Expression that holds three variable/call and two operators
+
+Assignment < Expression # Container that holds two expressions and/or multiassignments and an operator
+Multiassignment < Node  # Container that holds many expressions and an operator (when on righthand side)
+
+
+
+(foo)
+((foo))
+foo[1][2][3]
+foo[1][2][3]=
+
+
+
 http://web.njit.edu/all_topics/Prog_Lang_Docs/html/ruby/syntax.html
 http://web.njit.edu/all_topics/Prog_Lang_Docs/html/ruby/yacc.html
-
-
 
 # DONE
 
@@ -30,3 +56,46 @@ STRING		: `"' any_char* `"'
 		| ``' any_char* ``'
 
 STRING2		: `%'(`Q'|`q'|`x')char any_char* char
+
+
+_LINE__
+_FILE__
+_ENCODING__
+BEGIN
+END
+alias
+and
+begin
+break
+case
+class
+def
+defined
+do
+else
+elsif
+end
+ensure
+false
+for
+in
+module
+next
+nil
+not
+or
+redo
+rescue
+retry
+return
+self
+super
+then
+true
+undef
+when
+yield
+if
+unless
+while
+until

@@ -17,17 +17,10 @@ module Ruby
       end
       
       def []=(ix, object)
-        parent.children.delete(self[ix])
         object.parent = parent
         super
       end
       
-      def pop
-        object = super
-        parent.children.delete(object)
-        object
-      end
-
       def parent=(parent)
         each { |object| object.parent = parent }
         @parent = parent
@@ -56,17 +49,7 @@ module Ruby
       end
     end
 
-    attr_reader :parent
-
-    def parent=(parent)
-      @parent.children.delete(self) if @parent
-      @parent = parent
-      parent.children << self if parent && !parent.children.include?(self)
-    end
-
-    def children
-      @children ||= []
-    end
+    attr_accessor :parent
 
     def root?
       parent.nil?
