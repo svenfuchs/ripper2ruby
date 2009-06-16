@@ -132,7 +132,7 @@ module Ruby
       def update_positions(row, column, offset_column)
         pos = self.position
         pos[1] += offset_column if pos && self.row == row && self.column > column
-        nodes.each { |c| c.send(:update_positions, row, column, offset_column) }
+        nodes.compact.each { |c| c.send(:update_positions, row, column, offset_column) }
       end
   end
 end
