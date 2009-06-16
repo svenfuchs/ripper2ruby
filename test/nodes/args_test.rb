@@ -77,7 +77,7 @@ class RipperRubyBuilderArgsTest < Test::Unit::TestCase
   
     call = call(src)
     args = call.arguments
-    foo, bar, baz = args.args
+    foo, bar, baz = args.elements
   
     assert_equal :foo, foo.value
     assert_equal :bar, bar.value

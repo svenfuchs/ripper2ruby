@@ -31,5 +31,4 @@ module Ruby
       [ldelim, expression, rdelim, when_block, next_block].compact
     end
   end
-
 end
