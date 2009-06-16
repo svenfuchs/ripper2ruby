@@ -14,33 +14,33 @@
 #         when Ruby::Statement # from on_void_stmt, on_const_ref, on_var_ref, on_var_field
 #           target << statement
 #         when Ruby::Node      # TODO only from on_void_stmt, on_int, etc., can we remove this?
-#           target << Ruby::Statement.new(statement, pop_delim(:@semicolon)) 
+#           target << Ruby::Statement.new(statement, pop_token(:@semicolon)) 
 #         end
 #         target
 #       end
 # 
 #       def on_stmts_new
-#         rdelim = pop_delim(:@semicolon)
+#         rdelim = pop_token(:@semicolon)
 #         list = Ruby::Composite::Array.new
 #         list << Ruby::Statement.new(nil, rdelim) if rdelim
 #         list
 #       end
 #     
 #       def on_void_stmt
-#         rdelim = pop_delim(:@semicolon)
+#         rdelim = pop_token(:@semicolon)
 #         Ruby::Statement.new(nil, rdelim) if rdelim
 #       end
 # 
 #       def on_const_ref(const)
-#         Ruby::Statement.new(const, pop_delim(:@semicolon))  # technically not a statement, use Expression instead?
+#         Ruby::Statement.new(const, pop_token(:@semicolon))  # technically not a statement, use Expression instead?
 #       end
 # 
 #       def on_var_ref(ref)
-#         Ruby::Statement.new(ref, pop_delim(:@semicolon))    # technically not a statement, use Expression instead?
+#         Ruby::Statement.new(ref, pop_token(:@semicolon))    # technically not a statement, use Expression instead?
 #       end
 # 
 #       def on_var_field(field)
-#         Ruby::Statement.new(field, pop_delim(:@semicolon))  # technically not a statement, use Expression instead?
+#         Ruby::Statement.new(field, pop_token(:@semicolon))  # technically not a statement, use Expression instead?
 #       end
 #     end
 #   end

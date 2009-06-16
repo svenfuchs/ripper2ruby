@@ -2,19 +2,18 @@ class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     module Statements
       def build_statements(statements = nil, separators = nil)
-        rdelim, ldelim = pop_delim(:@rparen), pop_delim(:@lparen)
+        rdelim, ldelim = pop_token(:@rparen), pop_token(:@lparen)
         node = Ruby::Statements.new(statements, separators, ldelim, rdelim)
       end
       
       def on_program(statements)
         program = statements.to_program(src, filename)
-        program.separators += pop_delims(:@semicolon)
+        program.separators += pop_tokens(:@semicolon)
         program
       end
 
       def on_body_stmt(statements, rescue_block, something, ensure_block)
-        # , rescue_block, ensure_block)
-        statements.separators += stack_ignore(:@kw, :value => 'end') { pop_delims(:@semicolon) }
+        statements.separators += pop_tokens(:@semicolon)
         statements
       end
       
@@ -24,13 +23,13 @@ class Ripper
       end
 
       def on_stmts_add(target, statement)
-        target.separators += pop_delims(:@semicolon)
+        target.separators += pop_tokens(:@semicolon)
         target.elements << statement if statement
         target
       end
 
       def on_stmts_new
-        build_statements(nil, pop_delims(:@semicolon))
+        build_statements(nil, pop_tokens(:@semicolon))
       end
     
       def on_void_stmt

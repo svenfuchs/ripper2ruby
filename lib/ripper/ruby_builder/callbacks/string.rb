@@ -2,12 +2,12 @@
 #   class RubyBuilder < Ripper::SexpBuilder
 #     module String
 #       def on_string_literal(string)
-#         string.rdelim = pop_delim(:@tstring_end)
+#         string.rdelim = pop_token(:@tstring_end)
 #         string
 #       end
 # 
 #       def on_xstring_literal(string)
-#         string.rdelim = pop_delim(:@tstring_end)
+#         string.rdelim = pop_token(:@tstring_end)
 #         string
 #       end
 # 
@@ -20,7 +20,7 @@
 #       end
 # 
 #       def on_string_content
-#         Ruby::String.new(pop_delim(:@tstring_beg))
+#         Ruby::String.new(pop_token(:@tstring_beg))
 #       end
 # 
 #       def on_xstring_new(*args)

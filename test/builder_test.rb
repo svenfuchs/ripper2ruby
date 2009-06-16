@@ -30,20 +30,20 @@ class RipperToRubyBuilderTest < Test::Unit::TestCase
     assert !@builder.send(:pop, :@rbrace).empty?
   end
   
-  define_method "test pop: ignoring types" do
-    @builder.send(:stack_ignore, :@rbrace) do
-      commas = @builder.send(:pop, :@comma)
-      assert_equal 2, commas.length
-      assert_equal :@comma, commas[0].type
-      assert_equal :@comma, commas[1].type
-    end
-  end
-  
-  define_method "test pop: ignoring types nested" do
-    @builder.send(:stack_ignore, :@rbrace) do
-      @builder.send(:stack_ignore, :@comma) do
-        assert_equal :@lbrace, @builder.send(:pop, :@lbrace).first.type
-      end
-    end
-  end
+  # define_method "test pop: ignoring types" do
+  #   @builder.send(:stack_ignore, :@rbrace) do
+  #     commas = @builder.send(:pop, :@comma)
+  #     assert_equal 2, commas.length
+  #     assert_equal :@comma, commas[0].type
+  #     assert_equal :@comma, commas[1].type
+  #   end
+  # end
+  # 
+  # define_method "test pop: ignoring types nested" do
+  #   @builder.send(:stack_ignore, :@rbrace) do
+  #     @builder.send(:stack_ignore, :@comma) do
+  #       assert_equal :@lbrace, @builder.send(:pop, :@lbrace).first.type
+  #     end
+  #   end
+  # end
 end

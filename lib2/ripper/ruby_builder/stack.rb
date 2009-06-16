@@ -27,26 +27,15 @@ class Ripper
         while !empty? && !(max && tokens.length >= max)
           if types.include?(last.type) && value_matches?(last, value)
             tokens << super()
-          elsif ignore?(last.type)
-            ignored << super()
-          else
+          elsif last.opener?
             break
+          else 
+            ignored << super()
           end
         end
 
         ignored.reverse.each { |token| push(token) }
         tokens
-      end
-      
-      def ignore?(type)
-        @ignore_stack.flatten.include?(type)
-      end
-      
-      def ignore_types(*types)
-        @ignore_stack.push(types)
-        result = yield
-        @ignore_stack.pop
-        result
       end
       
       protected

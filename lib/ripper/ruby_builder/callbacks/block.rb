@@ -7,8 +7,8 @@ class Ripper
       end
 
       def on_method_add_block(call, block)
-        block.rdelim = pop_delim(:@kw, :value => 'end') || pop_delim(:@rbrace)
-        block.ldelim = pop_delim(:@kw, :value => 'do')  || pop_delim(:@lbrace)
+        block.rdelim = pop_token(:@kw, :value => 'end') || pop_token(:@rbrace)
+        block.ldelim = pop_token(:@kw, :value => 'do')  || pop_token(:@lbrace)
         call.block = block
         call
       end
@@ -18,14 +18,14 @@ class Ripper
       end
       
       def on_begin(body)
-        rdelim = pop_delim(:@kw, :value => 'end')
-        ldelim = pop_delim(:@kw, :value => 'begin')
+        rdelim = pop_token(:@kw, :value => 'end')
+        ldelim = pop_token(:@kw, :value => 'begin')
         Ruby::Block.new(body.statements, body.rescue_block, body.ensure_block, nil, ldelim, rdelim)
       end
       
       def on_rescue(error_types, error_var, statements, somethingelse) # retry_block?
-        operator = stack_ignore(:@kw, :value => 'end') { pop_delim(:@op, :value => '=>') }
-        ldelim   = stack_ignore(:@kw, :value => 'end') { pop_delim(:@kw, :value => 'rescue') }
+        operator = stack_ignore(:@kw, :value => 'end') { pop_token(:@op, :value => '=>') }
+        ldelim   = stack_ignore(:@kw, :value => 'end') { pop_token(:@kw, :value => 'rescue') }
         
         errors = Ruby::Assoc.new(error_types, error_var, operator)
         params = Ruby::Params.new(errors)
@@ -34,7 +34,7 @@ class Ripper
       end
       
       def on_ensure(statements)
-        ldelim = stack_ignore(:@kw, :value => 'end') { pop_delim(:@kw, :value => 'ensure') }
+        ldelim = stack_ignore(:@kw, :value => 'end') { pop_token(:@kw, :value => 'ensure') }
         Ruby::Block.new(statements, nil, nil, nil, ldelim)
       end
       

@@ -7,11 +7,11 @@ class Ripper
       
       def on_symbol(token)
         token = pop_token(:@op) unless token.is_a?(Ruby::Node)
-        Ruby::Symbol.new(token, pop_delim(:@symbeg))
+        Ruby::Symbol.new(token, pop_token(:@symbeg))
       end
 
       def on_dyna_symbol(symbol)
-        symbol.rdelim = pop_delim(:@tstring_end)
+        symbol.rdelim = pop_token(:@tstring_end)
         symbol
       end
     end

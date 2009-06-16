@@ -10,7 +10,7 @@ class WhileTest < Test::Unit::TestCase
   define_method :'test while block, semicolon separated' do
     assert_compiles_to_original "while true; false end"
     assert_compiles_to_original "while (true); false end"
-    assert_compiles_to_original "while (true;); false end"
+    assert_compiles_to_original "while (true;true); false end"
   end
 
   define_method :'test while block, newline separated' do

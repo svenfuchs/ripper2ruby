@@ -3,9 +3,8 @@ class Ripper
     module Method
       def on_def(identifier, params, body)
         identifier = identifier.to_identifier if identifier.respond_to?(:to_identifier)
-        rdelim, ldelim = stack_ignore(:@op, :@comma, :@lparen, :@rparen) do 
-          pop_delims(:@kw, :value => %w(def end))
-        end
+        rdelim = pop_token(:@end)
+        ldelim = pop_token(:@def)
         Ruby::Method.new(identifier, params, body, ldelim, rdelim)
       end
     end

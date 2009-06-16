@@ -4,7 +4,7 @@ class Ripper
       attr_accessor :type, :value, :whitespace, :position
 
       def initialize(type = nil, value = nil, position = nil)
-        @type = type
+        @type = type == :@kw ? :"@#{value.gsub(/\W/, '')}" : type
         @value = value
         @whitespace = ''
 
@@ -22,6 +22,10 @@ class Ripper
 
       def whitespace?
         WHITESPACE.include?(type)
+      end
+      
+      def opener?
+        OPENERS.include?(type)
       end
 
       def to_sexp

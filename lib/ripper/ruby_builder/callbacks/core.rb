@@ -39,11 +39,11 @@ class Ripper
       end
       
       def on_dot2(left, right)
-        Ruby::Range.new(left, pop_delim(:@op, :value => '..'), right)
+        Ruby::Range.new(left, pop_token(:@op, :value => '..'), right)
       end
       
       def on_dot3(left, right)
-        Ruby::Range.new(left, pop_delim(:@op, :value => '...'), right)
+        Ruby::Range.new(left, pop_token(:@op, :value => '...'), right)
       end
 
       def on_const(token)
@@ -51,27 +51,27 @@ class Ripper
       end
 
       def on_const_path_ref(parent, const)
-        separator = stack_ignore(:@period) { pop_delim(:@op, :value => '::') }
+        separator = stack_ignore(:@period) { pop_token(:@op, :value => '::') }
         Ruby::Call.new(parent, separator, const) # TODO maybe do Ruby::ConstRef < Ruby::Call instead
       end
 
       def on_class(const, super_class, body)
-        rdelim = pop_delim(:@kw, :value => 'end')
-        operator = pop_delim(:@op)
-        ldelim = pop_delim(:@kw, :value => 'class')
+        rdelim = pop_token(:@kw, :value => 'end')
+        operator = pop_token(:@op)
+        ldelim = pop_token(:@kw, :value => 'class')
         Ruby::Class.new(const, operator, super_class, body, ldelim, rdelim)
       end
 
       def on_module(const, body)
-        rdelim = pop_delim(:@kw, :value => 'end')
-        ldelim = pop_delim(:@kw, :value => 'module')
+        rdelim = pop_token(:@kw, :value => 'end')
+        ldelim = pop_token(:@kw, :value => 'module')
         Ruby::Module.new(const, body, ldelim, rdelim)
       end
       
       def on_BEGIN(statements)
-        rdelim = pop_delim(:@rbrace)
-        ldelim = pop_delim(:@lbrace)
-        identifier = pop_delim(:@kw, :value => 'BEGIN').to_identifier
+        rdelim = pop_token(:@rbrace)
+        ldelim = pop_token(:@lbrace)
+        identifier = pop_token(:@kw, :value => 'BEGIN').to_identifier
         Ruby::NamedBlock.new(identifier, statements, ldelim, rdelim)
       end
     end

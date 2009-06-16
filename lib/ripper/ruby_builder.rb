@@ -51,13 +51,13 @@ class Ripper
         stack.pop(*args)
       end
 
-      def pop_delim(*types)
+      def pop_token(*types)
         options = types.last.is_a?(::Hash) ? types.pop : {}
         options[:max] = 1
-        pop_delims(*types, options).first
+        pop_tokens(*types, options).first
       end
 
-      def pop_delims(*types)
+      def pop_tokens(*types)
         options = types.last.is_a?(::Hash) ? types.pop : {}
         stack_ignore(*WHITESPACE) do
           types.map { |type| pop(type, options).map { |token| build_token(token) } }.flatten.compact

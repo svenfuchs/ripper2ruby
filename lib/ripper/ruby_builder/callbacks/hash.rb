@@ -2,7 +2,7 @@
 #   class RubyBuilder < Ripper::SexpBuilder
 #     module Hash
 #       def on_hash(assocs)
-#         separators = pop_delims(:@rbrace, :@comma, :@lbrace).reverse
+#         separators = pop_tokens(:@rbrace, :@comma, :@lbrace).reverse
 #         ldelim, rdelim = separators.shift, separators.pop
 # 
 #         Ruby::Hash.new(assocs, ldelim, rdelim, separators)
@@ -14,7 +14,7 @@
 # 
 #       def on_bare_assoc_hash(assocs)
 #         separators = stack_ignore(:@rparen) do 
-#           pop_delims(:@comma, :max => assocs.length - 1).reverse
+#           pop_tokens(:@comma, :max => assocs.length - 1).reverse
 #         end
 #         
 #         Ruby::Hash.new(assocs, nil, nil, separators)
@@ -22,7 +22,7 @@
 # 
 #       def on_assoc_new(key, value)
 #         stack_ignore(:@rbrace, :@rparen, :@comma) do
-#           assoc = Ruby::Assoc.new(key, value, pop_delim(:@op))
+#           assoc = Ruby::Assoc.new(key, value, pop_token(:@op))
 #         end
 #       end
 #     end

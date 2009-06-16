@@ -33,7 +33,7 @@ class ConstTest < Test::Unit::TestCase
   define_method :"test a module" do
     src = "module A::B ; end"
     const = build(src).first
-
+  
     assert_equal Ruby::Module, const.class
     assert_equal 'B', const.const.token
     assert_equal src, const.to_ruby
