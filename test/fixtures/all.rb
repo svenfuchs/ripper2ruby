@@ -111,6 +111,9 @@ t(:a, :b, { :c => :c }, &c)
 
 t( \n:a, \n :b, \n :c => \n :c, \n &d)
 
+a = lambda { |b| c }
+a &lambda { |b| c }
+
 # control structures
 if true then :a else :b end
 if true; nil else; a end

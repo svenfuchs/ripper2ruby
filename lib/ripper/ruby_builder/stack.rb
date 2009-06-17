@@ -10,9 +10,13 @@ class Ripper
       end
       
       def push(token)
+        # return if token.comment?
         while !token.whitespace? && last && last.whitespace?
           token.whitespace = _pop.value + token.whitespace
         end
+        # while !token.comment? && last && last.comment?
+        #   token.comments.unshift(_pop)
+        # end
         self << token
         token
       end
@@ -35,7 +39,7 @@ class Ripper
           end
         end
 
-        ignored.reverse.each { |token| push(token) }
+        replace(self + ignored.reverse)
         tokens
       end
       

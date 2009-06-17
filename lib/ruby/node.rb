@@ -14,16 +14,24 @@ module Ruby
           node.whitespace = whitespace if whitespace
         end
       end
+      
+      def to_ruby(nodes, include_whitespace = false)
+        first = nodes.shift
+        (first ? first.to_ruby(include_whitespace) : '') +
+        nodes.map { |node| node.to_ruby(true) }.join
+      end
     end
     
     # include Ansi
     include Composite
 
     attr_writer :whitespace
+    child_accessor :comments
 
-    def initialize(position = nil, whitespace = nil)
+    def initialize(position = nil, whitespace = nil, comments = nil)
       self.position = position.dup if position
       self.whitespace = whitespace if whitespace
+      self.comments = comments || []
     end
 
     def row
@@ -51,7 +59,7 @@ module Ruby
     end
 
     def to_ruby(include_whitespace = false)
-      (include_whitespace ? whitespace : '') + nodes.map { |node| node.to_ruby(true) }.join.strip
+      self.class.to_ruby(nodes, include_whitespace)
     end
     
     def nodes

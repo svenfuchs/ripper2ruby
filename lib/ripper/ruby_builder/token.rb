@@ -1,12 +1,13 @@
 class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     class Token
-      attr_accessor :type, :value, :whitespace, :position
+      attr_accessor :type, :value, :whitespace, :comments, :position
 
       def initialize(type = nil, value = nil, position = nil)
         @type = type == :@kw ? :"@#{value.gsub(/\W/, '')}" : type
         @value = value
         @whitespace = ''
+        @comments = []
 
         position[0] -= 1 if position
         @position = position
@@ -26,6 +27,10 @@ class Ripper
       
       def opener?
         OPENERS.include?(type)
+      end
+      
+      def comment?
+        type == :@comment
       end
 
       def to_sexp

@@ -9,6 +9,7 @@ class Ripper
       def on_program(statements)
         program = statements.to_program(src, filename)
         program.separators += pop_tokens(:@semicolon)
+        program << Ruby::Token.new('', position, pop_whitespace) if stack.peek.whitespace?
         program
       end
 

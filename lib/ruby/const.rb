@@ -21,7 +21,7 @@ module Ruby
     end
 
     def to_ruby(include_whitespace = false)
-      (include_whitespace ? whitespace : '') + nodes.map { |node| node.to_ruby(true) }.join.strip + token.to_s
+      (include_whitespace ? whitespace : '') + Node.to_ruby(nodes, false) + super(false)
     end
   end
   

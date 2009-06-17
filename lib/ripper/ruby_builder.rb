@@ -13,7 +13,7 @@ class Ripper
       end
     end
 
-    WHITESPACE = [:@sp, :@nl, :@ignored_nl]
+    WHITESPACE = [:@sp, :@nl, :@ignored_nl, :@comment]
     OPENERS    = [:@lparen, :@lbracket, :@lbrace, :@class, :@module, :@def, :@begin,
                   :@while, :@until, :@for, :@if, :@elsif, :@else, :@unless, :@case, :@when]
     
