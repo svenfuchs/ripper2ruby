@@ -20,22 +20,34 @@ class Ripper
       alias :_pop :pop
       def pop(*types)
         options = types.last.is_a?(::Hash) ? types.pop : {}
-        max = options[:max]
-        value = options[:value]
+        max, pass, value = options.values_at(:max, :pass, :value)
         tokens, ignored = [], []
 
         while !empty? && !(max && tokens.length >= max)
           if types.include?(last.type) && value_matches?(last, value)
             tokens << super()
-          elsif last.opener?
+          elsif ignore?(last.type)
+            ignored << super()
+          elsif last.opener? && !pass
             break
-          else 
+          else
             ignored << super()
           end
         end
 
         ignored.reverse.each { |token| push(token) }
         tokens
+      end
+      
+      def ignore?(type)
+        @ignore_stack.flatten.include?(type)
+      end
+      
+      def ignore_types(*types)
+        @ignore_stack.push(types)
+        result = yield
+        @ignore_stack.pop
+        result
       end
       
       protected

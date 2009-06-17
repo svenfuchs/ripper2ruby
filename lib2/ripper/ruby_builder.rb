@@ -42,7 +42,12 @@ class Ripper
       end
 
       def pop(*args)
-        stack.pop(*args)
+        options = args.last.is_a?(::Hash) ? args.pop : {}
+        if types = options[:ignore]
+          stack_ignore(types) { stack.pop(*args << options) }
+        else
+          stack.pop(*args << options)
+        end
       end
       
       def pop_token(*types)
@@ -58,6 +63,10 @@ class Ripper
 
       def pop_whitespace
         pop(*WHITESPACE).reverse.map { |token| token.value }.join
+      end
+
+      def stack_ignore(*types, &block)
+        stack.ignore_types(*types, &block)
       end
       
       def build_token(token)

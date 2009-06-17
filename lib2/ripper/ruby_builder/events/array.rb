@@ -5,7 +5,7 @@ class Ripper
       # confusingly ripper throws the same events
       
       def on_array(args)
-        rdelim, ldelim = pop_tokens(:@rbracket, :@lbracket)
+        ldelim, rdelim = pop_tokens(:@lbracket, :@rbracket)
         args ? args.to_array(ldelim, rdelim) : Ruby::Array.new(nil, nil, ldelim, rdelim)
       end
       
@@ -15,7 +15,6 @@ class Ripper
       
       def on_qwords_add(array, arg)
         tokens = pop_tokens(:@words_sep)
-
         array.separators += tokens.select { |t| t.token =~ /^\s*$/ }
         array.rdelim = (tokens - array.separators).first
         array << arg

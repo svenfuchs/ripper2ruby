@@ -2,30 +2,28 @@ class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     module Block
       def on_method_add_block(call, block)
-        # block.rdelim = pop_token(:@end) || pop_token(:@rbrace)
-        # block.ldelim = pop_token(:@do)  || pop_token(:@lbrace)
         call.block = block
         call
       end
 
       def on_do_block(params, statements)
+        ldelim = pop_token(:@do)
         rdelim = pop_token(:@end)
         separators = pop_tokens(:@semicolon)
-        ldelim = pop_token(:@do)
         statements.to_block(separators, params, ldelim, rdelim)
       end
       
       def on_brace_block(params, statements)
+        ldelim = pop_token(:@lbrace)
         rdelim = pop_token(:@rbrace)
         separators = pop_tokens(:@semicolon)
-        ldelim = pop_token(:@lbrace)
         statements.to_block(separators, params, ldelim, rdelim)
       end
       
       def on_begin(statements)
+        ldelim = pop_token(:@begin)
         rdelim = pop_token(:@end)
         separators = pop_tokens(:@semicolon)
-        ldelim = pop_token(:@begin)
         statements.to_block(separators, nil, ldelim, rdelim)
       end
       
@@ -57,8 +55,8 @@ class Ripper
         params = (Array(params) + Array(optional_params) << rest_param << block_param).flatten.compact
 
         rdelim = pop_token(:@rparen) || pop_token(:@op, :value => '|')
-        separators = pop_tokens(:@comma)
         ldelim = pop_token(:@lparen) || pop_token(:@op, :value => '|')
+        separators = pop_tokens(:@comma)
 
         Ruby::Params.new(params, ldelim, rdelim, separators)
       end

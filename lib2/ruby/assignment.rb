@@ -12,7 +12,7 @@ module Ruby
     end
     
     def nodes
-      [left, operator, right]
+      [left, operator, right].compact
     end
   end
 
@@ -34,7 +34,7 @@ module Ruby
     end
 
     def method_missing(method, *args, &block)
-      @refs.respond_to?(method) ? @refs.send(method, *args, &block) : super
+      refs.respond_to?(method) ? refs.send(method, *args, &block) : super
     end
   end
 end

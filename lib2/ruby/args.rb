@@ -15,17 +15,20 @@ module Ruby
     end
   end
   
-  class BlockArg < Node
-    child_accessor :arg
-    attr_accessor :ldelim
+  class Arg < Node
+    child_accessor :arg, :ldelim
     
-    def initialize(arg, ldelim)
+    def initialize(arg, ldelim = nil)
       self.arg = arg
       self.ldelim = ldelim
     end
     
     def nodes
-      [ldelim, arg]
+      [ldelim, arg].compact
+    end
+
+    def method_missing(method, *args, &block)
+      arg.respond_to?(method) ? arg.send(method, *args, &block) : super
     end
   end
 end

@@ -11,7 +11,7 @@ class Ripper
       end
 
       def on_call(target, separator, identifier)
-        separator = pop_token(:@period)
+        separator = pop_token(:@period, :ignore => [:@do, :@lbrace])
         Ruby::Call.new(target, separator, identifier)
       end
 
@@ -42,6 +42,11 @@ class Ripper
       def on_undef(args)
         identifier = pop_token(:@undef).to_identifier
         Ruby::Call.new(nil, nil, identifier, args)
+      end
+
+      def on_return0
+        identifier = pop_token(:@return).to_identifier
+        Ruby::Call.new(nil, nil, identifier, nil)
       end
 
       def on_return(args)
@@ -77,17 +82,17 @@ class Ripper
 
       # TODO defined?(A), technically not a method call ... have Defined < Call for this?
       def on_defined(ref)
-        rdelim = pop_token(:@rparen)
         ldelim = pop_token(:@lparen)
-        token = pop_token(:@defined)
+        rdelim = pop_token(:@rparen)
+        token  = pop_token(:@defined)
 
         args = Ruby::ArgsList.new(ref, nil, ldelim, rdelim)
         Ruby::Call.new(nil, nil, token.to_identifier, args)
       end
       
       def on_BEGIN(statements)
-        statements.rdelim = pop_token(:@rbrace)
         statements.ldelim = pop_token(:@lbrace)
+        statements.rdelim = pop_token(:@rbrace)
         identifier = pop_token(:@BEGIN).to_identifier
         Ruby::Call.new(nil, nil, identifier, nil, statements)
       end
