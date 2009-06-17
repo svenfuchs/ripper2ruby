@@ -6,7 +6,7 @@ module Ruby
     
     def initialize(identifier, expression, statements, separators, rdelim = nil)
       self.expression = expression
-      super(identifier, statements, separators, nil, rdelim)
+      super(identifier, statements, separators, nil, nil, rdelim)
     end
       
     def nodes

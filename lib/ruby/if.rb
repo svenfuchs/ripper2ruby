@@ -7,7 +7,7 @@ module Ruby
     def initialize(identifier, expression, statements = nil, ldelim = nil, rdelim = nil, else_block = nil)
       self.expression = expression
       self.else_block = else_block
-      super(identifier, statements, nil, ldelim, rdelim)
+      super(identifier, statements, nil, nil, ldelim, rdelim)
     end
       
     def nodes

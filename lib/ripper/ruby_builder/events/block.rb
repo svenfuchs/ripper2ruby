@@ -20,27 +20,28 @@ class Ripper
         statements.to_block(separators, params, ldelim, rdelim)
       end
       
-      def on_begin(statements)
-        ldelim = pop_token(:@begin)
-        rdelim = pop_token(:@end)
-        separators = pop_tokens(:@semicolon)
-        statements.to_block(separators, nil, ldelim, rdelim)
+      def on_begin(body)
+        body = body.to_named_block unless body.respond_to?(:identifier)
+        body.identifier = pop_token(:@begin)
+        body.separators += pop_tokens(:@semicolon)
+        body.rdelim = pop_token(:@end)
+        body
       end
       
-      # def on_rescue(error_types, error_var, statements, somethingelse) # retry_block?
-      #   operator = pop_token(:@op, :value => '=>')
-      #   ldelim   = pop_token(:@rescue)
-      # 
-      #   errors = Ruby::Assoc.new(error_types, error_var, operator)
-      #   params = Ruby::Params.new(errors)
-      # 
-      #   Ruby::Block.new(statements, nil, nil, params, ldelim) # TODO extract Ruby::Rescue
-      # end
-      # 
-      # def on_ensure(statements)
-      #   ldelim = pop_token(:@ensure)
-      #   Ruby::Block.new(statements, nil, nil, nil, ldelim)
-      # end
+      def on_rescue(error_types, error_var, statements, somethingelse)
+        operator = pop_token(:@op, :value => '=>')
+        identifier = pop_token(:@rescue)
+
+        errors = Ruby::Assoc.new(error_types, error_var, operator)
+        params = Ruby::Params.new(errors)
+
+        Ruby::NamedBlock.new(identifier, statements, params) # TODO extract Ruby::Rescue
+      end
+      
+      def on_ensure(statements)
+        identifier = pop_token(:@ensure)
+        Ruby::NamedBlock.new(identifier, statements)
+      end
       
       def on_block_var(params, something)
         params

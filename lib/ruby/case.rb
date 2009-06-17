@@ -21,7 +21,7 @@ module Ruby
     def initialize(identifier, expression, statements, ldelim = nil, next_block = nil)
       self.expression = expression
       self.next_block = next_block
-      super(identifier, statements, nil, ldelim)
+      super(identifier, statements, nil, nil, ldelim)
     end
       
     def nodes

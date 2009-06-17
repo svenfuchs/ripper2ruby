@@ -1,13 +1,12 @@
-require 'ruby/list'
+require 'ruby/statements'
 
 module Ruby
-  class Block < DelimitedList
+  class Block < Statements
     child_accessor :params
     
-    # rescue_block = nil, ensure_block = nil, 
     def initialize(statements, separators = nil, params = nil, ldelim = nil, rdelim = nil)
       self.params = params
-      super(statements, separators, ldelim, rdelim) # , rescue_block, ensure_block
+      super(statements, separators, ldelim, rdelim)
     end
     
     def nodes
@@ -15,16 +14,30 @@ module Ruby
     end
   end
   
-  class NamedBlock < DelimitedList
-    child_accessor :identifier
+  class NamedBlock < Block
+    child_accessor :identifier, :child_blocks
     
-    def initialize(identifier, statements, separators = nil, ldelim = nil, rdelim = nil)
+    def initialize(identifier, statements, separators = nil, params = nil, ldelim = nil, rdelim = nil)
       self.identifier = identifier
-      super(statements, separators, ldelim, rdelim)
+      self.child_blocks = []
+      super(statements, separators, params, ldelim, rdelim)
     end
     
     def nodes
       [identifier, super].flatten.compact
+    end
+  end
+  
+  class ChainedBlock < NamedBlock
+    child_accessor :blocks
+
+    def initialize(identifier, blocks, statements, separators = nil, params = nil, ldelim = nil, rdelim = nil)
+      self.blocks = blocks || []
+      super(identifier, statements, separators, params, ldelim, rdelim)
+    end
+    
+    def nodes
+      [identifier, params, ldelim, contents, blocks, rdelim].flatten.compact
     end
   end
 end

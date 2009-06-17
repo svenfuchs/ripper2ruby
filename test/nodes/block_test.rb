@@ -20,7 +20,7 @@ class BlockTest < Test::Unit::TestCase
     assert_equal src, call.to_ruby
     assert_equal src, call.src
   end
-
+  
   define_method :"test method call block with semicolon delimited statements" do
     src = "t do ;; ;foo ; ;;bar; ; end"
     call = build(src).first
@@ -75,17 +75,15 @@ class BlockTest < Test::Unit::TestCase
     assert_equal src, block.to_ruby
   end
   
-  # TODO
-  #
-  # define_method :"test: a begin block with a rescue blocks" do
-  #   src = "begin foo\n rescue A, B => e\n bar\n end"
-  #   block = build(src).first
-  #   assert_equal src, block.to_ruby
-  # end
-  # 
-  # define_method :"test: a begin block with rescue and ensure blocks" do
-  #   src = "begin foo\n rescue A, B => e\n bar\nensure\nbaz\n end"
-  #   block = build(src).first
-  #   assert_equal src, block.to_ruby
-  # end
+  define_method :"test: a begin block with a rescue blocks" do
+    src = "begin foo\n rescue A, B => e\n bar\n end"
+    block = build(src).first
+    assert_equal src, block.to_ruby
+  end
+  
+  define_method :"test: a begin block with rescue and ensure blocks" do
+    src = "begin foo\n rescue A, B => e\n bar\nensure\nbaz\n end"
+    block = build(src).first
+    assert_equal src, block.to_ruby
+  end
 end

@@ -10,6 +10,17 @@ module Ruby
       Block.new(statements, self.separators + separators, params, ldelim, rdelim)
     end
     
+    def to_named_block(identifier = nil, separators = [], params = nil, ldelim = nil, rdelim = nil)
+      NamedBlock.new(identifier = nil, statements, self.separators + separators, params, ldelim, rdelim)
+    end
+    
+    def to_chained_block(identifier = nil, blocks = nil, separators = [], params = nil, ldelim = nil, rdelim = nil)
+      ldelim ||= self.ldelim
+      rdelim ||= self.rdelim
+      identifier ||= self.identifier if respond_to?(:identifier)
+      ChainedBlock.new(identifier, blocks, statements, self.separators + separators, params, ldelim, rdelim)
+    end
+    
     def to_program(src, filename)
       Program.new(src, filename, elements, separators)
     end
