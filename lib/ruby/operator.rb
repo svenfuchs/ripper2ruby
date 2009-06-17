@@ -2,10 +2,10 @@ require 'ruby/node'
 
 module Ruby
   class Unary < Node
-    attr_accessor :operator, :operand
+    child_accessor :operator, :operand
 
     def initialize(operator, operand)
-      self.operator = operator
+      self.operator = operator or raise "operator can not be nil"
       self.operand = operand
     end
     
@@ -15,10 +15,10 @@ module Ruby
   end
   
   class Binary < Node
-    attr_accessor :operator, :left, :right
+    child_accessor :operator, :left, :right
 
     def initialize(operator, left, right)
-      self.operator = operator
+      self.operator = operator or raise "operator can not be nil"
       self.left = left 
       self.right = right
     end
@@ -29,7 +29,7 @@ module Ruby
   end
   
   class IfOp < Node
-    attr_accessor :condition, :left, :right, :operators
+    child_accessor :condition, :left, :right, :operators
 
     def initialize(condition, left, right, operators)
       self.condition = condition

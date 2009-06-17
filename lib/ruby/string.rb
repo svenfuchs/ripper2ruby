@@ -21,6 +21,9 @@ module Ruby
     end
   end
   
+  class Regexp < String
+  end
+  
   class ExecutableString < String
   end
 end

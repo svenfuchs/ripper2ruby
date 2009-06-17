@@ -16,6 +16,7 @@ module Ruby
       end
       
       def to_ruby(nodes, include_whitespace = false)
+        nodes = nodes.compact
         first = nodes.shift
         (first ? first.to_ruby(include_whitespace) : '') +
         nodes.map { |node| node.to_ruby(true) }.join

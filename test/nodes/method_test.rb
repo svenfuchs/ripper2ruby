@@ -27,4 +27,10 @@ class MethodTest < Test::Unit::TestCase
     method = build(src).statements.first
     assert_equal src, method.to_ruby
   end
+  
+  define_method :"test method body rescue and ensure block" do
+    src = "def a(b, c)\n  d\nrescue A\n e\nensure\nb\nend"
+    method = build(src).statements.first
+    assert_equal src, method.to_ruby
+  end
 end

@@ -44,9 +44,5 @@ module Erb
     def to_whitespace(str)
       str.gsub(/[^\s;]/, ' ')
     end
-    
-    # def content_dump(string)
-    #   string.split("\n").map { |s| to_whitespace(s) }.join("\n")
-    # end
   end
 end

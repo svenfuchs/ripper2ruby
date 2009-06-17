@@ -10,13 +10,9 @@ class Ripper
       end
       
       def push(token)
-        # return if token.comment?
         while !token.whitespace? && last && last.whitespace?
           token.whitespace = _pop.value + token.whitespace
         end
-        # while !token.comment? && last && last.comment?
-        #   token.comments.unshift(_pop)
-        # end
         self << token
         token
       end

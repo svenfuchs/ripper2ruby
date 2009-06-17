@@ -39,17 +39,6 @@ class OperatorTest < Test::Unit::TestCase
     assert_operator(expr, src, options)
   end
   
-  def assert_ternary_operator(src, options = {})
-    expr = build(src).first
-
-    assert_equal Ruby::IfOp, expr.class
-    assert_equal 1, expr.condition.value
-    assert_equal 2, expr.left.value
-    assert_equal 3, expr.right.value
-      
-    assert_operator(expr, src, options)
-  end
-  
   # UNARY
   
   define_method :'test operator: !1 (!)' do
@@ -191,8 +180,12 @@ class OperatorTest < Test::Unit::TestCase
   
   # TERNARY
   
-  define_method :'test ternary: 1 ? 2 : 3 (ifop)' do
-    assert_ternary_operator '1 ? 2 : 3'
+  define_method :'test ternary: 1 == 1 ? 2 : 3 (ifop)' do
+    src = '1 == 1 ? 2 : 3'
+    expr = build(src).first
+
+    assert_equal Ruby::IfOp, expr.class
+    assert_equal src, build(src).to_ruby
   end
   
   define_method :'test ternary: ((1) ? 2 : (3)) (ifop, parentheses)' do

@@ -3,12 +3,17 @@ class Ripper
     module Assignment
       # simple assignments, e.g. a = b
       def on_assign(left, right)
-        Ruby::Assignment.new(left, right, pop_token(:@op, :value => '='))
+        Ruby::Assignment.new(left, right, pop_token(:@op, :value => '=', :pass => true))
       end
 
       # mass assignments, e.g. a, b = c, d
       def on_massign(left, right)
-        Ruby::Assignment.new(left, right, pop_token(:@op, :value => '='))
+        Ruby::Assignment.new(left, right, pop_token(:@op, :value => '=', :pass => true))
+      end
+      
+      # operator assignment (?), e.g. a ||= b; a += 1
+      def on_opassign(left, operator, right)
+        Ruby::Assignment.new(left, right, pop_token(:@op, :value => operator.value, :pass => true))
       end
 
       def on_mlhs_new

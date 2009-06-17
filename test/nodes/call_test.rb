@@ -119,6 +119,13 @@ class CallTest < Test::Unit::TestCase
     assert_equal src, call.src
   end
   
+  define_method :"test call with nested call/parantheses" do
+    src = "a(:a, b(:b))"
+    call = build(src).first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
   define_method :"test call on no target without arguments but a block" do
     src = "t do |a, b, *c|\nfoo\nend"
     call = build(src).first
@@ -162,6 +169,13 @@ class CallTest < Test::Unit::TestCase
   
   define_method :"test call super without arguments" do
     src = "super"
+    call = build(src).statements.first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
+  define_method :"test call super with arguments" do
+    src = "super(:foo)"
     call = build(src).statements.first
     assert_equal src, call.to_ruby
     assert_equal src, call.src
@@ -243,7 +257,7 @@ class CallTest < Test::Unit::TestCase
     assert_equal src, call.to_ruby
     assert_equal src, call.src
   end
-
+  
   define_method :'test begin routine' do
     src = "BEGIN { foo }"
     expr = build(src).statements.first

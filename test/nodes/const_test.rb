@@ -19,17 +19,33 @@ class ConstTest < Test::Unit::TestCase
     assert_equal src, identifier.src
   end
   
+  define_method :"test a const path with toplevel const ref" do
+    src = '::A::B'
+    identifier = build(src).first
+    assert identifier.is_a?(Ruby::Const)
+    assert_equal src, identifier.to_ruby
+    assert_equal src, identifier.src
+  end
+  
   define_method :"test a class" do
     src = "class A::B < C ; end"
     const = build(src).first
-
+  
     assert_equal Ruby::Class, const.class
     assert_equal 'B', const.const.token
     assert_equal 'C', const.super_class.token
     assert_equal src, const.to_ruby
     assert_equal src, const.src
   end
-
+  
+  define_method :"test a metaclass" do
+    src = "class << self; self; end"
+    const = build(src).first
+  
+    assert_equal src, const.to_ruby
+    assert_equal src, const.src
+  end
+  
   define_method :"test a module" do
     src = "module A::B ; end"
     const = build(src).first

@@ -66,4 +66,18 @@ class StringTest < Test::Unit::TestCase
     assert_equal "foo", string.value
     assert_equal src, string.to_ruby
   end
+
+  define_method :"test an percent-x delimited string" do
+    src = "/foo/"
+    string = build(src).first
+    assert string.is_a?(Ruby::Regexp)
+    assert_equal src, string.to_ruby
+  end
+
+  define_method :"test an percent-x delimited string" do
+    src = "%r(foo)"
+    string = build(src).first
+    assert string.is_a?(Ruby::Regexp)
+    assert_equal src, string.to_ruby
+  end
 end

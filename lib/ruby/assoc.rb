@@ -11,7 +11,7 @@ module Ruby
     end
     
     def nodes
-      [key, operator, value]
+      [key, operator, value].compact
     end
   end
 end

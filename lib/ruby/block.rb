@@ -15,11 +15,10 @@ module Ruby
   end
   
   class NamedBlock < Block
-    child_accessor :identifier, :child_blocks
+    child_accessor :identifier
     
     def initialize(identifier, statements, separators = nil, params = nil, ldelim = nil, rdelim = nil)
       self.identifier = identifier
-      self.child_blocks = []
       super(statements, separators, params, ldelim, rdelim)
     end
     

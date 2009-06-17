@@ -5,11 +5,7 @@ module Ruby
     child_accessor :namespace, :separator
     
     def src_pos(include_whitespace = false)
-      namespace ? namespace.src_pos(include_whitespace) : super
-    end
-    
-    def position
-      namespace ? namespace.position : super
+      @src_pos || nodes.each { |n| return n.src_pos if n } and super
     end
     
     def whitespace

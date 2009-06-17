@@ -11,6 +11,11 @@ class Ripper
         string
       end
 
+      def on_regexp_literal(string, rdelim)
+        string.rdelim = pop_token(:@regexp_end)
+        string
+      end
+
       def on_string_add(string, content)
         string << content and string
       end
@@ -24,10 +29,11 @@ class Ripper
       end
 
       def on_xstring_new(*args)
-        ldelim = pop(:@symbeg, :@backtick, :max => 1).first
-        case ldelim.type
-        when :@symbeg
+        ldelim = pop(:@symbeg, :@backtick, :@regexp_beg, :max => 1).first
+        if ldelim.type == :@symbeg
           Ruby::DynaSymbol.new(build_token(ldelim))
+        elsif ldelim.type == :@regexp_beg
+          Ruby::Regexp.new(build_token(ldelim))
         else
           Ruby::ExecutableString.new(build_token(ldelim))
         end

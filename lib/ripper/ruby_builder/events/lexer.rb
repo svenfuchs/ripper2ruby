@@ -24,6 +24,14 @@ class Ripper
       def on_tstring_end(*args)
         push(super)
       end
+      
+      def on_regexp_beg(*args)
+        push(super)
+      end
+      
+      def on_regexp_end(*args)
+        push(super)
+      end
 
       def on_lparen(*args)
         push(super)

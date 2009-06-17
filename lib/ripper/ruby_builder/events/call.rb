@@ -23,6 +23,11 @@ class Ripper
         identifier = pop_token(:@super).to_identifier
         Ruby::Call.new(nil, nil, identifier)
       end
+      
+      def on_super(args)
+        identifier = pop_token(:@super).to_identifier
+        Ruby::Call.new(nil, nil, identifier, args)
+      end
 
       def on_yield(args)
         identifier = pop_token(:@yield).to_identifier
