@@ -15,12 +15,12 @@ module Ruby
     end
   end
   
-  class Arg < Node
-    child_accessor :arg, :ldelim
+  class Arg < DelimitedNode
+    child_accessor :arg
     
     def initialize(arg, ldelim = nil)
       self.arg = arg
-      self.ldelim = ldelim
+      super(ldelim)
     end
     
     def nodes

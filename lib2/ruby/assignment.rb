@@ -8,7 +8,6 @@ module Ruby
       self.left = left
       self.right = right
       self.operator = operator
-      super(left.position)
     end
     
     def nodes
@@ -16,25 +15,18 @@ module Ruby
     end
   end
 
-  class MultiAssignment < Node
+  class MultiAssignment < DelimitedList
     attr_accessor :kind
-    child_accessor :refs, :separators, :ldelim, :rdelim, :star
+    child_accessor :star
 
-    def initialize(kind, ldelim = nil, rdelim = nil, separators = [], star = nil, refs = [])
+    def initialize(kind, elements = [], separators = [], ldelim = nil, rdelim = nil, star = nil)
       self.kind = kind
-      self.ldelim = ldelim
-      self.rdelim = rdelim
       self.star = star
-      self.separators = separators
-      self.refs = refs
+      super(elements, separators, ldelim, rdelim)
     end
     
     def nodes
-      [ldelim, star, zip(separators), rdelim].flatten.compact
-    end
-
-    def method_missing(method, *args, &block)
-      refs.respond_to?(method) ? refs.send(method, *args, &block) : super
+      [ldelim, star, contents, rdelim].flatten.compact
     end
   end
 end

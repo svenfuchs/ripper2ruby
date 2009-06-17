@@ -1,12 +1,12 @@
 require 'ruby/string'
 
 module Ruby
-  class Symbol < Node
-    child_accessor :identifier, :ldelim
+  class Symbol < DelimitedNode
+    child_accessor :identifier
     
     def initialize(identifier, ldelim)
       self.identifier = identifier
-      self.ldelim = ldelim
+      super(ldelim)
     end
     
     def value

@@ -4,22 +4,21 @@ class Ripper
       def on_case(args, when_block)
         rdelim = pop_token(:@end)
         separators = pop_tokens(:@semicolon)
-        ldelim = pop_token(:@case)
+        identifier = pop_token(:@case)
 
         args = Ruby::Statements.new(args) unless args.is_a?(Ruby::Statements)
         args = Ruby::Statements.new(args, separators) unless separators.empty?
 
-        Ruby::Case.new(args, when_block, ldelim, rdelim)
+        Ruby::Case.new(identifier, args, when_block, rdelim)
       end
       
       def on_when(expression, statements, next_block)
-        rdelim = pop_token(:@then)
+        ldelim = pop_token(:@then)
+        identifier = pop_token(:@when)
         # separators = pop_tokens(:@semicolon)
-        ldelim = pop_token(:@when)
-        
         # expression = Ruby::Statements.new(expression, separators) unless separators.empty?
 
-        Ruby::When.new(expression, Ruby::Block.new(statements), next_block, ldelim, rdelim)
+        Ruby::When.new(identifier, expression, statements, ldelim, next_block)
       end
     end
   end

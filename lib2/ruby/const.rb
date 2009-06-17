@@ -25,14 +25,13 @@ module Ruby
     end
   end
   
-  class Module < Node
-    child_accessor :const, :body, :ldelim, :rdelim
+  class Module < DelimitedNode
+    child_accessor :const, :body
 
     def initialize(const, body, ldelim, rdelim)
       self.const = const
       self.body = body
-      self.ldelim = ldelim
-      self.rdelim = rdelim
+      super(ldelim, rdelim)
     end
 
     def nodes
@@ -40,16 +39,15 @@ module Ruby
     end
   end
 
-  class Class < Node
-    child_accessor :const, :operator, :super_class, :body, :ldelim, :rdelim
+  class Class < DelimitedNode
+    child_accessor :const, :operator, :super_class, :body
 
     def initialize(const, operator, super_class, body, ldelim, rdelim)
       self.const = const
       self.operator = operator
       self.super_class = super_class
       self.body = body
-      self.ldelim = ldelim
-      self.rdelim = rdelim
+      super(ldelim, rdelim)
     end
 
     def nodes

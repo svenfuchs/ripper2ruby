@@ -75,6 +75,7 @@ a, b = c,d
 a, b = c, d
 a, b = *c
 
+a, b = c, d
 a, \n b = \n c, \n d
 
 # operators

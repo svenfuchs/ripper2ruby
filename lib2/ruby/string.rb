@@ -1,13 +1,9 @@
 require 'ruby/node'
 
 module Ruby
-  class String < Node
-    child_accessor :contents, :ldelim, :rdelim
-    
-    def initialize(ldelim, rdelim = nil)
-      self.ldelim = ldelim
-      self.rdelim = rdelim
-      self.contents = []
+  class String < DelimitedList
+    def initialize(ldelim = nil, rdelim = nil)
+      super(nil, nil, ldelim, rdelim)
     end
     
     def value
@@ -16,14 +12,6 @@ module Ruby
     
     def src_pos(include_whitespace = false)
       ldelim.src_pos(include_whitespace)
-    end
-    
-    def nodes
-      [ldelim, contents, rdelim].flatten.compact
-    end
-    
-    def method_missing(method, *args, &block)
-      contents.respond_to?(method) ? contents.send(method, *args, &block) : super
     end
   end
 

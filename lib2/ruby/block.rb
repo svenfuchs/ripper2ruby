@@ -15,12 +15,12 @@ module Ruby
     end
   end
   
-  class NamedBlock < Block
+  class NamedBlock < DelimitedList
     child_accessor :identifier
     
-    def initialize(identifier, statements, ldelim = nil, rdelim = nil)
+    def initialize(identifier, statements, separators = nil, ldelim = nil, rdelim = nil)
       self.identifier = identifier
-      super(statements, nil, nil, nil, ldelim, rdelim)
+      super(statements, separators, ldelim, rdelim)
     end
     
     def nodes

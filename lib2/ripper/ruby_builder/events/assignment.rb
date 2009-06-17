@@ -12,7 +12,7 @@ class Ripper
       end
 
       def on_mlhs_new
-        Ruby::MultiAssignment.new(:left, pop_token(:@lparen))
+        Ruby::MultiAssignment.new(:left, nil, nil, pop_token(:@lparen))
       end
 
       def on_mlhs_add(assignment, ref)
@@ -30,11 +30,11 @@ class Ripper
       def on_mrhs_new
         separators = pop_tokens(:@comma).reverse
         star = pop_token(:@op, :value => '*')
-        Ruby::MultiAssignment.new(:right, nil, nil, separators, star)
+        Ruby::MultiAssignment.new(:right, nil, separators, nil, nil, star)
       end
 
       def on_mrhs_new_from_args(args)
-        Ruby::MultiAssignment.new(:right, nil, nil, args.separators, nil, args.elements)
+        Ruby::MultiAssignment.new(:right, args.elements, args.separators)
       end
 
       def on_mrhs_add(assignment, ref)

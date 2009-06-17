@@ -7,40 +7,38 @@ class Ripper
         args
       end
       
-      def build_if_block(statements)
-        Ruby::Block.new(statements, nil, nil, pop_token(:@then))
-      end
-
-      def on_if(args, statements, else_block)
-        args = update_args(args)
-        if_block = build_if_block(statements)
-        Ruby::If.new(args, if_block, else_block, pop_token(:@if), pop_token(:@end))
-      end
-
-      def on_unless(args, statements, else_block)
-        args = update_args(args)
-        if_block = build_if_block(statements)
-        Ruby::Unless.new(args, if_block, else_block, pop_token(:@unless), pop_token(:@end))
+      def build_if(klass, type, expression, statements, else_block)
+        expression = update_args(expression)
+        rdelim = pop_token(:@end)
+        ldelim = pop_token(:@then)
+        identifier = pop_token(type)
+        klass.new(identifier, expression, statements, ldelim, rdelim, else_block)
       end
       
-      def on_elsif(args, statements, else_block)
-        args = update_args(args)
-        if_block = build_if_block(statements)
-        Ruby::If.new(args, if_block, else_block, pop_token(:@elsif), pop_token(:@end))
+      def on_if(expression, statements, else_block)
+        build_if(Ruby::If, :@if, expression, statements, else_block)
+      end
+
+      def on_unless(expression, statements, else_block)
+        build_if(Ruby::Unless, :@unless, expression, statements, else_block)
+      end
+      
+      def on_elsif(expression, statements, else_block)
+        build_if(Ruby::If, :@elsif, expression, statements, else_block)
       end
       
       def on_else(statements)
-        block = Ruby::Else.new(statements, nil, nil, pop_token(:@else))
+        block = Ruby::Else.new(pop_token(:@else), statements)
       end
       
-      def on_if_mod(args, statement)
-        args = Ruby::ArgsList.new(args) unless args.is_a?(Ruby::List)
-        Ruby::IfMod.new(args, statement, pop_token(:@if))
+      def on_if_mod(expression, statement)
+        expression = update_args(expression)
+        Ruby::IfMod.new(pop_token(:@if), expression, statement)
       end
       
-      def on_unless_mod(args, statement)
-        args = Ruby::ArgsList.new(args) unless args.is_a?(Ruby::List)
-        Ruby::UnlessMod.new(args, statement, pop_token(:@unless))
+      def on_unless_mod(expression, statement)
+        expression = update_args(expression)
+        Ruby::UnlessMod.new(pop_token(:@unless), expression, statement)
       end
     end
   end

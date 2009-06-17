@@ -18,7 +18,7 @@ class Ripper
                   :@while, :@until, :@for, :@if, :@elsif, :@else, :@unless, :@case, :@when]
     
     include Lexer, Statements, Const, Method, Call, Block, Args, Assignment, Operator,
-            If, Case, For, While, Until, Identifier, Literal, String, Symbol, Array, Hash
+            If, Case, For, While, Identifier, Literal, String, Symbol, Array, Hash
 
     attr_reader :src, :filename, :stack
 

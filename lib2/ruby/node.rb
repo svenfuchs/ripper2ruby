@@ -133,4 +133,23 @@ module Ruby
         children.each { |c| c.send(:update_positions, row, column, offset_column) }
       end
   end
+  
+  class DelimitedNode < Node
+    child_accessor :ldelim, :rdelim
+    
+    def initialize(ldelim = nil, rdelim = nil, position = nil, whitespace = nil)
+      self.ldelim = ldelim
+      self.rdelim = rdelim
+      super(position, whitespace)
+    end
+  end
+  
+  class NamedNode < DelimitedNode
+    child_accessor :identifier
+    
+    def initialize(identifier, ldelim = nil, rdelim = nil, position = nil, whitespace = nil)
+      self.identifier = identifier
+      super(ldelim, rdelim, position, whitespace)
+    end
+  end
 end
