@@ -4,74 +4,65 @@ require File.dirname(__FILE__) + '/../test_helper'
 # begin statement end while expression
 # statement while expression
 
-class RipperToRubyWhileTest < Test::Unit::TestCase
-  include TestRubyBuilderHelper
+class WhileTest < Test::Unit::TestCase
+  include TestHelper
 
   define_method :'test while block, semicolon separated' do
-    src = "while true; false end"
-    expr = build(src).statements.first
-    assert_equal src, expr.to_ruby
+    assert_compiles_to_original "while true; false end"
+    assert_compiles_to_original "while (true); false end"
+    assert_compiles_to_original "while (true;true); false end"
   end
 
   define_method :'test while block, newline separated' do
-    src = "while true\n false end"
-    expr = build(src).statements.first
-    assert_equal src, expr.to_ruby
+    assert_compiles_to_original "while true\n false end"
+    assert_compiles_to_original "while (true)\n false end"
   end
 
   define_method :'test begin do while block, semicolon separated' do
-    src = "begin; false; end while true"
-    expr = build(src).statements.first
-    assert_equal src, expr.to_ruby
+    assert_compiles_to_original "begin; false; end while true"
+    assert_compiles_to_original "begin; false; end while (true)"
   end
 
   define_method :'test begin do while block, newline separated' do
-    src = "begin\n false\n end while true"
-    expr = build(src).statements.first
-    assert_equal src, expr.to_ruby
+    assert_compiles_to_original "begin\n false\n end while true"
+    assert_compiles_to_original "begin\n false\n end while (true)"
   end
   
   define_method :'test while modifier' do
-    src = "foo while true"
-    expr = build(src).statements.first
-    assert_equal src, expr.to_ruby
+    assert_compiles_to_original "foo while true"
+    assert_compiles_to_original "foo while (true)"
   end
 end
+
 
 # until expression; statement; end
 # begin statement end until expression
 # statement until expression
 
-class RipperToRubyUntilTest < Test::Unit::TestCase
-  include TestRubyBuilderHelper
+class UntilTest < Test::Unit::TestCase
+  include TestHelper
 
   define_method :'test until block, semicolon separated' do
-    src = "until true; false end"
-    expr = build(src).statements.first
-    assert_equal src, expr.to_ruby
+    assert_compiles_to_original "until true; false end"
+    assert_compiles_to_original "until (true); false end"
+    assert_compiles_to_original "until (true;); false end"
   end
 
   define_method :'test until block, newline separated' do
-    src = "until true\n false end"
-    expr = build(src).statements.first
-    assert_equal src, expr.to_ruby
+    assert_compiles_to_original "until true\n false end"
+    assert_compiles_to_original "until (true)\n false end"
   end
   
   define_method :'test begin do until block, semicolon separated' do
-    src = "begin; false; end until true"
-    expr = build(src).statements.first
-    assert_equal src, expr.to_ruby
+    assert_compiles_to_original "begin; false; end until true"
   end
 
   define_method :'test begin do until block, newline separated' do
-    src = "begin\n false\n end until true"
-    expr = build(src).statements.first
-    assert_equal src, expr.to_ruby
+    assert_compiles_to_original "begin\n false\n end until true"
   end
   
   define_method :'test until modifier' do
-    src = "foo until true"
-    expr = build(src).statements.first
-    assert_equal src, expr.to_ruby
+    assert_compiles_to_original "foo until true"
+    assert_compiles_to_original "foo until (true)"
   end
 end

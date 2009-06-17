@@ -1,32 +1,24 @@
-require 'ruby/identifier'
+require 'ruby/string'
 
 module Ruby
-  class Symbol < Identifier
-    child_accessor :ldelim
+  class Symbol < DelimitedNode
+    child_accessor :identifier
     
-    def initialize(token, ldelim)
-      self.ldelim = ldelim
-      super(token)
+    def initialize(identifier, ldelim)
+      self.identifier = identifier
+      super(ldelim)
     end
     
     def value
-      token.to_sym
-    end
-    
-    def whitespace # FIXME remove these ...
-      ldelim.whitespace
-    end
-    
-    def whitespace=(whitespace) # FIXME remove these ...
-      ldelim.whitespace = whitespace
-    end
-    
-    def to_ruby(include_whitespace = false)
-      ldelim.to_ruby(include_whitespace) + token
+      identifier.token.to_sym
     end
     
     def nodes
-      [ldelim]
+      [ldelim, identifier].compact
+    end
+    
+    def method_missing(method, *args, &block)
+      identifier.respond_to?(method) ? identifier.send(method, *args, &block) : super
     end
   end
   

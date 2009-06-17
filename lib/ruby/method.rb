@@ -13,7 +13,7 @@ module Ruby
     end
     
     def nodes
-      [ldelim, identifier, params, body, rdelim]
+      [ldelim, identifier, params, body, rdelim].compact
     end
   end
 end

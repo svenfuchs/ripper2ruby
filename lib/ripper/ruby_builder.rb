@@ -3,7 +3,7 @@ require 'ruby'
 require 'ripper/ruby_builder/token'
 require 'ripper/ruby_builder/stack'
 
-Dir[File.dirname(__FILE__) + '/ruby_builder/callbacks/*.rb'].each { |file| require file }
+Dir[File.dirname(__FILE__) + '/ruby_builder/events/*.rb'].each { |file| require file }
 
 class Ripper
   class RubyBuilder < Ripper::SexpBuilder
@@ -14,9 +14,11 @@ class Ripper
     end
 
     WHITESPACE = [:@sp, :@nl, :@ignored_nl]
-
-    include Scanner, Core, Body, Method, If, Case, While, For, Call, Block, Params,
-            String, Symbol, Hash, Array, Args, Assignment, Operator
+    OPENERS    = [:@lparen, :@lbracket, :@lbrace, :@class, :@module, :@def, :@begin,
+                  :@while, :@until, :@for, :@if, :@elsif, :@else, :@unless, :@case, :@when]
+    
+    include Lexer, Statements, Const, Method, Call, Block, Args, Assignment, Operator,
+            If, Case, For, While, Identifier, Literal, String, Symbol, Array, Hash
 
     attr_reader :src, :filename, :stack
 
@@ -25,43 +27,38 @@ class Ripper
       @filename = filename
       @whitespace = ''
       @stack = []
-      @_stack_ignore_stack = [[]]
       @stack = Stack.new
       super
     end
 
-    def position
-      [lineno - 1, column]
-    end
-
-    def push(sexp)
-      stack.push(Token.new(*sexp))
-    end
-
     protected
 
-      def build_identifier(token)
+      def position
+        [lineno - 1, column]
       end
 
-      def build_token(token)
-        Ruby::Token.new(token.value, token.position, token.whitespace) if token
+      def push(sexp)
+        stack.push(Token.new(*sexp))
       end
 
       def pop(*args)
-        stack.pop(*args)
+        options = args.last.is_a?(::Hash) ? args.pop : {}
+        if types = options[:ignore]
+          stack_ignore(types) { stack.pop(*args << options) }
+        else
+          stack.pop(*args << options)
+        end
       end
-
+      
       def pop_token(*types)
         options = types.last.is_a?(::Hash) ? types.pop : {}
         options[:max] = 1
-        pop_tokens(*types, options).first
+        pop_tokens(*types << options).first
       end
 
       def pop_tokens(*types)
         options = types.last.is_a?(::Hash) ? types.pop : {}
-        stack_ignore(*WHITESPACE) do
-          types.map { |type| pop(type, options).map { |token| build_token(token) } }.flatten.compact
-        end
+        types.map { |type| pop(type, options).map { |token| build_token(token) } }.flatten.compact
       end
 
       def pop_whitespace
@@ -70,6 +67,10 @@ class Ripper
 
       def stack_ignore(*types, &block)
         stack.ignore_types(*types, &block)
+      end
+      
+      def build_token(token)
+        Ruby::Token.new(token.value, token.position, token.whitespace) if token
       end
   end
 end

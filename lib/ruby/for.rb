@@ -1,20 +1,18 @@
-require 'ruby/node'
+require 'ruby/statements'
 
 module Ruby
-  class For < Body
-    child_accessor :variable, :operator, :range, :ldelim, :rdelim
+  class For < Statements
+    child_accessor :variable, :operator, :range
     
-    def initialize(statements, variable, operator, range, ldelim = nil, rdelim = nil)
+    def initialize(variable, operator, range, statements, separators, ldelim = nil, rdelim = nil)
       self.variable = variable
       self.operator = operator
       self.range = range
-      self.ldelim = ldelim
-      self.rdelim = rdelim
-      super(statements)
+      super(statements, separators, ldelim, rdelim)
     end
       
     def nodes
-      [ldelim, variable, operator, range, super, rdelim].flatten.compact
+      [ldelim, variable, operator, range, contents, rdelim].flatten.compact
     end
   end
 end

@@ -1,36 +1,32 @@
 require 'ruby/node'
 
 module Ruby
-  class While < Body
-    child_accessor :expression, :ldelim, :rdelim
+  class While < NamedBlock
+    child_accessor :expression
     
-    def initialize(expression, statements, ldelim = nil, rdelim = nil)
+    def initialize(identifier, expression, statements, separators, rdelim = nil)
       self.expression = expression
-      self.ldelim = ldelim
-      self.rdelim = rdelim
-      super(statements)
+      super(identifier, statements, separators, nil, rdelim)
     end
       
     def nodes
-      [ldelim, expression, super, rdelim].flatten.compact
+      [identifier, expression, contents, rdelim].flatten.compact
+    end
+  end
+  
+  class WhileMod < NamedBlock
+    child_accessor :expression
+    
+    def initialize(identifier, expression, statements)
+      self.expression = expression
+      super(identifier, statements)
+    end
+      
+    def nodes
+      [contents, identifier, expression].flatten.compact
     end
   end
   
   class Until < While; end
-
-  class WhileMod < Node
-    child_accessor :expression, :statement, :ldelim
-    
-    def initialize(expression, statement, ldelim)
-      self.ldelim = ldelim
-      self.expression = expression
-      self.statement = statement
-    end
-      
-    def nodes
-      [statement, ldelim, expression].compact
-    end
-  end
-  
   class UntilMod < WhileMod; end
 end

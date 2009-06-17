@@ -1,12 +1,12 @@
 require File.dirname(__FILE__) + '/test_helper'
 
-class RipperToRubyBuilderTest < Test::Unit::TestCase
+class BuilderTest < Test::Unit::TestCase
   def setup
     @builder = Ripper::RubyBuilder.new('')
-    @builder.push([:@lbrace])
-    @builder.push([:@comma])
-    @builder.push([:@comma])
-    @builder.push([:@rbrace])
+    @builder.send(:push, [:@lbrace])
+    @builder.send(:push, [:@comma])
+    @builder.send(:push, [:@comma])
+    @builder.send(:push, [:@rbrace])
   end
 
   define_method "test pop: pops off elements until it finds a token with the requested type" do

@@ -1,36 +1,9 @@
-require 'ruby/node'
+require 'ruby/list'
 
 module Ruby
-  class ArgsList < Node
-    child_accessor :args, :separators, :ldelim, :rdelim
-
-    def initialize(args = nil, ldelim = nil, rdelim = nil)
-      self.args = Array(args) || []
-      self.separators = []
-      self.ldelim = ldelim
-      self.rdelim = rdelim
-    end
-    
-    # def <<(arg)
-    #   # unless arg.is_a?(Node)
-    #   #   arg = from_native(arg, nil, ' ') 
-    #   #   separators << from_native(' ,')
-    #   # end
-    #   super
-    # end
-      
-    def []=(ix, arg)
-      arg = from_native(arg, nil, self[ix].whitespace) unless arg.is_a?(Node)
-      arg.position = self[ix].position
-      super
-    end
-    
-    def pop
-      [args.pop, separators.pop]
-    end
-    
+  class ArgsList < DelimitedList
     def options
-      last.is_a?(Ruby::Hash) ? last : nil # TODO fix position!
+      last.is_a?(Ruby::Hash) ? last : nil
     end
     
     def set_option(key, value)
@@ -40,27 +13,22 @@ module Ruby
         options[key] = value
       end
     end
+  end
+  
+  class Arg < DelimitedNode
+    child_accessor :arg
+    
+    def initialize(arg, ldelim = nil)
+      self.arg = arg
+      super(ldelim)
+    end
     
     def nodes
-      [ldelim, zip(separators), rdelim].flatten.compact
+      [ldelim, arg].compact
     end
 
     def method_missing(method, *args, &block)
-      self.args.respond_to?(method) ? self.args.send(method, *args, &block) : super
-    end
-  end
-
-  class BlockArg < Node
-    child_accessor :arg
-    attr_accessor :ldelim
-    
-    def initialize(arg, ldelim)
-      self.arg = arg
-      self.ldelim = ldelim
-    end
-    
-    def nodes
-      [ldelim, arg]
+      arg.respond_to?(method) ? arg.send(method, *args, &block) : super
     end
   end
 end

@@ -4,7 +4,7 @@ require 'ripper/ruby_builder'
 require 'test/unit'
 require 'pp'
 
-module TestRubyBuilderHelper
+module TestHelper
   def sexp(src)
     Ripper::SexpBuilder.new(src).parse
   end
@@ -12,36 +12,10 @@ module TestRubyBuilderHelper
   def build(src)
     Ripper::RubyBuilder.build(src)
   end
-
-  def node(src, klass)
-    build(src).statement { |n| n.is_a?(klass) } or nil
-  end
-
-  def string(src)
-    node(src, Ruby::String)
-  end
-
-  def array(src)
-    node(src, Ruby::Array)
-  end
-
-  def hash(src)
-    node(src, Ruby::Hash)
-  end
-
-  def call(src)
-    node(src, Ruby::Call)
-  end
-
-  def arguments(src)
-    call(src).arguments
-  end
-
-  def method(src)
-    node(src, Ruby::Method)
-  end
-
-  def const(src)
-    node(src, Ruby::Const)
+  
+  def assert_compiles_to_original(src)
+    expr = build(src).statements.first
+    assert_equal src, expr.to_ruby
+    assert_equal src, expr.src
   end
 end

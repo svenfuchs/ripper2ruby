@@ -1,170 +1,153 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class RipperRubyBuilderCallTest < Test::Unit::TestCase
-  include TestRubyBuilderHelper
+class CallTest < Test::Unit::TestCase
+  include TestHelper
 
-  define_method :"test identifier on no target without arguments and without parantheses" do
-    # i'm not sure this is correct ... we're skipping :var_ref in ruby_builder
+  define_method :"test a variable" do
     src = "t"
-    program = build(src)
-    identifier = program.statements.first
+    variable = build(src).first
   
-    assert_equal 't', identifier.token
-  
-    assert identifier.root.is_a?(Ruby::Program)
-    assert_equal src, identifier.root.src
-    assert_equal src, identifier.to_ruby
-    assert_equal src, identifier.src
+    assert_equal Ruby::Variable, variable.class
+    assert_equal 't', variable.token
+    assert_equal src, variable.to_ruby
+    assert_equal src, variable.src
   end
   
   define_method :"test call on const target without arguments and without parantheses" do
     src = "I18n.t"
-    program = build(src)
-    call = program.statements.first
+    call = build(src).first
   
+    assert_equal Ruby::Call, call.class
     assert_equal 't', call.identifier.token
-    assert !call.arguments
-  
-    assert call.root.is_a?(Ruby::Program)
-    assert_equal src, call.root.src
+    assert_equal nil, call.arguments
     assert_equal src, call.to_ruby
     assert_equal src, call.src
   end
   
   define_method :"test call on const target without arguments and with parantheses" do
     src = "I18n.t()"
-    program = build(src)
-    call = program.statements.first
+    call = build(src).first
   
+    assert_equal Ruby::Call, call.class
     assert_equal 't', call.identifier.token
     assert call.arguments.empty?
-  
-    assert call.root.is_a?(Ruby::Program)
-    assert_equal src, call.root.src
     assert_equal src, call.to_ruby
     assert_equal src, call.src
   end
   
   define_method :'test method call: I18n.t("foo") (const target, double-quoted string, parantheses)' do
     src = "I18n.t('foo')"
-    program = build(src)
-    call = program.statements.first
-    arg = call.arguments.first
+    call = build(src).first
   
+    assert_equal Ruby::Call, call.class
     assert_equal 't', call.identifier.token
     assert_equal 'I18n', call.target.token
-    assert_equal 'foo', arg.first.value
+    assert_equal 'foo', call.arguments.first.value
   
-    assert call.root.is_a?(Ruby::Program)
-    assert_equal src, call.root.src
     assert_equal src, call.to_ruby
     assert_equal src, call.src
   end
   
   define_method :'test method call: I18n.t "foo" (const target, double-quoted string, no parantheses)' do
     src = "I18n.t 'foo'"
-    program = build(src)
-    call = program.statements.first
-    arg = call.arguments.first
+    call = build(src).first
   
+    assert_equal Ruby::Call, call.class
     assert_equal 't', call.identifier.token
     assert_equal 'I18n', call.target.token
-    assert_equal 'foo', arg.first.value
+    assert_equal 'foo', call.arguments.first.value
   
-    assert call.root.is_a?(Ruby::Program)
-    assert_equal src, call.root.src
     assert_equal src, call.to_ruby
     assert_equal src, call.src
   end
   
   define_method :'test method call: a.b(:foo) (var ref target, parantheses)' do
     src = "a.b(:foo)"
-    call = build(src).statements.first
+    call = build(src).first
   
+    assert_equal Ruby::Call, call.class
     assert_equal 'b', call.identifier.token
     assert_equal 'a', call.target.token
     assert_equal :foo, call.arguments.first.value
   
-    assert call.root.is_a?(Ruby::Program)
-    assert_equal src, call.root.src
     assert_equal src, call.to_ruby
     assert_equal src, call.src
   end
   
   define_method :"test call on no target without arguments but parantheses" do
-    src = "t('a', 'b')"
-    call = call(src)
+    src = "t('foo', 'bar')"
+    call = build(src).first
   
+    assert_equal Ruby::Call, call.class
     assert_equal 't', call.identifier.token
-    assert !call.target
+    assert_equal nil, call.target
+    assert_equal 'foo', call.arguments.first.value
   
-    assert_equal src, call.root.src
     assert_equal src, call.to_ruby
     assert_equal src, call.src
   end
   
   define_method :"test two method calls: t('foo'); t 'bar' (no target)" do
     src = "t('foo', 'bar'); t 'baz'"
-    calls = build(src).statements.map {|s| s.statement}[1..2] # TODO wtf, why's there an empty statement?
-
-    assert !calls[0].target
-    assert_equal 't', calls[0].identifier.token
-    assert_equal "t('foo', 'bar')", calls[0].to_ruby
-    assert_equal "t('foo', 'bar')", calls[0].src
+    program = build(src)
+    foo, baz = program.statements
   
-    assert !calls[1].target
-    assert_equal 't', calls[1].identifier.token
-    assert_equal "t 'baz'", calls[1].to_ruby
-    assert_equal "t 'baz'", calls[1].src
+    assert_equal Ruby::Call, foo.class
+    assert_equal nil, foo.target
+    assert_equal 't', foo.identifier.token
+    assert_equal "t('foo', 'bar')", foo.to_ruby
+    assert_equal "t('foo', 'bar')", foo.src
+  
+    assert_equal nil, baz.target
+    assert_equal 't', baz.identifier.token
+    assert_equal "t 'baz'", baz.to_ruby
+    assert_equal "t 'baz'", baz.src
+  
+    assert_equal src, program.to_ruby
+    assert_equal src, program.src
   end
   
   define_method :"test call on no target without arguments but parantheses" do
     src = "t()"
-    program = build(src)
-    call = program.statements.first
+    call = build(src).first
   
+    assert_equal Ruby::Call, call.class
+    assert_equal nil, call.target
     assert_equal 't', call.identifier.token
-    assert !call.target
   
-    assert call.root.is_a?(Ruby::Program)
-    assert_equal src, call.root.src
     assert_equal src, call.to_ruby
     assert_equal src, call.src
   end
   
   define_method :"test call on no target without arguments but a block" do
     src = "t do |a, b, *c|\nfoo\nend"
-    program = build(src)
-    call = program.statements.first
+    call = build(src).first
   
+    assert_equal Ruby::Call, call.class
     assert_equal 't', call.identifier.token
-    assert !call.target
+    assert_equal nil, call.target
     assert_equal Ruby::Block, call.block.class
   
-    assert call.root.is_a?(Ruby::Program)
-    assert_equal src, call.root.src
     assert_equal src, call.to_ruby
     assert_equal src, call.src
   end
   
   define_method :"test call on no target without arguments but a block" do
     src = "t do |(a, b), *c|\nfoo\nend"
-    program = build(src)
-    call = program.statements.first
+    call = build(src).first
   
+    assert_equal Ruby::Call, call.class
     assert_equal 't', call.identifier.token
-    assert !call.target
+    assert_equal nil, call.target
     assert_equal Ruby::Block, call.block.class
   
-    assert call.root.is_a?(Ruby::Program)
-    assert_equal src, call.root.src
     assert_equal src, call.to_ruby
     assert_equal src, call.src
   end
   
   define_method :"test call on no target with a block var" do
     src = "t(:foo, &block)"
-    call = build(src).statements.first
+    call = build(src).first
     
     assert_equal src, call.to_ruby
     assert_equal [0, 8], call.arguments[1].position
@@ -259,5 +242,11 @@ class RipperRubyBuilderCallTest < Test::Unit::TestCase
     call = build(src).statements.first
     assert_equal src, call.to_ruby
     assert_equal src, call.src
+  end
+
+  define_method :'test begin routine' do
+    src = "BEGIN { foo }"
+    expr = build(src).statements.first
+    assert_equal src, expr.to_ruby
   end
 end

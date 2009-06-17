@@ -12,13 +12,11 @@ module Ruby
         Ripper::RubyBuilder.new(src).parse.statements.first.tap do |node|
           node.position = position if position
           node.whitespace = whitespace if whitespace
-          # p whitespace
-          # p node.whitespace
         end
       end
     end
     
-    include Ansi
+    # include Ansi
     include Composite
 
     attr_writer :whitespace
@@ -37,7 +35,7 @@ module Ruby
     end
 
     def position
-      @position || nodes.each { |n| return n.position.dup if n } && nil # raise("position not set in #{self.class}")
+      @position || nodes.each { |n| return n.position.dup if n } && nil
     end
     
     def position=(position)
@@ -132,7 +130,26 @@ module Ruby
       def update_positions(row, column, offset_column)
         pos = self.position
         pos[1] += offset_column if pos && self.row == row && self.column > column
-        nodes.compact.each { |c| c.send(:update_positions, row, column, offset_column) }
+        children.each { |c| c.send(:update_positions, row, column, offset_column) }
       end
+  end
+  
+  class DelimitedNode < Node
+    child_accessor :ldelim, :rdelim
+    
+    def initialize(ldelim = nil, rdelim = nil, position = nil, whitespace = nil)
+      self.ldelim = ldelim
+      self.rdelim = rdelim
+      super(position, whitespace)
+    end
+  end
+  
+  class NamedNode < DelimitedNode
+    child_accessor :identifier
+    
+    def initialize(identifier, ldelim = nil, rdelim = nil, position = nil, whitespace = nil)
+      self.identifier = identifier
+      super(ldelim, rdelim, position, whitespace)
+    end
   end
 end

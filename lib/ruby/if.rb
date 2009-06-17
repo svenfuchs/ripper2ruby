@@ -1,36 +1,33 @@
 require 'ruby/node'
 
 module Ruby
-  class If < Node 
-    child_accessor :expression, :if_block, :else_block, :ldelim, :rdelim
-    
-    def initialize(expression, if_block, else_block = nil, ldelim = nil, rdelim = nil)
+  class If < NamedBlock 
+    child_accessor :expression, :else_block
+
+    def initialize(identifier, expression, statements = nil, ldelim = nil, rdelim = nil, else_block = nil)
       self.expression = expression
-      self.if_block = if_block
       self.else_block = else_block
-      self.ldelim = ldelim
-      self.rdelim = rdelim
+      super(identifier, statements, nil, ldelim, rdelim)
     end
       
     def nodes
-      [ldelim, expression, if_block, else_block, rdelim].compact
+      [identifier, expression, ldelim, contents, else_block, rdelim].flatten.compact
     end
   end
   
   class Unless < If; end
-  class Else < Block; end
+  class Else < NamedBlock; end
 
-  class IfMod < Node 
-    child_accessor :expression, :statement, :ldelim
+  class IfMod < NamedBlock 
+    child_accessor :expression
     
-    def initialize(expression, statement, ldelim)
-      self.ldelim = ldelim
+    def initialize(identifier, expression, statements)
       self.expression = expression
-      self.statement = statement
+      super(identifier, statements)
     end
       
     def nodes
-      [statement, ldelim, expression].compact
+      [contents, identifier, expression].flatten.compact
     end
   end
   

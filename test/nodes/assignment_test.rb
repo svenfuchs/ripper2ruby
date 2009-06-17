@@ -1,33 +1,39 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class RipperRubyBuilderAssignmentTest < Test::Unit::TestCase
-  include TestRubyBuilderHelper
+class AssignmentTest < Test::Unit::TestCase
+  include TestHelper
 
   define_method :'test assignment: a = b' do
     src = 'a = b'
-    assignment = node(src, Ruby::Assignment)
+    assignment = build(src).first
+    
     assert_equal Ruby::Assignment, assignment.class
     assert_equal 'a', assignment.left.token
     assert_equal 'b', assignment.right.token
+    
     assert_equal src, assignment.to_ruby
+    assert_equal src, assignment.src
   end
   
   define_method :'test assignment: a, b = c' do
     src = 'a, b = c'
-    assignment = node(src, Ruby::Assignment)
+    assignment = build(src).first
+    
     assert_equal Ruby::Assignment, assignment.class
     assert_equal Ruby::MultiAssignment, assignment.left.class
     assert_equal :left, assignment.left.kind
     assert_equal 'a', assignment.left[0].token
     assert_equal 'b', assignment.left[1].token
     assert_equal 'c', assignment.right.token
+    
     assert_equal src, assignment.to_ruby
+    assert_equal src, assignment.src
   end
   
   define_method :'test assignment: a, b = c, d' do
     src = 'a, b = c, d'
 
-    assignment = node(src, Ruby::Assignment)
+    assignment = build(src).first
     assert_equal Ruby::Assignment, assignment.class
 
     assert_equal Ruby::MultiAssignment, assignment.left.class
@@ -41,11 +47,12 @@ class RipperRubyBuilderAssignmentTest < Test::Unit::TestCase
     assert_equal 'd', assignment.right[1].token
 
     assert_equal src, assignment.to_ruby
+    assert_equal src, assignment.src
   end
   
   define_method :'test assignment: a, b = *c' do
     src = 'a, b = *c'
-    assignment = node(src, Ruby::Assignment)
+    assignment = build(src).first
     assert_equal Ruby::Assignment, assignment.class
 
     assert_equal Ruby::MultiAssignment, assignment.left.class
@@ -57,6 +64,8 @@ class RipperRubyBuilderAssignmentTest < Test::Unit::TestCase
     assert_equal :right, assignment.right.kind
     assert_equal '*', assignment.right.star.token
     assert_equal 'c', assignment.right[0].token
+
     assert_equal src, assignment.to_ruby
+    assert_equal src, assignment.src
   end
 end

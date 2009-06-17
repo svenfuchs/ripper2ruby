@@ -1,69 +1,42 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class RipperRubyBuilderConstTest < Test::Unit::TestCase
-  include TestRubyBuilderHelper
+class ConstTest < Test::Unit::TestCase
+  include TestHelper
 
-  @@space = "  \n  "
-
-  define_method :'test a const: I18n' do
-    src = @@space + 'I18n'
-    const = const(src)
+  define_method :"test a const" do
+    src = 'A'
+    identifier = build(src).first
+    assert identifier.is_a?(Ruby::Const)
+    assert_equal src, identifier.to_ruby
+    assert_equal src, identifier.src
+  end
   
-    assert const.root.is_a?(Ruby::Program)
-    assert_equal Ruby::Const, const.class
-    assert_equal 'I18n', const.token
-    assert_equal 'I18n', const.to_ruby
-  
-    assert_equal src, const.root.src
-  
-    assert_equal [1, 2], const.position
-    assert_equal 1, const.row
-    assert_equal 2, const.column
-    assert_equal 4, const.length
+  define_method :"test a const path" do
+    src = 'A::B::C'
+    identifier = build(src).first
+    assert identifier.is_a?(Ruby::Const)
+    assert_equal src, identifier.to_ruby
+    assert_equal src, identifier.src
   end
   
   define_method :"test a class" do
-    src = <<-eoc
-      class A < B
-        def foo
-        end
-      end
-    eoc
-    klass = node(src, Ruby::Class)
-  
-    assert klass.root.is_a?(Ruby::Program)
-    assert_equal klass, klass.super_class.parent
-    assert_equal klass, klass.body.parent
-  
-    assert_equal 'A', klass.const.token
-    assert_equal 'B', klass.super_class.token
-    assert_equal 'foo', klass.body.statements.first.identifier.token
-  
-    assert_equal src.strip, klass.to_ruby
-  
-    assert_equal [0, 6], klass.position
+    src = "class A::B < C ; end"
+    const = build(src).first
+
+    assert_equal Ruby::Class, const.class
+    assert_equal 'B', const.const.token
+    assert_equal 'C', const.super_class.token
+    assert_equal src, const.to_ruby
+    assert_equal src, const.src
   end
 
   define_method :"test a module" do
-    src = <<-eoc
-      module A
-        def foo
-        end
-      end
-    eoc
-    mod = node(src, Ruby::Module)
-
-    assert mod.root.is_a?(Ruby::Program)
-    assert_equal mod, mod.body.parent
+    src = "module A::B ; end"
+    const = build(src).first
   
-    assert_equal 'A', mod.const.token
-  
-    assert_equal src.strip, mod.to_ruby
-    assert_equal [0, 6], mod.position
-  end
-  
-  define_method :"test a const path ref" do
-    src = "A::B.foo = true"
-    assert_equal src, build(src).statements.first.to_ruby
+    assert_equal Ruby::Module, const.class
+    assert_equal 'B', const.const.token
+    assert_equal src, const.to_ruby
+    assert_equal src, const.src
   end
 end

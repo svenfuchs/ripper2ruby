@@ -20,13 +20,13 @@ module Ruby
       [target, separator, identifier, arguments, block].flatten.compact
     end
   end
-  
+
   class Alias < Call
     def initialize(identifier, arguments)
       self.identifier = identifier
       self.arguments = arguments
     end
-    
+
     def nodes
       [identifier, arguments].flatten
     end

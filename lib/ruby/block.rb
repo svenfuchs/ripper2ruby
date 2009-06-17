@@ -1,27 +1,26 @@
-require 'ruby/body'
+require 'ruby/list'
 
 module Ruby
-  class Block < Body
-    child_accessor :params, :ldelim, :rdelim
+  class Block < DelimitedList
+    child_accessor :params
     
-    def initialize(statements, rescue_block = nil, ensure_block = nil, params = nil, ldelim = nil, rdelim = nil)
+    # rescue_block = nil, ensure_block = nil, 
+    def initialize(statements, separators = nil, params = nil, ldelim = nil, rdelim = nil)
       self.params = params
-      self.ldelim = ldelim
-      self.rdelim = rdelim
-      super(statements, rescue_block, ensure_block)
+      super(statements, separators, ldelim, rdelim) # , rescue_block, ensure_block
     end
     
     def nodes
-      [ldelim, params, super, rdelim].flatten.compact
+      [ldelim, params, contents, rdelim].flatten.compact
     end
   end
   
-  class NamedBlock < Block
+  class NamedBlock < DelimitedList
     child_accessor :identifier
     
-    def initialize(identifier, statements, ldelim = nil, rdelim = nil)
+    def initialize(identifier, statements, separators = nil, ldelim = nil, rdelim = nil)
       self.identifier = identifier
-      super(statements, nil, nil, nil, ldelim, rdelim)
+      super(statements, separators, ldelim, rdelim)
     end
     
     def nodes

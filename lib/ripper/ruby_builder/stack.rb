@@ -5,6 +5,10 @@ class Ripper
         @ignore_stack = []
       end
       
+      def peek
+        last || Token.new
+      end
+      
       def push(token)
         while !token.whitespace? && last && last.whitespace?
           token.whitespace = _pop.value + token.whitespace
@@ -16,8 +20,7 @@ class Ripper
       alias :_pop :pop
       def pop(*types)
         options = types.last.is_a?(::Hash) ? types.pop : {}
-        max = options[:max]
-        value = options[:value]
+        max, pass, value = options.values_at(:max, :pass, :value)
         tokens, ignored = [], []
 
         while !empty? && !(max && tokens.length >= max)
@@ -25,8 +28,10 @@ class Ripper
             tokens << super()
           elsif ignore?(last.type)
             ignored << super()
-          else
+          elsif last.opener? && !pass
             break
+          else
+            ignored << super()
           end
         end
 

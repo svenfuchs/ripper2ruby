@@ -12,7 +12,11 @@ module Ruby
       end
 
       def <<(object)
-        object.parent = self.parent unless object.parent == self.parent
+        if object.respond_to?(:parent=)
+          object.parent = self.parent 
+        elsif object.respond_to?(:each)
+          object.each { |o| o.parent = parent if object.respond_to?(:parent=) }
+        end
         super
       end
       
@@ -22,7 +26,7 @@ module Ruby
       end
       
       def parent=(parent)
-        each { |object| object.parent = parent }
+        each { |object| object.parent = parent if object.respond_to?(:parent=) }
         @parent = parent
       end
 

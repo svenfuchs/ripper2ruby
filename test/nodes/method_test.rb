@@ -1,29 +1,13 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class RipperRubyBuilderMethodTest < Test::Unit::TestCase
-  include TestRubyBuilderHelper
+class MethodTest < Test::Unit::TestCase
+  include TestHelper
 
   define_method :"test a method" do
-    src = <<-eoc
-      def foo(a, b = nil, c = :foo, *d, &block)
-        bar
-        baz
-      end
-    eoc
-  
-    src = src.strip
-    method = method(src)
-    bar = method.body.statements.first
-  
-    assert method.root.is_a?(Ruby::Program)
-    assert_equal method, method.params.parent
-    assert_equal method, method.body.parent
-  
-    assert_equal 'foo', method.identifier.token
-    assert_equal 'a', method.params.first.token
-    assert_equal 'bar', bar.token
-  
+    src = "def foo(a, b = nil, c = :foo, *d, &block)\n        bar\n        baz\n      end"
+    method = build(src).first
     assert_equal src, method.to_ruby
+    assert_equal src, method.src
   end
   
   define_method :"test method definition: def t(a = []); end" do
