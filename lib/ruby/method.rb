@@ -2,9 +2,11 @@ require 'ruby/node'
 
 module Ruby
   class Method < Node
-    child_accessor :identifier, :params, :body, :ldelim, :rdelim
+    child_accessor :target, :separator, :identifier, :params, :body, :ldelim, :rdelim
 
-    def initialize(identifier, params, body, ldelim, rdelim)
+    def initialize(target, separator, identifier, params, body, ldelim, rdelim)
+      self.target = target
+      self.separator = separator
       self.identifier = identifier
       self.params = params
       self.body = body
@@ -13,7 +15,7 @@ module Ruby
     end
     
     def nodes
-      [ldelim, identifier, params, body, rdelim].compact
+      [ldelim, target, separator, identifier, params, body, rdelim].compact
     end
   end
 end

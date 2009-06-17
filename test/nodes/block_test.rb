@@ -86,4 +86,10 @@ class BlockTest < Test::Unit::TestCase
     block = build(src).first
     assert_equal src, block.to_ruby
   end
+  
+  define_method :"test: line with a rescue modifier" do
+    src = "foo rescue bar"
+    block = build(src).first
+    assert_equal src, block.to_ruby
+  end
 end

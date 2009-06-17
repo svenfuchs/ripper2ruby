@@ -31,4 +31,5 @@ module Ruby
   end
   
   class UnlessMod < IfMod; end
+  class RescueMod < IfMod; end
 end

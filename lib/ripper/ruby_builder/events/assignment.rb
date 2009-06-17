@@ -13,7 +13,7 @@ class Ripper
       
       # operator assignment (?), e.g. a ||= b; a += 1
       def on_opassign(left, operator, right)
-        Ruby::Assignment.new(left, right, pop_token(:@op, :value => operator.value, :pass => true))
+        Ruby::Assignment.new(left, right, pop_assignment_operator(:pass => true))
       end
 
       def on_mlhs_new

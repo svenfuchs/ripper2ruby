@@ -62,6 +62,12 @@ class IfTest < Test::Unit::TestCase
     expr = build(src).statements.first
     assert_equal src, expr.to_ruby
   end
+  
+  define_method :'test if modifier after a keyword statement' do
+    src = "return if true"
+    expr = build(src).statements.first
+    assert_equal src, expr.to_ruby
+  end
 end
 
 class UnlessTest < Test::Unit::TestCase

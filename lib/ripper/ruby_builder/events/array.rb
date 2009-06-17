@@ -5,7 +5,7 @@ class Ripper
       # confusingly ripper throws the same events
       
       def on_array(args)
-        ldelim, rdelim = pop_tokens(:@lbracket, :@rbracket)
+        rdelim, ldelim = pop_tokens(:@lbracket, :@rbracket)
         args ? args.to_array(ldelim, rdelim) : Ruby::Array.new(nil, nil, ldelim, rdelim)
       end
       

@@ -20,62 +20,62 @@ class Ripper
       end
 
       def on_zsuper(*args)
-        identifier = pop_token(:@super).to_identifier
+        identifier = pop_token(:@super, :pass => true).to_identifier
         Ruby::Call.new(nil, nil, identifier)
       end
       
       def on_super(args)
-        identifier = pop_token(:@super).to_identifier
+        identifier = pop_token(:@super, :pass => true).to_identifier
         Ruby::Call.new(nil, nil, identifier, args)
       end
 
       def on_yield(args)
-        identifier = pop_token(:@yield).to_identifier
+        identifier = pop_token(:@yield, :pass => true).to_identifier
         Ruby::Call.new(nil, nil, identifier, args)
       end
 
       def on_yield0
-        identifier = pop_token(:@yield).to_identifier
+        identifier = pop_token(:@yield, :pass => true).to_identifier
         Ruby::Call.new(nil, nil, identifier)
       end
 
       def on_alias(*args)
-        identifier = pop_token(:@alias).to_identifier
+        identifier = pop_token(:@alias, :pass => true).to_identifier
         Ruby::Alias.new(identifier, args)
       end
 
       def on_undef(args)
-        identifier = pop_token(:@undef).to_identifier
+        identifier = pop_token(:@undef, :pass => true).to_identifier
         Ruby::Call.new(nil, nil, identifier, args)
       end
 
       def on_return0
-        identifier = pop_token(:@return).to_identifier
+        identifier = pop_token(:@return, :pass => true).to_identifier
         Ruby::Call.new(nil, nil, identifier, nil)
       end
 
       def on_return(args)
-        identifier = pop_token(:@return).to_identifier
+        identifier = pop_token(:@return, :pass => true).to_identifier
         Ruby::Call.new(nil, nil, identifier, args)
       end
 
       def on_next(args)
-        identifier = pop_token(:@next).to_identifier
+        identifier = pop_token(:@next, :pass => true).to_identifier
         Ruby::Call.new(nil, nil, identifier, args)
       end
 
       def on_break(args)
-        identifier = pop_token(:@break).to_identifier
+        identifier = pop_token(:@break, :pass => true).to_identifier
         Ruby::Call.new(nil, nil, identifier, args)
       end
 
       def on_redo
-        identifier = pop_token(:@redo).to_identifier
+        identifier = pop_token(:@redo, :pass => true).to_identifier
         Ruby::Call.new(nil, nil, identifier)
       end
 
       def on_retry
-        identifier = pop_token(:@retry).to_identifier
+        identifier = pop_token(:@retry, :pass => true).to_identifier
         Ruby::Call.new(nil, nil, identifier)
       end
 
@@ -98,7 +98,7 @@ class Ripper
       def on_BEGIN(statements)
         statements.ldelim = pop_token(:@lbrace)
         statements.rdelim = pop_token(:@rbrace)
-        identifier = pop_token(:@BEGIN).to_identifier
+        identifier = pop_token(:@BEGIN, :pass => true).to_identifier
         Ruby::Call.new(nil, nil, identifier, nil, statements)
       end
     end

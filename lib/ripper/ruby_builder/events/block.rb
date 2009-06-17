@@ -44,6 +44,11 @@ class Ripper
         Ruby::NamedBlock.new(identifier, statements)
       end
       
+      def on_rescue_mod(expression, statement)
+        expression = update_args(expression)
+        Ruby::RescueMod.new(pop_token(:@rescue), expression, statement)
+      end
+      
       def on_block_var(params, something)
         params
       end

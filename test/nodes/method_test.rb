@@ -9,6 +9,13 @@ class MethodTest < Test::Unit::TestCase
     assert_equal src, method.to_ruby
     assert_equal src, method.src
   end
+
+  define_method :"test a class method" do
+    src = "def self.foo(a, b = nil, c = :foo, *d, &block)\n        bar\n        baz\n      end"
+    method = build(src).first
+    assert_equal src, method.to_ruby
+    assert_equal src, method.src
+  end
   
   define_method :"test method definition: def t(a = []); end" do
     src = "def t(a = []) end"
