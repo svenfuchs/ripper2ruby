@@ -41,6 +41,14 @@ class OperatorTest < Test::Unit::TestCase
   
   # UNARY
   
+  define_method :'test operator: +1 (+)' do
+    assert_unary_operator(:!)
+  end
+  
+  define_method :'test operator: -1 (-)' do
+    assert_unary_operator(:!)
+  end
+  
   define_method :'test operator: !1 (!)' do
     assert_unary_operator(:!)
   end
@@ -52,12 +60,12 @@ class OperatorTest < Test::Unit::TestCase
   define_method :'test operator: ~1 (complement/bitwise-not)' do
     assert_unary_operator(:~)
   end
-
+  
   define_method :'test operator: (!1) (complement/bitwise-not, parentheses)' do
     src = '(!1)'
     assert_equal src, build(src).to_ruby
   end
-
+  
   # BINARY
   
   # arithmetical
@@ -183,7 +191,7 @@ class OperatorTest < Test::Unit::TestCase
   define_method :'test ternary: 1 == 1 ? 2 : 3 (ifop)' do
     src = '1 == 1 ? 2 : 3'
     expr = build(src).first
-
+  
     assert_equal Ruby::IfOp, expr.class
     assert_equal src, build(src).to_ruby
   end

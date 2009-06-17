@@ -6,7 +6,7 @@ class Ripper
       end
       
       def on_symbol(token)
-        token = pop_token(:@op) unless token.is_a?(Ruby::Node)
+        token = pop_operator unless token.is_a?(Ruby::Node)
         Ruby::Symbol.new(token, pop_token(:@symbeg))
       end
 

@@ -4,7 +4,7 @@ class Ripper
       attr_accessor :type, :value, :whitespace, :comments, :position
 
       def initialize(type = nil, value = nil, position = nil)
-        @type = type == :@kw ? :"@#{value.gsub(/\W/, '')}" : type
+        @type = normalize_type(type, value)
         @value = value
         @whitespace = ''
         @comments = []
@@ -40,6 +40,19 @@ class Ripper
       def to_identifier
         Ruby::Identifier.new(value, position, whitespace)
       end
+      
+      protected
+      
+        def normalize_type(type, value)
+          case type 
+          when :@kw
+            :"@#{value.gsub(/\W/, '')}"
+          when :@op
+            :"@#{value}"
+          else
+            type
+          end
+        end
     end
   end
 end

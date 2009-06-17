@@ -14,7 +14,7 @@ class Ripper
       end
       
       def on_args_add_block(args, block)
-        args << Ruby::Arg.new(block, pop_token(:@op, :value => '&')) if block
+        args << Ruby::Arg.new(block, pop_token(:'@&')) if block
         separators = pop_tokens(:@comma).reverse
         args.separators += separators if separators
         args
@@ -22,7 +22,7 @@ class Ripper
       
       def on_args_add_star(args, arg)
         args.separators += pop_tokens(:@comma).reverse
-        args << Ruby::Arg.new(arg, pop_token(:@op, :value => '*'))
+        args << Ruby::Arg.new(arg, pop_token(:'@*'))
         args
       end
 
@@ -33,7 +33,7 @@ class Ripper
       end
       
       def on_blockarg(identifier)
-        Ruby::Arg.new(identifier, pop_token(:@op, :value => '&'))
+        Ruby::Arg.new(identifier, pop_token(:'@&'))
       end
 
       def on_args_new

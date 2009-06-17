@@ -13,10 +13,19 @@ class Ripper
       end
     end
 
-    WHITESPACE = [:@sp, :@nl, :@ignored_nl, :@comment]
-    OPENERS    = [:@lparen, :@lbracket, :@lbrace, :@class, :@module, :@def, :@begin,
-                  :@while, :@until, :@for, :@if, :@elsif, :@else, :@unless, :@case, :@when]
+    WHITESPACE        = [:@sp, :@nl, :@ignored_nl, :@comment]
+    OPENERS           = [:@lparen, :@lbracket, :@lbrace, :@class, :@module, :@def, :@begin,
+                         :@while, :@until, :@for, :@if, :@elsif, :@else, :@unless, :@case, :@when]
+                      
+    ASSING_OPERATORS  = [:'@=', :'@+=', :'@-=',:'@*=', :'@**=', :'@/=']
+    UNARY_OPERATORS   = [:'@+', :'@-', :'@!', :'@~', :@not]
+    BINARY_OPERATORS  = [:'@**', :'@*', :'@/', :'@%', :'@+', :'@-', :'@<<', :'@>>', :'@&', :'@|', :'@^', 
+                         :'@>', :'@>=', :'@<', :'@<=', :'@<=>', :'@==', :'@===', :'@!=', :'@=~', :'@!~', 
+                         :'@&&', :'@||', :@and, :@or]
+    TERNARY_OPERATORS = [:'@?', :'@:']
     
+    OPERATORS = ASSING_OPERATORS + UNARY_OPERATORS + BINARY_OPERATORS + TERNARY_OPERATORS
+
     include Lexer, Statements, Const, Method, Call, Block, Args, Assignment, Operator,
             If, Case, For, While, Identifier, Literal, String, Symbol, Array, Hash
 
@@ -59,6 +68,26 @@ class Ripper
       def pop_tokens(*types)
         options = types.last.is_a?(::Hash) ? types.pop : {}
         types.map { |type| pop(type, options).map { |token| build_token(token) } }.flatten.compact
+      end
+      
+      def pop_operator(options = {})
+        pop_token(*OPERATORS, options)
+      end
+      
+      def pop_unary_operator(options = {})
+        pop_token(*UNARY_OPERATORS, options)
+      end
+
+      def pop_binary_operator(options = {})
+        pop_token(*BINARY_OPERATORS, options)
+      end
+
+      def pop_ternary_operators(options = {})
+        pop_tokens(*TERNARY_OPERATORS, options)
+      end
+
+      def pop_assignment_operator(options = {})
+        pop_token(*ASSIGN_OPERATORS, options)
       end
 
       def pop_whitespace

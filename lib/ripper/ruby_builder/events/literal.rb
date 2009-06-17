@@ -31,11 +31,11 @@ class Ripper
       end
       
       def on_dot2(left, right)
-        Ruby::Range.new(left, pop_token(:@op, :value => '..'), right)
+        Ruby::Range.new(left, pop_token(:'@..'), right)
       end
       
       def on_dot3(left, right)
-        Ruby::Range.new(left, pop_token(:@op, :value => '...'), right)
+        Ruby::Range.new(left, pop_token(:'@...'), right)
       end
     end
   end

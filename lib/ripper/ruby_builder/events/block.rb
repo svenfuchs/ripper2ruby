@@ -29,7 +29,7 @@ class Ripper
       end
       
       def on_rescue(error_types, error_var, statements, block)
-        operator = pop_token(:@op, :value => '=>')
+        operator = pop_token(:'@=>')
         identifier = pop_token(:@rescue)
 
         error_types = Ruby::Array.new(error_types)
@@ -50,26 +50,26 @@ class Ripper
 
       def on_params(params, optional_params, rest_param, something, block_param)
         optional_params.map! do |left, right|
-          operator = pop_token(:@op, :value => '=')
+          operator = pop_token(:'@=')
           Ruby::Assignment.new(left, right, operator)
         end if optional_params
         
         params = (Array(params) + Array(optional_params) << rest_param << block_param).flatten.compact
 
-        rdelim = pop_token(:@rparen) || pop_token(:@op, :value => '|')
-        ldelim = pop_token(:@lparen) || pop_token(:@op, :value => '|')
+        rdelim = pop_token(:@rparen) || pop_token(:'@|')
+        ldelim = pop_token(:@lparen) || pop_token(:'@|')
         separators = pop_tokens(:@comma)
 
         Ruby::Params.new(params, ldelim, rdelim, separators)
       end
 
       def on_rest_param(identifier)
-        star = pop_token(:@op, :value => '*')
+        star = pop_token(:'@*')
         Ruby::RestParam.new(identifier.token, identifier.position, star)
       end
 
       def on_paren(params)
-        rdelim = pop_token(:@rparen) || pop_token(:@op, :value => '|')
+        rdelim = pop_token(:@rparen) || pop_token(:'@|')
         params.rdelim = rdelim if rdelim
         params
       end

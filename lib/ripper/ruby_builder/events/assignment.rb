@@ -3,12 +3,12 @@ class Ripper
     module Assignment
       # simple assignments, e.g. a = b
       def on_assign(left, right)
-        Ruby::Assignment.new(left, right, pop_token(:@op, :value => '=', :pass => true))
+        Ruby::Assignment.new(left, right, pop_token(:'@=', :pass => true))
       end
 
       # mass assignments, e.g. a, b = c, d
       def on_massign(left, right)
-        Ruby::Assignment.new(left, right, pop_token(:@op, :value => '=', :pass => true))
+        Ruby::Assignment.new(left, right, pop_token(:'@=', :pass => true))
       end
       
       # operator assignment (?), e.g. a ||= b; a += 1
@@ -34,7 +34,7 @@ class Ripper
 
       def on_mrhs_new
         separators = pop_tokens(:@comma).reverse
-        star = pop_token(:@op, :value => '*')
+        star = pop_token(:'@*')
         Ruby::MultiAssignment.new(:right, nil, separators, nil, nil, star)
       end
 

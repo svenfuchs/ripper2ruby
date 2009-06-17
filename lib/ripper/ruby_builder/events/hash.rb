@@ -18,7 +18,7 @@ class Ripper
       end
 
       def on_assoc_new(key, value)
-        Ruby::Assoc.new(key, value, pop_token(:@op))
+        Ruby::Assoc.new(key, value, pop_token(:'@=>'))
       end
     end
   end
