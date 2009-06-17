@@ -28,14 +28,15 @@ class Ripper
         body
       end
       
-      def on_rescue(error_types, error_var, statements, somethingelse)
+      def on_rescue(error_types, error_var, statements, block)
         operator = pop_token(:@op, :value => '=>')
         identifier = pop_token(:@rescue)
 
+        error_types = Ruby::Array.new(error_types)
         errors = Ruby::Assoc.new(error_types, error_var, operator)
         params = Ruby::Params.new(errors)
 
-        Ruby::NamedBlock.new(identifier, statements, params) # TODO extract Ruby::Rescue
+        Ruby::ChainedBlock.new(identifier, block, statements, params) # TODO extract Ruby::Rescue
       end
       
       def on_ensure(statements)

@@ -75,14 +75,14 @@ class BlockTest < Test::Unit::TestCase
     assert_equal src, block.to_ruby
   end
   
-  define_method :"test: a begin block with a rescue blocks" do
+  define_method :"test: a begin block with rescue" do
     src = "begin foo\n rescue A, B => e\n bar\n end"
     block = build(src).first
     assert_equal src, block.to_ruby
   end
   
-  define_method :"test: a begin block with rescue and ensure blocks" do
-    src = "begin foo\n rescue A, B => e\n bar\nensure\nbaz\n end"
+  define_method :"test: a begin block with multiple rescues and ensure" do
+    src = "begin foo\n rescue A, B => e\n bar\nrescue C => e\n bam\nensure\nbaz\n end"
     block = build(src).first
     assert_equal src, block.to_ruby
   end

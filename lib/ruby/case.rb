@@ -2,30 +2,29 @@ require 'ruby/node'
 
 module Ruby
   class Case < NamedNode 
-    child_accessor :expression, :when_block
+    child_accessor :expression, :block
     
-    def initialize(identifier, expression, when_block, rdelim)
+    def initialize(identifier, expression, block, rdelim)
       self.expression = expression
-      self.when_block = when_block
+      self.block = block
       super(identifier, nil, rdelim)
     end
       
     def nodes
-      [identifier, expression, when_block, rdelim].compact
+      [identifier, expression, block, rdelim].compact
     end
   end
 
-  class When < NamedBlock 
-    child_accessor :expression, :next_block
+  class When < ChainedBlock 
+    child_accessor :expression
     
-    def initialize(identifier, expression, statements, ldelim = nil, next_block = nil)
+    def initialize(identifier, expression, statements, ldelim = nil, block = nil)
       self.expression = expression
-      self.next_block = next_block
-      super(identifier, statements, nil, nil, ldelim)
+      super(identifier, [block], statements, nil, nil, ldelim)
     end
       
     def nodes
-      [identifier, expression, ldelim, contents, next_block, rdelim].flatten.compact
+      [identifier, expression, ldelim, contents, blocks, rdelim].flatten.compact
     end
   end
 end

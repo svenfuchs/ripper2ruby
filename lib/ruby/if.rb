@@ -1,17 +1,16 @@
 require 'ruby/node'
 
 module Ruby
-  class If < NamedBlock 
+  class If < ChainedBlock 
     child_accessor :expression, :else_block
 
     def initialize(identifier, expression, statements = nil, ldelim = nil, rdelim = nil, else_block = nil)
       self.expression = expression
-      self.else_block = else_block
-      super(identifier, statements, nil, nil, ldelim, rdelim)
+      super(identifier, [else_block], statements, nil, nil, ldelim, rdelim)
     end
       
     def nodes
-      [identifier, expression, ldelim, contents, else_block, rdelim].flatten.compact
+      [identifier, expression, ldelim, contents, blocks, rdelim].flatten.compact
     end
   end
   

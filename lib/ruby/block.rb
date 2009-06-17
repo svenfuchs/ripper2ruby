@@ -32,7 +32,7 @@ module Ruby
     child_accessor :blocks
 
     def initialize(identifier, blocks, statements, separators = nil, params = nil, ldelim = nil, rdelim = nil)
-      self.blocks = blocks || []
+      self.blocks = Array(blocks) || []
       super(identifier, statements, separators, params, ldelim, rdelim)
     end
     
