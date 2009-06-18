@@ -29,7 +29,7 @@ module Ruby
     
     def contents
       (elements + separators).flatten.compact.
-      sort { |a, b| a.src_pos <=> b.src_pos }
+      sort { |a, b| a.row < b.row ? -1 : a.row > b.row ?  1 : a.column <=> b.column }
     end
     
     def to_array(ldelim, rdelim)
