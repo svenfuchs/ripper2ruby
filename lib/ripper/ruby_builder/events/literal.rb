@@ -37,6 +37,10 @@ class Ripper
       def on_dot3(left, right)
         Ruby::Range.new(left, pop_token(:'@...'), right)
       end
+      
+      def on_CHAR(token)
+        Ruby::Char.new(token, position, pop_whitespace)
+      end
     end
   end
 end

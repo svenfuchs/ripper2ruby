@@ -18,4 +18,10 @@ module Ruby
       false
     end
   end
+  
+  class Char < Token
+    def value
+      token[1]
+    end
+  end
 end

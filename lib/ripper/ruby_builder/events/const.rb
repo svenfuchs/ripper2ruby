@@ -29,7 +29,11 @@ class Ripper
       
       def on_const_path_ref(namespace, const)
         const.namespace = namespace
-        # pop_token(:'@::').tap { |s| const.separator = s if s }
+        const
+      end
+      
+      def on_const_path_field(namespace, const)
+        const.namespace = namespace
         const
       end
       

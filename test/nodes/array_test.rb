@@ -32,6 +32,15 @@ class ArrayTest < Test::Unit::TestCase
     assert_equal src, call.src
   end
   
+  define_method :"test array access with no argument" do
+    src = "foo[]"
+    call = build(src).first
+  
+    assert_equal Ruby::Call, call.class
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
   define_method :"test array assignment" do
     src = "result[0] = :value"
     assignment = build(src).first

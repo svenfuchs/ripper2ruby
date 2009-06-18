@@ -195,7 +195,14 @@ class CallTest < Test::Unit::TestCase
     assert_equal src, call.src
   end
   
-  define_method :"test call alias" do
+  define_method :"test call alias with identifiers" do
+    src = "alias eql? =="
+    call = build(src).statements.first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
+  define_method :"test call alias with symbols" do
     src = "alias :foo :bar"
     call = build(src).statements.first
     assert_equal src, call.to_ruby

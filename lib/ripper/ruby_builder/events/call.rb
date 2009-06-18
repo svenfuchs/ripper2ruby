@@ -40,6 +40,7 @@ class Ripper
       end
 
       def on_alias(*args)
+        args.map! { |arg| arg.respond_to?(:to_identifier) ? arg.to_identifier : arg }
         identifier = pop_token(:@alias, :pass => true).to_identifier
         Ruby::Alias.new(identifier, args)
       end

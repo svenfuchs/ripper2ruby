@@ -49,6 +49,10 @@ class Ripper
       def on_var_field(field)
         field
       end
+      
+      def on_backref(arg)
+        Ruby::Variable.new(arg, position, pop_whitespace)
+      end
     end
   end
 end

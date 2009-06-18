@@ -32,11 +32,13 @@ class Ripper
         operator = pop_token(:'@=>')
         identifier = pop_token(:@rescue)
 
-        error_types = Ruby::Array.new(error_types)
-        errors = Ruby::Assoc.new(error_types, error_var, operator)
-        params = Ruby::Params.new(errors)
-
-        Ruby::ChainedBlock.new(identifier, block, statements, params) # TODO extract Ruby::Rescue
+        params = if error_types
+          error_types = Ruby::Array.new(error_types)
+          errors = Ruby::Assoc.new(error_types, error_var, operator)
+          Ruby::Params.new(errors)
+        end
+        
+        statements.to_chained_block(identifier, block, nil, params)
       end
       
       def on_ensure(statements)

@@ -58,4 +58,12 @@ class LiteralsTest < Test::Unit::TestCase
     assert_equal 1...2, literal.value
     assert_equal src, literal.to_ruby
   end
+
+  define_method :"test character" do
+    src = '?a'
+    literal = build(src).first
+    assert literal.is_a?(Ruby::Char)
+    assert_equal 'a', literal.value
+    assert_equal src, literal.to_ruby
+  end
 end

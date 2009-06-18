@@ -29,6 +29,14 @@ class Ripper
         OPENERS.include?(type)
       end
       
+      def keyword?
+        KEYWORDS.include?(type)
+      end
+      
+      def operator?
+        OPERATORS.include?(type)
+      end
+      
       def comment?
         type == :@comment
       end

@@ -75,7 +75,19 @@ class BlockTest < Test::Unit::TestCase
     assert_equal src, block.to_ruby
   end
   
-  define_method :"test: a begin block with rescue" do
+  define_method :"test: a begin block with rescue without error_type" do
+    src = "begin\nfoo\nrescue\nbar\nend"
+    block = build(src).first
+    assert_equal src, block.to_ruby
+  end
+  
+  define_method :"test: a begin block with rescue without an error_type" do
+    src = "begin \n rescue A \n end"
+    block = build(src).first
+    assert_equal src, block.to_ruby
+  end
+  
+  define_method :"test: a begin block with rescue with a error_types and error_var" do
     src = "begin foo\n rescue A, B => e\n bar\n end"
     block = build(src).first
     assert_equal src, block.to_ruby

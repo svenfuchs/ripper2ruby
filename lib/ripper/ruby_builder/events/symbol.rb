@@ -6,7 +6,10 @@ class Ripper
       end
       
       def on_symbol(token)
-        token = pop_operator unless token.is_a?(Ruby::Node)
+        # happens for symbols that are also keywords, e.g. :if
+        if token.respond_to?(:keyword?) && (token.keyword? || token.operator?)
+          token = pop_token(*KEYWORDS + OPERATORS).to_identifier
+        end
         Ruby::Symbol.new(token, pop_token(:@symbeg))
       end
 

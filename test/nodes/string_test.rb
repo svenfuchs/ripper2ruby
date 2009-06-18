@@ -65,7 +65,7 @@ class StringTest < Test::Unit::TestCase
     assert_equal src, string.to_ruby
   end
   
-  define_method :"test an percent-x delimited string" do
+  define_method :"test a percent-x delimited string" do
     src = "%x(foo)"
     string = build(src).first
     assert string.is_a?(Ruby::ExecutableString)
@@ -73,17 +73,31 @@ class StringTest < Test::Unit::TestCase
     assert_equal src, string.to_ruby
   end
   
-  define_method :"test an percent-x delimited string" do
+  define_method :"test a slash delimited regexp" do
     src = "/foo/"
     string = build(src).first
     assert string.is_a?(Ruby::Regexp)
     assert_equal src, string.to_ruby
   end
   
-  define_method :"test an percent-x delimited string" do
+  define_method :"test a percent-r delimited regexp" do
     src = "%r(foo)"
     string = build(src).first
     assert string.is_a?(Ruby::Regexp)
+    assert_equal src, string.to_ruby
+  end
+  
+  define_method :"test a string with a backreference" do
+    src = '"#{$1}"'
+    string = build(src).first
+    assert string.is_a?(Ruby::String)
+    assert_equal src, string.to_ruby
+  end
+  
+  define_method :"test a string with a dvar" do
+    src = '"#$0"'
+    string = build(src).first
+    assert string.is_a?(Ruby::String)
     assert_equal src, string.to_ruby
   end
 

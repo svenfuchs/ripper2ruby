@@ -34,8 +34,7 @@ class Ripper
 
       def on_mrhs_new
         separators = pop_tokens(:@comma).reverse
-        star = pop_token(:'@*')
-        Ruby::MultiAssignment.new(:right, nil, separators, nil, nil, star)
+        Ruby::MultiAssignment.new(:right, nil, separators)
       end
 
       def on_mrhs_new_from_args(args)
@@ -47,7 +46,18 @@ class Ripper
         assignment
       end
 
+      def on_mlhs_add_star(assignment, ref)
+        star = pop_token(:'@*')
+        ref = Ruby::Arg.new(ref, star) if star
+
+        assignment << ref
+        assignment
+      end
+
       def on_mrhs_add_star(assignment, ref)
+        star = pop_token(:'@*')
+        ref = Ruby::Arg.new(ref, star) if star
+
         assignment << ref
         assignment
       end

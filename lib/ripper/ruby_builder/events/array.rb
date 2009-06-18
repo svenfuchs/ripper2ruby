@@ -22,6 +22,7 @@ class Ripper
       end
       
       def on_aref(target, args)
+        args ||= Ruby::ArgsList.new
         pop_token(:@lbracket).tap { |l| args.ldelim = l if l }
         pop_token(:@rbracket).tap { |r| args.rdelim = r if r }
         Ruby::Call.new(target, nil, nil, args)

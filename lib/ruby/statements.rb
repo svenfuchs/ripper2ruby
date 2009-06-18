@@ -18,7 +18,8 @@ module Ruby
       ldelim ||= self.ldelim
       rdelim ||= self.rdelim
       identifier ||= self.identifier if respond_to?(:identifier)
-      ChainedBlock.new(identifier, blocks, statements, self.separators + separators, params, ldelim, rdelim)
+      separators = self.separators + Array(separators)
+      ChainedBlock.new(identifier, blocks, statements, separators, params, ldelim, rdelim)
     end
     
     def to_program(src, filename)

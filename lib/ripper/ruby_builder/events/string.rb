@@ -50,6 +50,28 @@ class Ripper
       def on_tstring_content(token)
         Ruby::StringContent.new(token, position)
       end
+      
+      def on_string_dvar(variable)
+        variable.token = '#' + variable.token # HACK. from where can we obtain the hashmark?
+        variable
+      end
+      
+      def heredoc_stack
+        @heredoc_stack ||= []
+      end
+      
+      # strangely there doesn't seem to be a way to access the heredoc content
+      # other than this, so we need to add some logic here
+      def on_heredoc_beg(*args) 
+        token = push(super)
+        heredoc_stack << position.tap { |p| p[1] += token.value.length }
+      end
+      
+      def on_heredoc_end(*args)
+        token = push(super)
+        content = extract_src(heredoc_stack.pop, position)
+        Ruby::StringContent.new(content, position, pop_whitespace)
+      end
     end
   end
 end

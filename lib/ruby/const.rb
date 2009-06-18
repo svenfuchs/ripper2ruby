@@ -12,6 +12,10 @@ module Ruby
       namespace ? namespace.whitespace : super
     end
     
+    def position
+      nodes.each { |n| return n.position.dup if n } && @position
+    end
+    
     def nodes
       [namespace, separator].compact
     end

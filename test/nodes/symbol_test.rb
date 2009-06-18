@@ -10,15 +10,39 @@ class SymbolTest < Test::Unit::TestCase
     assert_equal :foo, symbol.value
     assert_equal src, symbol.to_ruby
   end
-
-  define_method :"test a symbol (non-word character)" do
+  
+  define_method :"test a symbol that is an operator" do
     src = ':!'
     symbol = build(src).first
     assert symbol.is_a?(Ruby::Symbol)
     assert_equal :!, symbol.value
     assert_equal src, symbol.to_ruby
   end
-
+  
+  define_method :'test a symbol that is also a keyword' do
+    src = ":if"
+    symbol = build(src).first
+    assert symbol.is_a?(Ruby::Symbol)
+    assert_equal :if, symbol.value
+    assert_equal src, symbol.to_ruby
+  end
+  
+  define_method :"test a symbol that is an array access operator" do
+    src = ':[]'
+    symbol = build(src).first
+    assert symbol.is_a?(Ruby::Symbol)
+    assert_equal :[], symbol.value
+    assert_equal src, symbol.to_ruby
+  end
+  
+  define_method :"test a symbol that is an array assignment operator" do
+    src = ':[]='
+    symbol = build(src).first
+    assert symbol.is_a?(Ruby::Symbol)
+    assert_equal :[]=, symbol.value
+    assert_equal src, symbol.to_ruby
+  end
+  
   define_method :"test a double-quoted dyna-symbol" do
     src = ':"foo.bar"'
     symbol = build(src).first

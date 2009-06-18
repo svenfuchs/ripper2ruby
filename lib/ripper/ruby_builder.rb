@@ -16,15 +16,22 @@ class Ripper
     WHITESPACE        = [:@sp, :@nl, :@ignored_nl, :@comment]
     OPENERS           = [:@lparen, :@lbracket, :@lbrace, :@class, :@module, :@def, :@begin,
                          :@while, :@until, :@for, :@if, :@elsif, :@else, :@unless, :@case, :@when]
-                      
-    ASSIGN_OPERATORS  = [:'@=', :'@+=', :'@-=',:'@*=', :'@**=', :'@/=']
+    KEYWORDS          = [:@alias, :@and, :@BEGIN, :@begin, :@break, :@case, :@class, :@def, :@defined, 
+                         :@do, :@else, :@elsif, :@END, :@end, :@ensure, :@false, :@for, :@if, :@in, 
+                         :@module, :@next, :@nil, :@not, :@or, :@redo, :@rescue, :@retry, :@return, 
+                         :@self, :@super, :@then, :@true, :@undef, :@unless, :@until, :@when, :@while, 
+                         :@yield]
+    
     UNARY_OPERATORS   = [:'@+', :'@-', :'@!', :'@~', :@not]
     BINARY_OPERATORS  = [:'@**', :'@*', :'@/', :'@%', :'@+', :'@-', :'@<<', :'@>>', :'@&', :'@|', :'@^', 
                          :'@>', :'@>=', :'@<', :'@<=', :'@<=>', :'@==', :'@===', :'@!=', :'@=~', :'@!~', 
                          :'@&&', :'@||', :@and, :@or]
     TERNARY_OPERATORS = [:'@?', :'@:']
-    
-    OPERATORS = ASSIGN_OPERATORS + UNARY_OPERATORS + BINARY_OPERATORS + TERNARY_OPERATORS
+    ASSIGN_OPERATORS  = [:'@=', :'@+=', :'@-=',:'@*=', :'@**=', :'@/=', :'@[]=']
+    ACCESS_OPERATORS  = [:'@[]']
+
+    OPERATORS = UNARY_OPERATORS + BINARY_OPERATORS + TERNARY_OPERATORS + ASSIGN_OPERATORS + ACCESS_OPERATORS
+
 
     include Lexer, Statements, Const, Method, Call, Block, Args, Assignment, Operator,
             If, Case, For, While, Identifier, Literal, String, Symbol, Array, Hash
@@ -101,6 +108,13 @@ class Ripper
       
       def build_token(token)
         Ruby::Token.new(token.value, token.position, token.whitespace) if token
+      end
+      
+      def extract_src(from, to)
+        lines = src.split("\n")[from[0]..to[0]]
+        lines[0] = lines.first[from[1]..-1]
+        lines[lines.length - 1] = lines.last.slice(0, to[1])
+        lines.join("\n")
       end
   end
 end

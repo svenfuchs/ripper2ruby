@@ -94,7 +94,6 @@ class ArgsTest < Test::Unit::TestCase
     foo, bar = args
   
     args[0] = baz = Ruby::Symbol.from_native(:baz)
-  
     assert_equal args, baz.parent
     assert_equal [0, 2], baz.position
   end
