@@ -107,4 +107,11 @@ class StringTest < Test::Unit::TestCase
     assert string.is_a?(Ruby::String)
     assert_equal src, string.to_ruby
   end
+
+  define_method :'test string concat' do
+    src = "'a' 'b'"
+    array = build(src).first
+    assert_equal src, array.to_ruby
+    assert_equal src, array.src
+  end
 end

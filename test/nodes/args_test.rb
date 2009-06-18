@@ -98,7 +98,7 @@ class ArgsTest < Test::Unit::TestCase
     assert_equal [0, 2], baz.position
   end
   
-  define_method :"test: args with a star" do
+  define_method :"test: args with a starred call" do
     src = "t(*a.b)"
     call = build(src).statements.first
     assert_equal src, call.to_ruby

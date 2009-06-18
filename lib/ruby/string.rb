@@ -1,6 +1,9 @@
 require 'ruby/node'
 
 module Ruby
+  class StringConcat < List
+  end
+  
   class String < DelimitedList
     def initialize(ldelim = nil, rdelim = nil)
       super(nil, nil, ldelim, rdelim)
@@ -11,7 +14,7 @@ module Ruby
     end
     
     def src_pos(include_whitespace = false)
-      ldelim.src_pos(include_whitespace)
+      ldelim ? ldelim.src_pos(include_whitespace) : super
     end
   end
 

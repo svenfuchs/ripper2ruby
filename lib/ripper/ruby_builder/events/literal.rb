@@ -41,6 +41,10 @@ class Ripper
       def on_CHAR(token)
         Ruby::Char.new(token, position, pop_whitespace)
       end
+      
+      def on_label(label)
+        Ruby::Label.new(label, position, pop_whitespace)
+      end
     end
   end
 end

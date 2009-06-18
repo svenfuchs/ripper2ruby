@@ -1,6 +1,10 @@
 class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     module String
+      def on_string_concat(*strings)
+        Ruby::StringConcat.new(strings)
+      end
+      
       def on_string_literal(string)
         string.rdelim = pop_token(:@tstring_end, :@heredoc_end)
         string
@@ -17,6 +21,11 @@ class Ripper
       end
 
       def on_string_add(string, content)
+        string << content
+        string
+      end
+
+      def on_word_add(string, content)
         string << content
         string
       end
@@ -49,6 +58,10 @@ class Ripper
 
       def on_tstring_content(token)
         Ruby::StringContent.new(token, position)
+      end
+
+      def on_word_new
+        Ruby::String.new
       end
       
       def on_string_dvar(variable)

@@ -13,8 +13,18 @@ class ArrayTest < Test::Unit::TestCase
     assert_equal src, array.src
   end
   
-  define_method :'test a wordlist array %w(foo bar)' do
+  define_method :'test a wordlist array %w(foo bar) (parentheses)' do
     src = '%w(foo bar)'
+    array = build(src).first
+  
+    assert_equal Ruby::Array, array.class
+    assert_equal %w(foo bar), array.value
+    assert_equal src, array.to_ruby
+    assert_equal src, array.src
+  end
+  
+  define_method :'test a wordlist array %W[foo bar] (brackets)' do
+    src = '%W[foo bar]'
     array = build(src).first
   
     assert_equal Ruby::Array, array.class

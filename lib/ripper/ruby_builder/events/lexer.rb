@@ -69,6 +69,10 @@ class Ripper
         push(super)
       end
 
+      def on_words_beg(*args)
+        push(super)
+      end
+
       def on_op(*args)
         push(super)
       end

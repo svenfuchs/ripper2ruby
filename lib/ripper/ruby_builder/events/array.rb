@@ -9,6 +9,10 @@ class Ripper
         args ? args.to_array(ldelim, rdelim) : Ruby::Array.new(nil, nil, ldelim, rdelim)
       end
       
+      def on_words_new(*args)
+        Ruby::Array.new(nil, pop_token(:@words_beg))
+      end
+      
       def on_qwords_new(*args)
         Ruby::Array.new(nil, pop_token(:@qwords_beg))
       end
@@ -20,6 +24,18 @@ class Ripper
         array << arg
         array
       end
+      
+      def on_words_add(array, arg)
+        tokens = pop_tokens(:@words_sep)
+        array.separators += tokens.select { |t| t.token =~ /^\s*$/ }
+        array.rdelim = (tokens - array.separators).first
+        array << arg
+        array
+      end
+      
+      # def on_word_add(*args)
+      #   p args
+      # end
       
       def on_aref(target, args)
         args ||= Ruby::ArgsList.new

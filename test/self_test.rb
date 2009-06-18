@@ -10,6 +10,13 @@ class SelfTest < Test::Unit::TestCase
     Dir["#{root}/**/*.rb"].sort
   end
   
+  def read_file(filename)
+    src = File.read(filename)
+    src = File.open(filename, 'r:iso-8859-1') { |f| f.read } unless src.valid_encoding?
+    # src.encoding = 'utf-8'
+    src
+  end
+  
   # def test_self_build
   #   assert_nothing_raised do
   #     filenames(File.dirname(__FILE__) + '/../').each do |filename|
@@ -19,19 +26,24 @@ class SelfTest < Test::Unit::TestCase
   #   end
   # end
   
-  def test_rails
-    rails = File.expand_path('~/Development/shared/rails/rails/activesupport/test')
-    # filenames = %w(
-    # )
-    # filenames.each do |filename|
-    filenames(rails).each do |filename|
+  def test_library
+    lib = File.expand_path('~/Development/shared/rails/rails')
+    lib = File.expand_path('/usr/local/ruby19/lib/ruby/1.9.1')
+    filenames(lib).each do |filename|
+      next if filename < '/usr/local/ruby19/lib/ruby/1.9.1/tkextlib'
+      next if filename.index('tktable.rb')
+      # next if filename.index('/templates/') || filename.index('environment.rb') # for Rails, these are erb files
       puts filename
-      build(File.read(filename) ).to_ruby
+      build(read_file(filename)).to_ruby
     end
   end
   
   def xtest_tmp
-    build(File.read(File.dirname(__FILE__) + '/fixtures/tmp.rb')).to_ruby
+    filename = File.dirname(__FILE__) + '/fixtures/tmp.rb'
+    src = read_file(filename)
+    p src
+    pp sexp(src)
+    build(src).to_ruby
   end
   
   def xtest_src
@@ -39,7 +51,7 @@ class SelfTest < Test::Unit::TestCase
   end
   
   def xtest_this
-    src = 'A::B = 1'
+    src = '[1 [2]]'
     # pp sexp(src)
     assert_equal src, build(src).to_ruby(true)
   end

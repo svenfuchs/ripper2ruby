@@ -72,7 +72,8 @@ class Ripper
 
       def on_rest_param(identifier)
         star = pop_token(:'@*')
-        Ruby::RestParam.new(identifier.token, identifier.position, star)
+        token = identifier ? identifier.token : nil
+        Ruby::RestParam.new(token, nil, star)
       end
 
       def on_paren(params)

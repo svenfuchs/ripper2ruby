@@ -37,6 +37,10 @@ class Ripper
         OPERATORS.include?(type)
       end
       
+      def known?
+        keyword? || operator? || opener? || whitespace?
+      end
+      
       def comment?
         type == :@comment
       end

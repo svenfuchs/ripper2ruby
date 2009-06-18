@@ -38,12 +38,6 @@ class CallTest < Test::Unit::TestCase
   define_method :'test method call: I18n.t("foo") (const target, double-quoted string, parantheses)' do
     src = "I18n.t('foo')"
     call = build(src).first
-  
-    assert_equal Ruby::Call, call.class
-    assert_equal 't', call.identifier.token
-    assert_equal 'I18n', call.target.token
-    assert_equal 'foo', call.arguments.first.value
-  
     assert_equal src, call.to_ruby
     assert_equal src, call.src
   end
@@ -51,12 +45,13 @@ class CallTest < Test::Unit::TestCase
   define_method :'test method call: I18n.t "foo" (const target, double-quoted string, no parantheses)' do
     src = "I18n.t 'foo'"
     call = build(src).first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
   
-    assert_equal Ruby::Call, call.class
-    assert_equal 't', call.identifier.token
-    assert_equal 'I18n', call.target.token
-    assert_equal 'foo', call.arguments.first.value
-  
+  define_method :'test method call: foo.<=>(bar) (sending an operator, srsly ... used in Rake 0.8.3)' do
+    src = "foo.<=>(bar)"
+    call = build(src).first
     assert_equal src, call.to_ruby
     assert_equal src, call.src
   end
@@ -209,8 +204,29 @@ class CallTest < Test::Unit::TestCase
     assert_equal src, call.src
   end
   
-  define_method :"test call undef" do
+  define_method :"test call alias with global vars" do
+    src = "alias $ERROR_INFO $!"
+    call = build(src).statements.first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
+  define_method :"test call undef with a symbol" do
     src = "undef :foo"
+    call = build(src).statements.first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
+  define_method :"test call undef with a method name" do
+    src = "undef puts"
+    call = build(src).statements.first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
+  define_method :"test call undef with an operator" do
+    src = "undef =~"
     call = build(src).statements.first
     assert_equal src, call.to_ruby
     assert_equal src, call.src
@@ -265,8 +281,14 @@ class CallTest < Test::Unit::TestCase
     assert_equal src, call.src
   end
   
-  define_method :'test begin routine' do
+  define_method :'test BEGIN routine' do
     src = "BEGIN { foo }"
+    expr = build(src).statements.first
+    assert_equal src, expr.to_ruby
+  end
+  
+  define_method :'test END routine' do
+    src = "END { foo }"
     expr = build(src).statements.first
     assert_equal src, expr.to_ruby
   end

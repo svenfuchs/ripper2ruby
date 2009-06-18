@@ -24,4 +24,10 @@ module Ruby
       token[1]
     end
   end
+  
+  class Label < Token
+    def value
+      token.gsub(':').to_sym
+    end
+  end
 end

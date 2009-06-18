@@ -23,6 +23,12 @@ class MethodTest < Test::Unit::TestCase
     assert_equal src, method.to_ruby
   end
   
+  define_method :"test: method definition: def t(*) end (a single star)" do
+    src = "def t(*) end"
+    call = build(src).statements.first
+    assert_equal src, call.to_ruby
+  end
+  
   define_method :"test method definition: def <<()" do
     src = "def <<(arg) end"
     method = build(src).statements.first

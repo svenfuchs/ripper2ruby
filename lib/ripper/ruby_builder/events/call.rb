@@ -11,6 +11,8 @@ class Ripper
       end
 
       def on_call(target, separator, identifier)
+        # happens for symbols that are also keywords, e.g. :if
+        identifier = pop_token(identifier.type).to_identifier if identifier.respond_to?(:known?) && identifier.known?
         separator = pop_token(:@period, :ignore => [:@do, :@lbrace])
         Ruby::Call.new(target, separator, identifier)
       end
@@ -40,6 +42,12 @@ class Ripper
       end
 
       def on_alias(*args)
+        args.map! { |arg| arg.respond_to?(:to_identifier) ? arg.to_identifier : arg }
+        identifier = pop_token(:@alias, :pass => true).to_identifier
+        Ruby::Alias.new(identifier, args)
+      end
+      
+      def on_var_alias(*args)
         args.map! { |arg| arg.respond_to?(:to_identifier) ? arg.to_identifier : arg }
         identifier = pop_token(:@alias, :pass => true).to_identifier
         Ruby::Alias.new(identifier, args)
@@ -100,6 +108,13 @@ class Ripper
         statements.ldelim = pop_token(:@lbrace)
         statements.rdelim = pop_token(:@rbrace)
         identifier = pop_token(:@BEGIN, :pass => true).to_identifier
+        Ruby::Call.new(nil, nil, identifier, nil, statements)
+      end
+      
+      def on_END(statements)
+        statements.ldelim = pop_token(:@lbrace)
+        statements.rdelim = pop_token(:@rbrace)
+        identifier = pop_token(:@END, :pass => true).to_identifier
         Ruby::Call.new(nil, nil, identifier, nil, statements)
       end
     end
