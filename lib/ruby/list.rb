@@ -19,8 +19,7 @@ module Ruby
     end
     
     def []=(ix, element)
-      element = from_native(element, nil, self[ix].whitespace) unless element.is_a?(Node)
-      element.position = self[ix].position
+      element = to_node(element, self[ix].position, self[ix].whitespace)
       super
     end
     

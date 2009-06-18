@@ -9,3 +9,6 @@ Differences:
 * uses Ripper for parsing (shipped with Ruby 1.9)
 * produces a full object-oriented representation of the Ruby code
 
+Disadvantages:
+
+* f*cking slow so far, will be improved though

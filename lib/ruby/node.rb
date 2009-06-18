@@ -54,6 +54,11 @@ module Ruby
     def whitespace
       @whitespace || nodes.each { |n| return n.whitespace if n } && ''
     end
+    
+    def whitespace=(whitespace)
+      nodes.each { |n| return n.whitespace = whitespace if n }
+      @whitespace = whitespace
+    end
 
     def length(include_whitespace = false)
       to_ruby(include_whitespace).length
@@ -123,6 +128,13 @@ module Ruby
     
     protected
     
+      def to_node(node, position, whitespace)
+        node = from_native(node) unless node.is_a?(Node)
+        node.position = position
+        node.whitespace = whitespace
+        node
+      end
+    
       def from_ruby(*args)
         self.class.from_ruby(*args)
       end
@@ -139,7 +151,7 @@ module Ruby
       def update_positions(row, column, offset_column)
         pos = self.position
         pos[1] += offset_column if pos && self.row == row && self.column > column
-        children.each { |c| c.send(:update_positions, row, column, offset_column) }
+        nodes.each { |c| c.send(:update_positions, row, column, offset_column) }
       end
   end
   
