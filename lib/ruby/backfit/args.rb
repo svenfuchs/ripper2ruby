@@ -10,7 +10,7 @@ module Ruby
           # TODO gotta add a separator as well, so maybe better replace the whole options hash
           self << to_node({key => value}, position.tap { |p| p[1] += length })
         else
-          options[key] = to_node(value, options[key].position)
+          options[key] = to_node(value, options[key].position, options[key].whitespace)
         end
       end
     
