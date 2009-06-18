@@ -73,8 +73,6 @@ class Ripper
       end
 
       def pop_tokens(*types)
-        # options = types.last.is_a?(::Hash) ? types.pop : {}
-        # types.map { |type| pop(type, options).map { |token| build_token(token) } }.flatten.compact
         pop(*types).map { |token| build_token(token) }.flatten.compact
       end
       

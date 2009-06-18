@@ -1,3 +1,10 @@
+- refactor so that every node is either a token- or a container-type node.
+- add the token/identifier to the nodes array for container-type nodes.
+- change position/whitespace so that container-type nodes don't carry their 
+  own position/whitespace
+
+
+
 (foo)
 ((foo))
 foo[1][2][3]
@@ -6,74 +13,3 @@ foo[1][2][3]=
 
 http://web.njit.edu/all_topics/Prog_Lang_Docs/html/ruby/syntax.html
 http://web.njit.edu/all_topics/Prog_Lang_Docs/html/ruby/yacc.html
-
-# DONE
-
-	class module def
-	begin until while do end rescue ensure retry 
-	if unless then else elsif
-	when case
-	nil true false
-	and or
-	self
-	defined alias undef
-	super yield return
-	next redo break
-	for in
-	BEGIN	END
-
-
-# MISSING
-
-	regexps
-	heredoc
-
-
-STRING		: `"' any_char* `"'
-		| `'' any_char* `''
-		| ``' any_char* ``'
-
-STRING2		: `%'(`Q'|`q'|`x')char any_char* char
-
-
-_LINE__
-_FILE__
-_ENCODING__
-BEGIN
-END
-alias
-and
-begin
-break
-case
-class
-def
-defined
-do
-else
-elsif
-end
-ensure
-false
-for
-in
-module
-next
-nil
-not
-or
-redo
-rescue
-retry
-return
-self
-super
-then
-true
-undef
-when
-yield
-if
-unless
-while
-until

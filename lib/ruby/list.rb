@@ -1,26 +1,15 @@
 require 'ruby/node'
+require 'ruby/backfit/list'
 
 module Ruby
   class List < Node
+    include Backfit::List
+    
     child_accessor :elements, :separators
     
     def initialize(elements = nil, separators = nil)
       self.elements = Array(elements)
       self.separators = Array(separators)
-    end
-    
-    def <<(element)
-      elements << element
-      self
-    end
-    
-    def pop
-      [elements.pop, separators.pop]
-    end
-    
-    def []=(ix, element)
-      element = to_node(element, self[ix].position, self[ix].whitespace)
-      super
     end
     
     def nodes

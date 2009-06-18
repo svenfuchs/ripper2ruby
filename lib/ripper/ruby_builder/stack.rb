@@ -1,10 +1,6 @@
 class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     class Stack < ::Array
-      def initialize
-        @ignore_stack = []
-      end
-      
       def peek
         last || Token.new
       end
@@ -40,17 +36,21 @@ class Ripper
       end
       
       def ignore?(type)
-        @ignore_stack.flatten.include?(type)
+        ignore_stack.flatten.include?(type)
       end
       
       def ignore_types(*types)
-        @ignore_stack.push(types)
+        ignore_stack.push(types)
         result = yield
-        @ignore_stack.pop
+        ignore_stack.pop
         result
       end
       
       protected
+      
+        def ignore_stack
+          @ignore_stack ||= []
+        end
       
         def value_matches?(token, value)
           case value

@@ -26,23 +26,22 @@ class SelfTest < Test::Unit::TestCase
   #   end
   # end
   
-  def test_library
+  def xtest_library
     lib = File.expand_path('~/Development/shared/rails/rails')
-    lib = File.expand_path('/usr/local/ruby19/lib/ruby/1.9.1')
+    # lib = File.expand_path('/usr/local/ruby19/lib/ruby/1.9.1')
+    # lib = File.expand_path('~/Development/projects/adva_cms/adva_cms')
     filenames(lib).each do |filename|
-      next if filename < '/usr/local/ruby19/lib/ruby/1.9.1/tkextlib'
-      next if filename.index('tktable.rb')
-      # next if filename.index('/templates/') || filename.index('environment.rb') # for Rails, these are erb files
+      # next if filename < '/usr/local/ruby19/lib/ruby/1.9.1/tkextlib'
+      # next if filename.index('tktable.rb')
+      next if filename.index('/templates/') || filename.index('environment.rb') # for Rails, these are erb files
       puts filename
       build(read_file(filename)).to_ruby
     end
   end
   
-  def xtest_tmp
+  def xtest_srctest_tmp
     filename = File.dirname(__FILE__) + '/fixtures/tmp.rb'
     src = read_file(filename)
-    p src
-    pp sexp(src)
     build(src).to_ruby
   end
   

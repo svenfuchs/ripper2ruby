@@ -33,10 +33,6 @@ class Ripper
         array
       end
       
-      # def on_word_add(*args)
-      #   p args
-      # end
-      
       def on_aref(target, args)
         args ||= Ruby::ArgsList.new
         pop_token(:@lbracket).tap { |l| args.ldelim = l if l }
