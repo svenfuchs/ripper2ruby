@@ -23,7 +23,6 @@ module Ruby
       end
     end
     
-    # include Ansi
     include Composite
 
     attr_writer :whitespace
@@ -94,9 +93,9 @@ module Ruby
 
     # TODO what if a node spans multiple lines (like a block, method definition, ...)?
     def line(options = {})
-      highlight = options.has_key?(:highlight) ? options[:highlight] : false
+      highlighter = options.has_key?(:highlight) ? options[:highlight] : false
       line = lines[row].dup
-      highlight ? line_head + ansi_format(to_ruby, [:red, :bold]) + line_tail : line
+      highlighter ? line_head + highlighter.highlight(to_ruby) + line_tail : line
     end
 
     # excerpt from source, preceding and succeeding [Ruby.context_width] lines
