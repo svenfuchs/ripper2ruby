@@ -7,20 +7,35 @@ module Ruby
     def initialize(token, position = nil, whitespace = nil)
       self.token = token
       self.position = position
-      self.whitespace = whitespace || ''
+      self.whitespace = whitespace
+    end
+    
+    def position(whitespace = false)
+      if whitespace
+        self.whitespace.position rescue @position
+      else
+        @position
+      end
     end
     
     def position=(position)
       @position = position.dup
     end
     
+    def to_s
+      token.to_s
+    end
+    
     def to_ruby(whitespace = false)
-      (whitespace ? self.whitespace : '') + token.to_s
+      (whitespace ? self.whitespace.to_s : '') + token.to_s
     end
       
     def to_identifier
       Identifier.new(token, position, whitespace) 
     end
+  end
+  
+  class Whitespace < Token
   end
   
   class Keyword < Token

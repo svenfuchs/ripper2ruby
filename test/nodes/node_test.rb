@@ -5,16 +5,16 @@ class NodeTest < Test::Unit::TestCase
     Ripper::RubyBuilder.build(src).statements
   end
   
-  def test_src_pos
-    statements = statements("  aaaaaaa\nbbbbb\ncccc(:c)\nddd\nee\nf")
-    assert_equal 2,  statements[0].src_pos
-    assert_equal 10, statements[1].src_pos
-    assert_equal 16, statements[2].src_pos
-    assert_equal 21, statements[2].arguments.first.src_pos
-    assert_equal 25, statements[3].src_pos
-    assert_equal 29, statements[4].src_pos
-    assert_equal 32, statements[5].src_pos
-  end
+  # def test_src_pos
+  #   statements = statements("  aaaaaaa\nbbbbb\ncccc(:c)\nddd\nee\nf")
+  #   assert_equal 2,  statements[0].src_pos
+  #   assert_equal 10, statements[1].src_pos
+  #   assert_equal 16, statements[2].src_pos
+  #   assert_equal 21, statements[2].arguments.first.src_pos
+  #   assert_equal 25, statements[3].src_pos
+  #   assert_equal 29, statements[4].src_pos
+  #   assert_equal 32, statements[5].src_pos
+  # end
   
   # def test_update_position
   #   program = Ripper::RubyBuilder.build("a\nb\nc(:c); d(:d); e(:e)\nf")

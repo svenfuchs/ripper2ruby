@@ -102,6 +102,13 @@ class CallTest < Test::Unit::TestCase
     assert_equal src, program.src
   end
   
+  define_method :'test method call: t "foo" (no target, double-quoted string, no parantheses)' do
+    src = "t 'foo'"
+    call = build(src).first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
   define_method :"test call on no target without arguments but parantheses" do
     src = "t()"
     call = build(src).first
@@ -152,7 +159,7 @@ class CallTest < Test::Unit::TestCase
     call = build(src).first
     
     assert_equal src, call.to_ruby
-    assert_equal [0, 8], call.arguments[1].position
+    assert_equal [0, 8], call.arguments[1].position.to_a
   end
   
   define_method :"test call to self" do

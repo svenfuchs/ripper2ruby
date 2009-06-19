@@ -4,8 +4,12 @@ module Ruby
   class Aggregate < Node
     attr_writer :whitespace
 
-    def position
-      nodes.each { |n| return n.position.dup if n } && nil
+    def position(whitespace = false)
+      if whitespace
+        self.whitespace.position rescue position(false)
+      else
+        nodes.each { |n| return n.position.dup if n } && nil
+      end
     end
     
     def position=(position)
@@ -13,7 +17,7 @@ module Ruby
     end
     
     def whitespace
-      nodes.each { |n| return n.whitespace if n } && ''
+      nodes.each { |n| return n.whitespace if n } && nil
     end
     
     def whitespace=(whitespace)

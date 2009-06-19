@@ -77,7 +77,7 @@ class Ripper
       # other than this, so we need to add some logic here
       def on_heredoc_beg(*args) 
         token = push(super)
-        heredoc_stack << position.tap { |p| p[1] += token.value.length }
+        heredoc_stack << position.tap { |p| p.col += token.value.length }
       end
       
       def on_heredoc_end(*args)

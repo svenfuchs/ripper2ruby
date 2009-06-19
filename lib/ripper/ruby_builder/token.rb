@@ -1,3 +1,5 @@
+require 'ruby/node/position'
+
 class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     class Token
@@ -6,19 +8,8 @@ class Ripper
       def initialize(type = nil, value = nil, position = nil)
         @type = normalize_type(type, value)
         @value = value
-        @whitespace = ''
         @comments = []
-
-        position[0] -= 1 if position
-        @position = position
-      end
-
-      def row
-        position[0]
-      end
-
-      def column
-        position[1]
+        @position = Ruby::Node::Position.new(position[0] - 1, position[1]) if position
       end
 
       def whitespace?

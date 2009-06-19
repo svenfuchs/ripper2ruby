@@ -22,15 +22,15 @@ class ArgsTest < Test::Unit::TestCase
   
     assert_equal '(', args.ldelim.token
     assert_equal ')', args.rdelim.token
-    assert_equal '',  args.ldelim.whitespace
+    assert_equal '',  args.ldelim.whitespace.to_s
   
     assert_equal 2,   args.separators.length
     assert_equal ',', args.separators[0].token
-    assert_equal ' ', args.separators[0].whitespace
+    assert_equal ' ', args.separators[0].whitespace.to_s
     assert_equal ',', args.separators[1].token
-    assert_equal '',  args.separators[1].whitespace
+    assert_equal '',  args.separators[1].whitespace.to_s
   
-    assert_equal [0, 1], args.position
+    assert_equal [0, 1], args.position.to_a
     assert_equal 21, args.length
   end
   
@@ -95,7 +95,7 @@ class ArgsTest < Test::Unit::TestCase
   
     args[0] = baz = Ruby::Symbol.from_native(:baz)
     assert_equal args, baz.parent.parent # baz is wrapped into an Arg
-    assert_equal [0, 2], baz.position
+    assert_equal [0, 2], baz.position.to_a
   end
   
   define_method :"test: args with a starred call" do

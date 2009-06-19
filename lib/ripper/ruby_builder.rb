@@ -41,7 +41,6 @@ class Ripper
     def initialize(src, filename = nil, lineno = nil)
       @src = src || filename && File.read(filename)
       @filename = filename
-      @whitespace = ''
       @stack = []
       @stack = Stack.new
       super
@@ -50,7 +49,7 @@ class Ripper
     protected
 
       def position
-        [lineno - 1, column]
+        Ruby::Node::Position.new(lineno - 1, column)
       end
 
       def push(sexp)
@@ -64,6 +63,12 @@ class Ripper
         else
           stack.pop(*args << options)
         end
+      end
+      
+      def pop_one(*types)
+        options = types.last.is_a?(::Hash) ? types.pop : {}
+        options[:max] = 1
+        pop(*types << options).first
       end
       
       def pop_token(*types)
@@ -97,7 +102,8 @@ class Ripper
       end
 
       def pop_whitespace
-        pop(*WHITESPACE).reverse.map { |token| token.value }.join
+        token = pop_one(*WHITESPACE)
+        token ? build_whitespace(token) : nil
       end
 
       def stack_ignore(*types, &block)
@@ -106,6 +112,10 @@ class Ripper
       
       def build_token(token)
         Ruby::Token.new(token.value, token.position, token.whitespace) if token
+      end
+      
+      def build_whitespace(token)
+        Ruby::Whitespace.new(token.value, token.position)
       end
       
       def extract_src(from, to)

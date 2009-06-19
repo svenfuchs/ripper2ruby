@@ -53,7 +53,7 @@ class HashTest < Test::Unit::TestCase
   
     assert_equal ':a => :a, :b => :b', hash.to_ruby
   
-    assert_equal [0, 2], hash.position
+    assert_equal [0, 2], hash.position.to_a
     assert_equal 0, hash.row
     assert_equal 2, hash.column
     assert_equal 18, hash.length
@@ -109,8 +109,8 @@ class HashTest < Test::Unit::TestCase
   end
   
   def assert_whitespace(node, whitespace, length)
-    assert_equal whitespace, node.whitespace
+    assert_equal whitespace, node.whitespace.to_s
     assert_equal length, node.length
-    assert_equal length + whitespace.length, node.length(true)
+    assert_equal length + whitespace.to_s.length, node.length(true)
   end
 end

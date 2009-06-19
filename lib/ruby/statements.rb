@@ -36,6 +36,10 @@ module Ruby
       super(statements, separators)
     end
     
+    def line_pos(row)
+      (row > 0 ? src.split("\n")[0..(row - 1)].inject(0) { |pos, line| pos + line.length + 1 } : 0)
+    end
+    
     def replace_src(row, column, length, src)
       @src[line_pos(row) + column, length] = src 
       save_src if filename

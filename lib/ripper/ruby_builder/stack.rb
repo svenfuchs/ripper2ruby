@@ -6,9 +6,11 @@ class Ripper
       end
       
       def push(token)
-        while !token.whitespace? && last && last.whitespace?
-          token.whitespace = _pop.value + token.whitespace
+        if token.whitespace? && last && last.whitespace?
+          last.value += token.value
+          return last
         end
+        token.whitespace = pop_whitespace
         self << token
         token
       end
@@ -44,6 +46,21 @@ class Ripper
         result = yield
         ignore_stack.pop
         result
+      end
+
+      def pop_one(*types)
+        options = types.last.is_a?(::Hash) ? types.pop : {}
+        options[:max] = 1
+        pop(*types << options).first
+      end
+      
+      def pop_whitespace
+        token = pop_one(*WHITESPACE)
+        token ? build_whitespace(token) : nil
+      end
+      
+      def build_whitespace(token)
+        Ruby::Whitespace.new(token.value, token.position)
       end
       
       protected
