@@ -1,7 +1,7 @@
 require 'ruby/node'
 
 module Ruby
-  class Assignment < Node
+  class Assignment < Aggregate
     child_accessor :left, :right, :operator
 
     def initialize(left, right, operator)

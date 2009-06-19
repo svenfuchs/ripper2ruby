@@ -1,7 +1,7 @@
 require 'ruby/args'
 
 module Ruby
-  class Call < Node
+  class Call < Aggregate
     child_accessor :identifier, :separator, :target, :arguments, :block
 
     def initialize(target, separator, identifier, arguments = nil, block = nil)

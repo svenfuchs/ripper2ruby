@@ -5,26 +5,26 @@ class ConstTest < Test::Unit::TestCase
 
   define_method :"test a const" do
     src = 'A'
-    identifier = build(src).first
-    assert identifier.is_a?(Ruby::Const)
-    assert_equal src, identifier.to_ruby
-    assert_equal src, identifier.src
+    const = build(src).first
+    assert_equal Ruby::Const, const.class
+    assert_equal src, const.to_ruby
+    assert_equal src, const.src
   end
   
   define_method :"test a const path" do
     src = 'A::B::C'
-    identifier = build(src).first
-    assert identifier.is_a?(Ruby::Const)
-    assert_equal src, identifier.to_ruby
-    assert_equal src, identifier.src
+    const = build(src).first
+    assert_equal Ruby::Const, const.class
+    assert_equal src, const.to_ruby
+    assert_equal src, const.src
   end
   
   define_method :"test a const path with toplevel const ref" do
     src = '::A::B'
-    identifier = build(src).first
-    assert identifier.is_a?(Ruby::Const)
-    assert_equal src, identifier.to_ruby
-    assert_equal src, identifier.src
+    const = build(src).first
+    assert_equal Ruby::Const, const.class
+    assert_equal src, const.to_ruby
+    assert_equal src, const.src
   end
   
   define_method :"test a class" do
@@ -32,8 +32,6 @@ class ConstTest < Test::Unit::TestCase
     const = build(src).first
   
     assert_equal Ruby::Class, const.class
-    assert_equal 'B', const.const.token
-    assert_equal 'C', const.super_class.token
     assert_equal src, const.to_ruby
     assert_equal src, const.src
   end
@@ -51,7 +49,6 @@ class ConstTest < Test::Unit::TestCase
     const = build(src).first
   
     assert_equal Ruby::Module, const.class
-    assert_equal 'B', const.const.token
     assert_equal src, const.to_ruby
     assert_equal src, const.src
   end

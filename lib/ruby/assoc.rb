@@ -1,7 +1,7 @@
 require 'ruby/node'
 
 module Ruby
-  class Assoc < Node
+  class Assoc < Aggregate
     child_accessor :key, :value, :operator
     
     def initialize(key, value, operator)

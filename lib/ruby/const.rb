@@ -1,31 +1,19 @@
-require 'ruby/identifier'
+require 'ruby/aggregate'
 
 module Ruby
-  class Const < Identifier
-    child_accessor :namespace, :separator
+  class Const < Aggregate
+    child_accessor :identifier, :namespace, :separator
     
-    def src_pos(include_whitespace = false)
-      @src_pos || nodes.each { |n| return n.src_pos if n } and super
-    end
-    
-    def whitespace
-      namespace ? namespace.whitespace : super
-    end
-    
-    def position
-      nodes.each { |n| return n.position.dup if n } && @position
+    def initialize(identifier = nil)
+      self.identifier = identifier
     end
     
     def nodes
-      [namespace, separator].compact
-    end
-
-    def to_ruby(include_whitespace = false)
-      (include_whitespace ? whitespace : '') + Node.to_ruby(nodes, false) + super(false)
+      [namespace, separator, identifier].compact
     end
   end
   
-  class Module < DelimitedNode
+  class Module < DelimitedAggregate
     child_accessor :const, :body
 
     def initialize(const, body, ldelim, rdelim)
@@ -39,7 +27,7 @@ module Ruby
     end
   end
 
-  class Class < DelimitedNode
+  class Class < DelimitedAggregate
     child_accessor :const, :operator, :super_class, :body
 
     def initialize(const, operator, super_class, body, ldelim, rdelim)

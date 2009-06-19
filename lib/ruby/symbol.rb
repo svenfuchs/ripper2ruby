@@ -1,7 +1,8 @@
+require 'ruby/aggregate'
 require 'ruby/string'
 
 module Ruby
-  class Symbol < DelimitedNode
+  class Symbol < DelimitedAggregate
     child_accessor :identifier
     
     def initialize(identifier, ldelim)
@@ -15,10 +16,6 @@ module Ruby
     
     def nodes
       [ldelim, identifier].compact
-    end
-    
-    def method_missing(method, *args, &block)
-      identifier.respond_to?(method) ? identifier.send(method, *args, &block) : super
     end
   end
   

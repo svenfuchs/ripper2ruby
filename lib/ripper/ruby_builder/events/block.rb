@@ -67,13 +67,12 @@ class Ripper
         ldelim = pop_token(:@lparen) || pop_token(:'@|')
         separators = pop_tokens(:@comma)
 
-        Ruby::Params.new(params, ldelim, rdelim, separators)
+        Ruby::Params.new(params, separators, ldelim, rdelim)
       end
 
-      def on_rest_param(identifier)
+      def on_rest_param(param)
         star = pop_token(:'@*')
-        token = identifier ? identifier.token : nil
-        Ruby::RestParam.new(token, nil, star)
+        Ruby::RestParam.new(param, star)
       end
 
       def on_paren(params)

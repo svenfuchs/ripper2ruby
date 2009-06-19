@@ -1,3 +1,4 @@
+require 'ruby/aggregate'
 require 'ruby/list'
 require 'ruby/backfit/args'
 
@@ -6,7 +7,7 @@ module Ruby
     include Backfit::ArgsList
   end
   
-  class Arg < DelimitedNode
+  class Arg < DelimitedAggregate
     child_accessor :arg
     
     def initialize(arg, ldelim = nil)

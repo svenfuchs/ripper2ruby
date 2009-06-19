@@ -1,7 +1,7 @@
 require 'ruby/node'
 
 module Ruby
-  class Method < Node
+  class Method < Aggregate # TODO clean this up
     child_accessor :target, :separator, :identifier, :params, :body, :ldelim, :rdelim
 
     def initialize(target, separator, identifier, params, body, ldelim, rdelim)

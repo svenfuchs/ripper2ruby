@@ -12,10 +12,6 @@ module Ruby
     def value
       map { |content| content.value }.join
     end
-    
-    def src_pos(include_whitespace = false)
-      ldelim ? ldelim.src_pos(include_whitespace) : super
-    end
   end
 
   class StringContent < Token

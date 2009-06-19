@@ -2,7 +2,7 @@ require 'ruby/node'
 require 'ruby/backfit/list'
 
 module Ruby
-  class List < Node
+  class List < Aggregate
     include Backfit::List
     
     child_accessor :elements, :separators

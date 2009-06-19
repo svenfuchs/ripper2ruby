@@ -1,9 +1,3 @@
-- refactor so that every node is either a token- or a container-type node.
-- add the token/identifier to the nodes array for container-type nodes.
-- change position/whitespace so that container-type nodes don't carry their 
-  own position/whitespace
-
-
 
 (foo)
 ((foo))

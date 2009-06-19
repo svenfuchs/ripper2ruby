@@ -1,7 +1,7 @@
 require 'ruby/node'
 
 module Ruby
-  class Case < NamedNode 
+  class Case < NamedAggregate 
     child_accessor :expression, :block
     
     def initialize(identifier, expression, block, rdelim)

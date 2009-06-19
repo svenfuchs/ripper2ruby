@@ -1,7 +1,7 @@
 require 'ruby/node'
 
 module Ruby
-  class Unary < Node
+  class Unary < Aggregate
     child_accessor :operator, :operand
 
     def initialize(operator, operand)
@@ -14,7 +14,7 @@ module Ruby
     end
   end
   
-  class Binary < Node
+  class Binary < Aggregate
     child_accessor :operator, :left, :right
 
     def initialize(operator, left, right)
@@ -28,7 +28,7 @@ module Ruby
     end
   end
   
-  class IfOp < Node
+  class IfOp < Aggregate
     child_accessor :condition, :left, :right, :operators
 
     def initialize(condition, left, right, operators)

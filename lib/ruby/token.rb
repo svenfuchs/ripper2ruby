@@ -2,15 +2,20 @@ require 'ruby/node'
 
 module Ruby
   class Token < Node 
-    attr_accessor :token
+    attr_accessor :token, :position, :whitespace
 
     def initialize(token, position = nil, whitespace = nil)
       self.token = token
-      super(position, whitespace)
+      self.position = position
+      self.whitespace = whitespace || ''
     end
     
-    def to_ruby(include_whitespace = false)
-      (include_whitespace ? whitespace : '') + token.to_s
+    def position=(position)
+      @position = position.dup
+    end
+    
+    def to_ruby(whitespace = false)
+      (whitespace ? self.whitespace : '') + token.to_s
     end
       
     def to_identifier

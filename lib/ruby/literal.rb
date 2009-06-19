@@ -1,4 +1,4 @@
-require 'ruby/node'
+require 'ruby/token'
 
 module Ruby
   class Nil < Token

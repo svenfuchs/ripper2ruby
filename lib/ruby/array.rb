@@ -7,7 +7,7 @@ module Ruby
     end
   end
   
-  class Range < Node
+  class Range < Aggregate
     child_accessor :left, :operator, :right
     
     def initialize(left, operator, right)

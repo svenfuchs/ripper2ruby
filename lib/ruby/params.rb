@@ -1,35 +1,24 @@
-require 'ruby/identifier'
+require 'ruby/aggregate'
+require 'ruby/list'
 
 module Ruby
-  class Params < Node # join with ArgsList?
-    child_accessor :params, :separators, :ldelim, :rdelim
-
-    def initialize(params, ldelim = nil, rdelim = nil, separators = [])
-      self.ldelim = ldelim
-      self.rdelim = rdelim
-      self.separators = separators
-      self.params = Array(params)
+  class Params < DelimitedList
+  end
+  
+  class RestParam < DelimitedAggregate
+    child_accessor :param
+    
+    def initialize(param, ldelim = nil)
+      self.param = param
+      super(ldelim)
     end
-
+    
     def nodes
-      [ldelim, zip(separators), rdelim].flatten.compact
+      [ldelim, param].compact
     end
 
     def method_missing(method, *args, &block)
-      @params.respond_to?(method) ? @params.send(method, *args, &block) : super
-    end
-  end
-
-  class RestParam < Identifier
-    child_accessor :ldelim
-
-    def initialize(token, position, ldelim)
-      self.ldelim = ldelim
-      super(token, ldelim.position)
-    end
-
-    def to_ruby(include_whitespace = false)
-      ldelim.to_ruby(include_whitespace) + super(true)
+      param.respond_to?(method) ? param.send(method, *args, &block) : super
     end
   end
 end
