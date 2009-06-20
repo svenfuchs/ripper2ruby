@@ -28,17 +28,17 @@ class Ripper
       end
       
       def on_else(statements)
-        block = Ruby::Else.new(pop_token(:@else), statements)
+        block = Ruby::Else.new(pop_token(:@else, :pass => true), statements)
       end
       
       def on_if_mod(expression, statement)
         expression = update_args(expression)
-        Ruby::IfMod.new(pop_token(:@if), expression, statement)
+        Ruby::IfMod.new(pop_token(:@if, :pass => true), expression, statement)
       end
       
       def on_unless_mod(expression, statement)
         expression = update_args(expression)
-        Ruby::UnlessMod.new(pop_token(:@unless), expression, statement)
+        Ruby::UnlessMod.new(pop_token(:@unless, :pass => true), expression, statement)
       end
     end
   end

@@ -6,19 +6,25 @@ class Ripper
       end
 
       def on_command_call(target, separator, identifier, args)
-        separator = pop_token(:@period)
+        separator = pop_token(:@period, :"@::", :pass => true)
         Ruby::Call.new(target, separator, identifier, args)
       end
 
       def on_call(target, separator, identifier)
         # happens for symbols that are also keywords, e.g. :if
         identifier = pop_token(identifier.type).to_identifier if identifier.respond_to?(:known?) && identifier.known?
-        separator = pop_token(:@period, :ignore => [:@do, :@lbrace])
+        separator = pop_token(:@period, :"@::", :pass => true, :right => identifier)
         Ruby::Call.new(target, separator, identifier)
       end
 
       def on_fcall(identifier)
         Ruby::Call.new(nil, nil, identifier)
+      end
+
+      # assignment methods, e.g. a.b = :c
+      def on_field(target, separator, identifier)
+        separator = pop_token(:@period, :"@::", :pass => true)
+        Ruby::Call.new(target, separator, identifier)
       end
 
       def on_zsuper(*args)
@@ -88,17 +94,11 @@ class Ripper
         Ruby::Call.new(nil, nil, identifier)
       end
 
-      # assignment methods, e.g. a.b = :c
-      def on_field(target, separator, identifier)
-        separator = pop_token(:@period)
-        Ruby::Call.new(target, separator, identifier)
-      end
-
       # TODO defined?(A), technically not a method call ... have Defined < Call for this?
       def on_defined(ref)
-        ldelim = pop_token(:@lparen)
-        rdelim = pop_token(:@rparen)
-        token  = pop_token(:@defined)
+        token  = pop_token(:@defined, :pass => true)
+        ldelim = pop_token(:@lparen, :left => token)
+        rdelim = pop_token(:@rparen) if ldelim
 
         args = Ruby::ArgsList.new(ref, nil, ldelim, rdelim)
         Ruby::Call.new(nil, nil, token.to_identifier, args)

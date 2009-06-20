@@ -42,22 +42,26 @@ class Ripper
       
       def on_string_content(*args)
         ldelim = pop_token(:@tstring_beg, :@heredoc_beg)
-        Ruby::String.new(ldelim)
+        string = Ruby::String.new(ldelim)
+        tstring_stack << string
+        string
+      end
+
+      def on_tstring_content(token)
+        Ruby::StringContent.new(token, position)
       end
 
       def on_xstring_new(*args)
-        ldelim = pop(:@symbeg, :@backtick, :@regexp_beg, :max => 1).first
-        if ldelim.type == :@symbeg
+        ldelim = pop(:@symbeg, :@backtick, :@regexp_beg, :max => 1, :pass => true).first
+        string = if ldelim.type == :@symbeg
           Ruby::DynaSymbol.new(build_token(ldelim))
         elsif ldelim.type == :@regexp_beg
           Ruby::Regexp.new(build_token(ldelim))
         else
           Ruby::ExecutableString.new(build_token(ldelim))
         end
-      end
-
-      def on_tstring_content(token)
-        Ruby::StringContent.new(token, position)
+        tstring_stack << string
+        string
       end
 
       def on_word_new
@@ -83,6 +87,7 @@ class Ripper
       def on_heredoc_end(*args)
         token = push(super)
         content = extract_src(heredoc_stack.pop, position)
+        stack.announce_extra_whitespace(position)
         Ruby::StringContent.new(content, position, pop_whitespace)
       end
     end

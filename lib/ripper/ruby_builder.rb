@@ -13,9 +13,10 @@ class Ripper
       end
     end
 
-    WHITESPACE        = [:@sp, :@nl, :@ignored_nl, :@comment]
-    OPENERS           = [:@lparen, :@lbracket, :@lbrace, :@class, :@module, :@def, :@begin,
-                         :@while, :@until, :@for, :@if, :@elsif, :@else, :@unless, :@case, :@when]
+    NEWLINE           = [:@nl, :@ignored_nl]
+    WHITESPACE        = [:@sp, :@comment] + NEWLINE
+    OPENERS           = [:@lparen, :@lbracket, :@lbrace, :@class, :@module, :@def, :@begin, :@while, :@until, 
+                         :@for, :@if, :@elsif, :@else, :@unless, :@case, :@when, :@embexpr_beg]
     KEYWORDS          = [:@alias, :@and, :@BEGIN, :@begin, :@break, :@case, :@class, :@def, :@defined, 
                          :@do, :@else, :@elsif, :@END, :@end, :@ensure, :@false, :@for, :@if, :@in, 
                          :@module, :@next, :@nil, :@not, :@or, :@redo, :@rescue, :@retry, :@return, 
@@ -27,7 +28,8 @@ class Ripper
                          :'@>', :'@>=', :'@<', :'@<=', :'@<=>', :'@==', :'@===', :'@!=', :'@=~', :'@!~', 
                          :'@&&', :'@||', :@and, :@or]
     TERNARY_OPERATORS = [:'@?', :'@:']
-    ASSIGN_OPERATORS  = [:'@=', :'@+=', :'@-=',:'@*=', :'@**=', :'@/=', :'@[]=']
+    ASSIGN_OPERATORS  = [:'@=', :'@+=', :'@-=', :'@*=', :'@**=', :'@/=', :'@|=', :'@&=', :'@^=', 
+                         :'@[]=', :'@||=', :'@&&=', :'@<<=', :'@>>=']
     ACCESS_OPERATORS  = [:'@[]']
 
     OPERATORS = UNARY_OPERATORS + BINARY_OPERATORS + TERNARY_OPERATORS + ASSIGN_OPERATORS + ACCESS_OPERATORS
@@ -36,13 +38,14 @@ class Ripper
     include Lexer, Statements, Const, Method, Call, Block, Args, Assignment, Operator,
             If, Case, For, While, Identifier, Literal, String, Symbol, Array, Hash
 
-    attr_reader :src, :filename, :stack
+    attr_reader :src, :filename, :stack, :tstring_stack
 
     def initialize(src, filename = nil, lineno = nil)
       @src = src || filename && File.read(filename)
       @filename = filename
       @stack = []
       @stack = Stack.new
+      @tstring_stack = []
       super
     end
 
@@ -118,11 +121,19 @@ class Ripper
         Ruby::Whitespace.new(token.value, token.position)
       end
       
+      # def _extract_src(from, to)
+      #   lines = src.split("\n")[from.row..to.row]
+      #   lines[0] = lines.first[from.col..-1]
+      #   lines[lines.length - 1] = lines.last.slice(0, to.col)
+      #   lines.join("\n")
+      # end
+
       def extract_src(from, to)
-        lines = src.split("\n")[from[0]..to[0]]
-        lines[0] = lines.first[from[1]..-1]
-        lines[lines.length - 1] = lines.last.slice(0, to[1])
-        lines.join("\n")
+        # TODO make Clip work with start/end positions and use it
+        lines = Ruby::Node::Text.split(src)
+        lines[from.row] = lines[from.row][from.col..-1]
+        lines[to.row] = lines[to.row][0, to.col]
+        lines[from.row..to.row].join
       end
   end
 end

@@ -17,6 +17,7 @@ module Ruby
       end
     end
     
+    include Comparable
     include Composite
     include Source
 
@@ -40,6 +41,10 @@ module Ruby
     
     def nodes
       []
+    end
+    
+    def <=>(other)
+      position <=> other.position
     end
     
     protected

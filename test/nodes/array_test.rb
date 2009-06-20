@@ -23,6 +23,16 @@ class ArrayTest < Test::Unit::TestCase
     assert_equal src, array.src
   end
   
+  define_method :"test a percent-parens delimited string" do
+    src = "%(foo)"
+    assert_equal src, build(src).to_ruby
+  end
+  
+  define_method :'test a multiline wordlist array %w(\nfoo bar\n) (parentheses)' do
+    src = "%w(\nfoo bar\n)"
+    assert_equal src, build(src).to_ruby(true)
+  end
+  
   define_method :'test a wordlist array %W[foo bar] (brackets)' do
     src = '%W[foo bar]'
     array = build(src).first
@@ -51,6 +61,20 @@ class ArrayTest < Test::Unit::TestCase
     assert_equal src, call.src
   end
   
+  define_method :"test array access on a call with no argument" do
+    src = "foo.bar[]"
+    call = build(src).first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
+  # define_method :"test array w/ nested array access" do
+  #   src = '[ foo[bar] ]'
+  #   pp sexp(src)
+  #   assert_equal src, build(src).to_ruby(true)
+  # end
+  
+  
   define_method :"test array assignment" do
     src = "result[0] = :value"
     assignment = build(src).first
@@ -58,6 +82,11 @@ class ArrayTest < Test::Unit::TestCase
     assert_equal Ruby::Assignment, assignment.class
     assert_equal src, assignment.to_ruby
     assert_equal src, assignment.src
+  end
+  
+  define_method :'test nested array with whitespace' do
+    src = "\n  [type, [row]]\n" 
+    assert_equal src, build(src).to_ruby(true)
   end
   
   define_method :'test array length: with and without whitespace' do

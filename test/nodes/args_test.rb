@@ -34,6 +34,13 @@ class ArgsTest < Test::Unit::TestCase
     assert_equal 21, args.length
   end
   
+  define_method :'test call arguments: t(:a => a, :b => b, &block)' do
+    src = 't(:a => a, :b => b, &c)'
+    call = build(src).first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
   define_method :'test call arguments: t("foo") (string, no parentheses)' do
     src = 'foo'
     args = build('t ' + src).first.arguments

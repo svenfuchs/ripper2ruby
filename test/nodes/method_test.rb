@@ -9,12 +9,24 @@ class MethodTest < Test::Unit::TestCase
     assert_equal src, method.to_ruby
     assert_equal src, method.src
   end
-
+  
+  define_method :"test a method with an options hash" do
+    src = "def foo(a, b = {})\nend"
+    method = build(src).first
+    assert_equal src, method.to_ruby
+    assert_equal src, method.src
+  end
+  
   define_method :"test a class method" do
     src = "def self.foo(a, b = nil, c = :foo, *d, &block)\n        bar\n        baz\n      end"
     method = build(src).first
     assert_equal src, method.to_ruby
     assert_equal src, method.src
+  end
+  
+  define_method :"test method definition: def foo(b = :b, c=:c); end (optional args w/ whitespace differences)" do
+    src = 'def foo(a = 1, b=2); end'
+    assert_equal src, build(src).to_ruby(true)
   end
   
   define_method :"test method definition: def t(a = []); end" do
@@ -39,6 +51,11 @@ class MethodTest < Test::Unit::TestCase
     src = "def <<(arg) foo; bar; end"
     method = build(src).statements.first
     assert_equal src, method.to_ruby
+  end
+  
+  define_method :"test method body rescue with error var" do
+    src = "def t\nrescue => e\nend"
+    assert_equal src, build(src).to_ruby(true)
   end
   
   define_method :"test method body rescue and ensure block" do

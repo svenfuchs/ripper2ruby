@@ -36,6 +36,16 @@ class ConstTest < Test::Unit::TestCase
     assert_equal src, const.src
   end
   
+  define_method :"test a nested namespaced class" do
+    src = "class A < B::C\nclass D\nend\nend"
+    assert_equal src, build(src).first.to_ruby
+  end
+  
+  define_method :"test const on self.class" do
+    src = 'self.class::A'
+    assert_equal src, build(src).first.to_ruby
+  end
+  
   define_method :"test a metaclass" do
     src = "class << self; self; end"
     const = build(src).first

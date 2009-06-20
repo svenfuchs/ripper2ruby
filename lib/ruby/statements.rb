@@ -36,6 +36,11 @@ module Ruby
       super(statements, separators)
     end
     
+    def to_ruby(whitespace = false)
+      super(true)
+    end
+    
+    # TODO replace this with Clip?
     def line_pos(row)
       (row > 0 ? src.split("\n")[0..(row - 1)].inject(0) { |pos, line| pos + line.length + 1 } : 0)
     end

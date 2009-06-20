@@ -57,6 +57,11 @@ class BlockTest < Test::Unit::TestCase
     assert_equal src, call.src
   end
   
+  define_method :"test: an empty method call brace_block w/ arg and parenthesed arg" do
+    src = 't {|a, (b)| }'
+    assert_equal src, build(src).to_ruby(true)
+  end
+  
   define_method :"test: an empty begin end block" do
     src = "begin\nend"
     block = build(src).first

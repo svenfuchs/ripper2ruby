@@ -1,6 +1,15 @@
 class Ripper
   class RubyBuilder < Ripper::SexpBuilder
-    module Lexer      
+    module Lexer
+      unimplemented = :__end__, :embvar, :tlambda, :tlambeg
+      
+      # unimplemented.each do |type|
+      #   define_method :"on_#{type}" do |*args|
+      #     p super(*args)
+      #     super(*args)
+      #   end
+      # end
+       
       def on_sp(*args)
         push(super)
       end
@@ -20,8 +29,35 @@ class Ripper
       def on_tstring_beg(*args)
         push(super)
       end
+      
+      def closes_qwords?(token)
+        raise "tstring_stack is empty" if tstring_stack.empty?
+        raise "element on tstring_stack does not have an ldelim" if tstring_stack.last.ldelim.nil?
+        
+        ldelim = tstring_stack.last.ldelim.token
+        qwords = ldelim.gsub(/[^%w]/, '') == '%w'
+        
+        map = { '{' => '}', '(' => ')', '|' => '|' }
+        key = ldelim.gsub(/[%w\s]/, '')
+        closes = map[key] == token.gsub(/[%w\s]/, '')
+        
+        qwords && closes
+      end
 
-      def on_tstring_end(*args)
+      def on_tstring_end(token)
+        push(super)
+        on_qwords_end(token) if closes_qwords?(token)
+      end
+
+      def on_qwords_beg(*args)
+        push(super)
+      end
+
+      def on_words_beg(*args)
+        push(super)
+      end
+      
+      def on_words_sep(*args)
         push(super)
       end
       
@@ -65,23 +101,11 @@ class Ripper
         push(super)
       end
 
-      def on_qwords_beg(*args)
-        push(super)
-      end
-
-      def on_words_beg(*args)
-        push(super)
-      end
-
       def on_op(*args)
         push(super)
       end
 
       def on_comma(*args)
-        push(super)
-      end
-      
-      def on_words_sep(*args)
         push(super)
       end
       
@@ -99,6 +123,18 @@ class Ripper
       
       def on_comment(*args)
         push(super)
+      end
+      
+      def on_embdoc(doc)
+        push([:@comment, doc, position])
+      end
+      
+      def on_embdoc_beg(doc)
+        push([:@comment, doc, position])
+      end
+      
+      def on_embdoc_end(doc)
+        push([:@comment, doc, position])
       end
     end
   end

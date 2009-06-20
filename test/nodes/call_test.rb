@@ -49,6 +49,34 @@ class CallTest < Test::Unit::TestCase
     assert_equal src, call.src
   end
   
+  define_method :"test call on const target without arguments and without parantheses (:: separator)" do
+    src = "I18n::t"
+    call = build(src).first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
+  define_method :"test call on const target without arguments and with parantheses (:: separator)" do
+    src = "I18n::t()"
+    call = build(src).first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
+  define_method :'test method call: I18n::t("foo") (const target, double-quoted string, parantheses, :: separator)' do
+    src = "I18n::t('foo')"
+    call = build(src).first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
+  define_method :'test method call: I18n::t "foo" (const target, double-quoted string, no parantheses, :: separator)' do
+    src = "I18n::t 'foo'"
+    call = build(src).first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+    
   define_method :'test method call: foo.<=>(bar) (sending an operator, srsly ... used in Rake 0.8.3)' do
     src = "foo.<=>(bar)"
     call = build(src).first
@@ -67,6 +95,11 @@ class CallTest < Test::Unit::TestCase
   
     assert_equal src, call.to_ruby
     assert_equal src, call.src
+  end
+
+  define_method :"test call with a string with an embedded expression" do
+    src = 'foo("#{bar}")'
+    assert_equal src, build(src).first.to_ruby
   end
   
   define_method :"test call on no target without arguments but parantheses" do
@@ -109,6 +142,11 @@ class CallTest < Test::Unit::TestCase
     assert_equal src, call.src
   end
   
+  define_method :'test method call: t %(foo) (no target, two percent-parentheses delimited strings w/ embedded expression)' do
+    src = 't %(foo #{bar}), %(baz)'
+    assert_equal src, build(src).to_ruby(true)
+  end
+  
   define_method :"test call on no target without arguments but parantheses" do
     src = "t()"
     call = build(src).first
@@ -122,7 +160,7 @@ class CallTest < Test::Unit::TestCase
   end
   
   define_method :"test call with nested call/parantheses" do
-    src = "a(:a, b(:b))"
+    src = "t(:a, b(:b))"
     call = build(src).first
     assert_equal src, call.to_ruby
     assert_equal src, call.src

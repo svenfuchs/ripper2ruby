@@ -2,7 +2,6 @@ class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     module Const
       def on_const(token)
-        # const = Ruby::Const.new(token, position, pop_whitespace)
         identifier = Ruby::Identifier.new(token, position, pop_whitespace)
         const = Ruby::Const.new(identifier)
         const.separator = pop_token(:'@::')
@@ -11,7 +10,7 @@ class Ripper
       
       def on_class(const, super_class, body)
         ldelim = pop_token(:@class)
-        operator = pop_token(:'@<')
+        operator = super_class ? pop_token(:'@<') : nil
         rdelim = pop_token(:@end)
         Ruby::Class.new(const, operator, super_class, body, ldelim, rdelim)
       end

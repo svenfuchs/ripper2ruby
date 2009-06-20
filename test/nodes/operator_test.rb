@@ -200,4 +200,25 @@ class OperatorTest < Test::Unit::TestCase
     src = '((1) ? 2 : (3))'
     assert_equal src, build(src).to_ruby
   end
+  
+  # ======
+  
+  define_method :'test operator order in an expression with multiple identical operators' do
+    src = 'foo + bar  + baz'
+    expr = build(src).first
+    assert_equal src, expr.to_ruby
+    # FIXME positions are messed up!
+    # assert_equal [0, 4], expr.left.operator.position.to_a
+    # assert_equal [0, 10], expr.operator.position.to_a
+  end
+  
+  define_method :'test operator order in an expression with multiple different operators' do
+    src = 'foo + bar - baz'
+    assert_equal src, build(src).to_ruby
+  end
+  
+  define_method :'test operator order in an expression with multiple ternary operators' do
+    src = "a ? c : d ? f : g"
+    assert_equal src, build(src).to_ruby(true)
+  end
 end

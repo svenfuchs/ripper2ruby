@@ -21,9 +21,11 @@ class Ripper
       end
 
       def on_mlhs_add(assignment, ref)
-        separator = pop_token(:@comma)
-        assignment.separators << separator if separator
         assignment << ref
+        if stack.peek && assignment < stack.peek # assignment.position && 
+          separator = pop_token(:@comma)
+          assignment.separators << separator if separator
+        end
         assignment
       end
 

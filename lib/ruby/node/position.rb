@@ -1,6 +1,8 @@
 module Ruby
   class Node
     class Position
+      include Comparable
+      
       attr_accessor :row, :col
       
       def initialize(row, col)
@@ -22,6 +24,10 @@ module Ruby
       
       def to_a
         [row, col]
+      end
+      
+      def inspect
+        to_a.inspect
       end
     end
   end

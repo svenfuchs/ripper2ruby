@@ -52,4 +52,9 @@ class StatementsTest < Test::Unit::TestCase
     src = '(((foo)); ((bar); (baz)));'
     assert_equal src, build(src).to_ruby
   end
+  
+  define_method :"test a statement with preceding and succeding whitespace" do
+    src = "\n foo \n"
+    assert_equal src, build(src).to_ruby
+  end
 end

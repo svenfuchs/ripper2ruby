@@ -36,6 +36,9 @@ module Ruby
   end
   
   class Whitespace < Token
+    def inspect
+      token.inspect
+    end
   end
   
   class Keyword < Token

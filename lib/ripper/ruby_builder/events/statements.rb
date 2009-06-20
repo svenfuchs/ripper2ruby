@@ -1,8 +1,7 @@
 class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     module Statements
-      def build_statements(statements = nil, separators = nil)
-        rdelim, ldelim = pop_token(:@rparen), pop_token(:@lparen)
+      def build_statements(statements = nil, separators = nil, rdelim = nil, ldelim = nil)
         node = Ruby::Statements.new(statements, separators, ldelim, rdelim)
       end
       
@@ -20,11 +19,12 @@ class Ripper
       end
       
       def on_paren(node)
-        node = build_statements(node) if stack.peek.type == :@rparen
+        node = build_statements(node, nil, pop_token(:@rparen), pop_token(:@lparen)) if stack.peek.type == :@rparen
         node
       end
 
       def on_stmts_add(target, statement)
+        # statement.rdelim = pop_token(:@tstring_end) if statement.respond_to?(:ldelim) && statement.ldelim && !statement.rdelim
         target.separators += pop_tokens(:@semicolon)
         target.elements << statement if statement
         target

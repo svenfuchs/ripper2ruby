@@ -12,4 +12,12 @@ class NodesTest < Test::Unit::TestCase
       assert_equal line, build(line).first.src
     end
   end
+  
+  Dir["#{File.dirname(__FILE__)}/../fixtures/**/*.rb"].sort.each do |filename|
+    # puts filename
+    define_method :"test: #{filename} compiles to the original src" do
+      src = File.read(filename)
+      assert_equal src, build(src).to_ruby
+    end
+  end
 end

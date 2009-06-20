@@ -1,8 +1,22 @@
+factor out Source from Node
+make it use a FileIO
+move Text, Position etc. to a new module Source
 
-(foo)
-((foo))
-foo[1][2][3]
-foo[1][2][3]=
+
+
+sexp("I18n::t()") # =>
+[:program,
+ [:stmts_add,
+  [:stmts_new],
+  [:method_add_arg,
+   [:call,
+    [:var_ref, [:@const, "I18n", [1, 0]]],
+    :".",
+    [:@ident, "t", [1, 6]]],
+   [:arg_paren, nil]]]]
+
+watch the separator!
+
 
 
 http://web.njit.edu/all_topics/Prog_Lang_Docs/html/ruby/syntax.html

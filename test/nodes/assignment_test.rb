@@ -15,6 +15,14 @@ class AssignmentTest < Test::Unit::TestCase
     assert_equal src, assignment.src
   end
   
+  define_method :'test assignment: a ||= b' do
+    src = 'a ||= b'
+    assignment = build(src).first
+    
+    assert_equal src, assignment.to_ruby
+    assert_equal src, assignment.src
+  end
+  
   define_method :'test assignment: a, b = c' do
     src = 'a, b = c'
     assignment = build(src).first

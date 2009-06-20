@@ -17,9 +17,7 @@ module Ruby
     end
     
     def contents
-      (elements + separators).flatten.compact.
-      # sort { |a, b| a.row < b.row ? -1 : a.row > b.row ?  1 : a.column <=> b.column }
-      sort { |a, b| a.position <=> b.position }
+      (elements + separators).flatten.compact.sort
     end
     
     def to_array(ldelim, rdelim)
