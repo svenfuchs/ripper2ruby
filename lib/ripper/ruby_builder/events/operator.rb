@@ -3,12 +3,12 @@ class Ripper
     module Operator
       def on_unary(operator, operand)
         operator = pop_unary_operator(:pass => true, :right => operand)
-        Ruby::Unary.new(operator, operand)
+        Ruby::Unary.new(operator, operand) if operator
       end
 
       def on_binary(left, operator, right)
         operator = pop_token(:"@#{operator}", :pass => true, :right => right) 
-        Ruby::Binary.new(operator, left, right)
+        Ruby::Binary.new(operator, left, right) if operator
       end
 
       def on_ifop(condition, left, right)

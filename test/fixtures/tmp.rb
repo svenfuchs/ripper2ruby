@@ -1,3 +1,3 @@
-foo <<-end
-#{a['b']}
-end
+<<-eos unless foo
+a
+eos

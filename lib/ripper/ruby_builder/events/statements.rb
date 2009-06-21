@@ -24,6 +24,7 @@ class Ripper
       end
 
       def on_stmts_add(target, statement)
+        # stop_extra_heredoc!
         # statement.rdelim = pop_token(:@tstring_end) if statement.respond_to?(:ldelim) && statement.ldelim && !statement.rdelim
         target.separators += pop_tokens(:@semicolon)
         target.elements << statement if statement

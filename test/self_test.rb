@@ -57,7 +57,7 @@ class SelfTest < Test::Unit::TestCase
   def xtest_library_build
     lib = LIBS[:rails]
     filenames(File.expand_path(lib[:path])).each do |filename|
-      next if filename <= '/Users/sven/Development/shared/rails/rails/actionpack/lib/action_controller/mime_responds.rb'
+      next if filename <= '/Users/sven/Development/shared/rails/rails/activerecord/lib/active_record/associations.rb'
       next if Array(lib[:exclude]).any? { |exclude| filename.index(exclude) }
 
       puts filename
@@ -73,10 +73,8 @@ class SelfTest < Test::Unit::TestCase
 
   def test_tmp_file
     src = File.read(File.dirname(__FILE__) + '/fixtures/tmp.rb')
-    pp sexp(src)
     result = build(src).to_ruby(true)
-    assert_equal src, result
-    # puts diff(src, result)
+    puts diff(src, result)
   end
 
   def xtest_src
@@ -84,7 +82,7 @@ class SelfTest < Test::Unit::TestCase
   end
 
   def xtest_this
-    src = ':"#{self}"'
+    src = 'foo *args if bar?'
     assert_equal src, build(src).to_ruby(true)
   end
 end

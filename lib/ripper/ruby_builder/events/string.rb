@@ -9,14 +9,13 @@ class Ripper
         if heredoc?
           on_heredoc_literal(string)
         else
-          string.rdelim = pop_token(:@tstring_end, :@heredoc_end)
+          string.rdelim = pop_token(:@tstring_end)
           string
         end
       end
       
       def on_heredoc_literal(string)
-        string.rdelim = pop_token(:@heredoc_end)
-        string
+        heredoc
       end
 
       def on_xstring_literal(string)
@@ -30,20 +29,17 @@ class Ripper
       end
 
       def on_string_add(string, content)
-        string << content if content && (!heredoc? || content.is_a?(Ruby::Statements))
+        string << content if string && content && !heredoc?
         string
       end
-
-      def on_heredoc_add(content)
-        heredoc_stack.last << content
-      end
-
+      
       def on_word_add(string, content)
         string << content
         string
       end
 
       def on_xstring_add(string, content)
+        return string if heredoc?
         string.tap { |s| s << content }
       end
 
@@ -54,27 +50,22 @@ class Ripper
       end
 
       def on_string_content(*args)
-        if heredoc?
-          on_heredoc_content(*args)
-        else
-          ldelim = pop_token(:@tstring_beg)
-          string = Ruby::String.new(ldelim)
-          tstring_stack << string
-          string
-        end
+        return if heredoc?
+        ldelim = pop_token(:@tstring_beg)
+        string = Ruby::String.new(ldelim)
+        tstring_stack << string
+        string
       end
 
       def on_tstring_content(token)
+        return if heredoc?
         content = Ruby::StringContent.new(token, position)
-        on_heredoc_add(content) if heredoc?
         content
       end
 
       def on_heredoc_content(*args)
         ldelim = pop_token(:@heredoc_beg)
-        string = Ruby::HereDoc.new(ldelim)
-        heredoc_stack << string
-        string
+        heredoc_stack << Ruby::HereDoc.new(ldelim)
       end
 
       def on_xstring_new(*args)
@@ -102,44 +93,57 @@ class Ripper
       def on_heredoc_beg(*args)
         token = push(super)
         @heredoc = true
+        on_heredoc_content
       end
 
       def on_heredoc_end(*args)
         push(super)
         @heredoc = false
-        nil
+        @extra_heredoc = true
+
+        heredoc.rdelim = pop_token(:@heredoc_end)
+        pos = heredoc.ldelim.position
+        pos = Ruby::Node::Position.new(pos.row, pos.col + heredoc.ldelim.length)
+        heredoc << Ruby::StringContent.new(extract_src(pos, heredoc.rdelim.position), pos)
       end
       
       protected
+      
+        def heredoc_stack
+          @heredoc_stack ||= []
+        end
+        
+        def heredoc
+          heredoc_stack.last
+        end
 
         def heredoc?
-          !!@heredoc
+          !!@heredoc || @extra_heredoc
+        end
+
+        def extra_heredoc?
+          !!@extra_heredoc
+        end
+        
+        def stop_extra_heredoc!
+          # p :stop_extra_heredoc!
+          heredoc_stack.pop 
+          @extra_heredoc = false
         end
       
         def extra_heredoc_chars(token)
-          return false if !extra_heredoc_stage? || arglist_element?(token)
-          string = heredoc_stack.last
-          string.separators << build_token(token)
-
-          heredoc_stack.pop if token.newline?
-          true
+          if extra_heredoc? && heredoc_part?(token)
+            stop_extra_heredoc! if token.newline? || token.comment?
+            true
+          else
+            false
+          end
         end
         
-        def arglist_element?(token)
-          [:@comma, :@rparen].include?(token.type) || token.operator? || 
-          stack.peek.type == :@comma || stack.peek.operator?
-        end
-      
-        def extra_heredoc_stage?
-          !heredoc? && !!heredoc_stack.last
-        end
-      
-        def extra_heredoc_char?(type)
-          [*WHITESPACE, :@semicolon].include?(type)
-        end
-
-        def heredoc_stack
-          @heredoc_stack ||= []
+        def heredoc_part?(token)
+          return false unless heredoc.ldelim
+          return false unless heredoc.rdelim
+          heredoc.ldelim <= token && token <= heredoc.rdelim
         end
     end
   end

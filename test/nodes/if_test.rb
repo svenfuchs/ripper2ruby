@@ -80,69 +80,28 @@ class IfTest < Test::Unit::TestCase
     assert_equal src, build(src).to_ruby(true)
   end
   
+  define_method :'test if modifier after call with a star argument' do
+    src = 'foo *args if bar?'
+    assert_equal src, build(src).to_ruby(true)
+  end
+  
   define_method :'test if modifier after array access' do
     src = 'pos[1] if pos'
     assert_equal src, build(src).to_ruby(true)
   end
-
+  
   define_method :'test if modifier testing defined?' do
     src = 'a if (defined? a)'
     assert_equal src, build(src).to_ruby(true)
   end
-
+  
   define_method :'test rescue modifier' do
     src = 'rescued rescue rescuing'
     assert_equal src, build(src).to_ruby(true)
   end
-
+  
   define_method :'test rescue modifier after assignment' do
     src = 'rescued = assigned rescue rescueing'
     assert_equal src, build(src).to_ruby(true)
-  end
-end
-
-class UnlessTest < Test::Unit::TestCase
-  include TestHelper
-
-  define_method :'test unless block, semicolon separated' do
-    src = "unless true; false end"
-    expr = build(src).statements.first
-    assert_equal src, expr.to_ruby
-  end
-
-  define_method :'test unless block, newline separated' do
-    src = "unless true\n false end"
-    expr = build(src).statements.first
-    assert_equal src, expr.to_ruby
-  end
-
-  define_method :'test unless block w/ then, not separated' do
-    src = "unless true then false end"
-    expr = build(src).statements.first
-    assert_equal src, expr.to_ruby
-  end
-
-  define_method :'test unless block w/ else block, semicolon separated' do
-    src = "unless true; false; else; true end"
-    expr = build(src).statements.first
-    assert_equal src, expr.to_ruby
-  end
-
-  define_method :'test unless block w/ else block, newline separated' do
-    src = "unless true\n false\n else\n true end"
-    expr = build(src).statements.first
-    assert_equal src, expr.to_ruby
-  end
-
-  define_method :'test unless modifier' do
-    src = "foo unless true"
-    expr = build(src).statements.first
-    assert_equal src, expr.to_ruby
-  end
-
-  define_method :'test chained unless and if modifiers' do
-    src = "1 unless false if true"
-    expr = build(src).statements.first
-    assert_equal src, expr.to_ruby
   end
 end

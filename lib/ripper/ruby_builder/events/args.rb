@@ -22,13 +22,13 @@ class Ripper
       
       def on_args_add_star(args, arg)
         args.separators += pop_tokens(:@comma).reverse
-        args << Ruby::Arg.new(arg, pop_token(:'@*'))
+        args << Ruby::Arg.new(arg, pop_token(:'@*', :pass => true))
         args
       end
 
       def on_args_add(args, arg)
         args = args.to_heredoc_args_list if arg.is_a?(Ruby::HereDoc)
-        args.separators += pop_tokens(:@comma).reverse unless extra_heredoc_stage?
+        args.separators += pop_tokens(:@comma).reverse unless extra_heredoc?
         args << Ruby::Arg.new(arg)
         args
       end
