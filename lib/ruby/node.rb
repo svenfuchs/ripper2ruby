@@ -43,6 +43,10 @@ module Ruby
       []
     end
     
+    # def flatten_nodes
+    #   nodes.map{ |n| [n] + n.nodes }.flatten.compact
+    # end
+    
     def <=>(other)
       position <=> other.position
     end

@@ -12,12 +12,22 @@ module Ruby
   end
   
   class HeredocArgsList < ArgsList
-    def <<(arg)
-      super if arg.arg.is_a?(Ruby::HereDoc)
+    def nodes
+      nodes = elements
+      heredoc = nodes.shift.arg
+      [nodes, separators, ldelim, rdelim, heredoc.ldelim, heredoc.elements, heredoc.rdelim].flatten.compact.sort
     end
     
-    def contents
-      elements.flatten.compact.sort
+    def heredoc
+      elements.first.arg
+    end
+    
+    def heredoc_ldelim
+      heredoc.ldelim
+    end
+    
+    def heredoc_rest
+      heredoc.elements + [heredoc.rdelim]
     end
   end
   

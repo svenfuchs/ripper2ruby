@@ -7,15 +7,11 @@ class Ripper
 
       def on_string_literal(string)
         if heredoc?
-          on_heredoc_literal(string)
+          @heredoc_beg
         else
           string.rdelim = pop_token(:@tstring_end)
           string
         end
-      end
-      
-      def on_heredoc_literal(string)
-        heredoc
       end
 
       def on_xstring_literal(string)
@@ -29,7 +25,8 @@ class Ripper
       end
 
       def on_string_add(string, content)
-        string << content if string && content && !heredoc?
+        return string if heredoc?
+        string << content if string && content
         string
       end
       
@@ -39,7 +36,6 @@ class Ripper
       end
 
       def on_xstring_add(string, content)
-        return string if heredoc?
         string.tap { |s| s << content }
       end
 
@@ -50,7 +46,6 @@ class Ripper
       end
 
       def on_string_content(*args)
-        return if heredoc?
         ldelim = pop_token(:@tstring_beg)
         string = Ruby::String.new(ldelim)
         tstring_stack << string
@@ -58,14 +53,8 @@ class Ripper
       end
 
       def on_tstring_content(token)
-        return if heredoc?
         content = Ruby::StringContent.new(token, position)
         content
-      end
-
-      def on_heredoc_content(*args)
-        ldelim = pop_token(:@heredoc_beg)
-        heredoc_stack << Ruby::HereDoc.new(ldelim)
       end
 
       def on_xstring_new(*args)
@@ -90,60 +79,37 @@ class Ripper
         variable
       end
       
+      def string_stack
+        @string_stack ||= []
+      end
+      
       def on_heredoc_beg(*args)
         token = push(super)
-        @heredoc = true
-        on_heredoc_content
+        @heredoc_beg = pop_token(:@heredoc_beg)
+        @heredoc     = Ruby::HereDoc.new
+        
+        @string_stack << @heredoc_beg
       end
 
       def on_heredoc_end(*args)
         push(super)
-        @heredoc = false
-        @extra_heredoc = true
-
-        heredoc.rdelim = pop_token(:@heredoc_end)
-        pos = heredoc.ldelim.position
-        pos = Ruby::Node::Position.new(pos.row, pos.col + heredoc.ldelim.length)
-        heredoc << Ruby::StringContent.new(extract_src(pos, heredoc.rdelim.position), pos)
+        @heredoc.rdelim = pop_token(:@heredoc_end)
+        pos = Ruby::Node::Position.new(@heredoc_beg.position.row + 1, 0)
+        @heredoc << Ruby::StringContent.new(extract_src(pos, @heredoc.rdelim.position), pos)
       end
       
       protected
       
-        def heredoc_stack
-          @heredoc_stack ||= []
-        end
-        
-        def heredoc
-          heredoc_stack.last
-        end
-
         def heredoc?
-          !!@heredoc || @extra_heredoc
-        end
-
-        def extra_heredoc?
-          !!@extra_heredoc
-        end
-        
-        def stop_extra_heredoc!
-          # p :stop_extra_heredoc!
-          heredoc_stack.pop 
-          @extra_heredoc = false
+          !!@heredoc
         end
       
         def extra_heredoc_chars(token)
-          if extra_heredoc? && heredoc_part?(token)
-            stop_extra_heredoc! if token.newline? || token.comment?
-            true
-          else
-            false
+          if @heredoc && (token.newline? || token.comment?)
+            token.value += @heredoc.to_ruby
+            @heredoc_beg = @heredoc = nil
           end
-        end
-        
-        def heredoc_part?(token)
-          return false unless heredoc.ldelim
-          return false unless heredoc.rdelim
-          heredoc.ldelim <= token && token <= heredoc.rdelim
+          false
         end
     end
   end

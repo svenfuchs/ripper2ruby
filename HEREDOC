@@ -1,0 +1,69 @@
+# mir scheint, das pattern hier ist, daß der heredoc body immer in der zeile
+# unmittelbar nach dem heredoc_beg token stehen muß. d.h., es sollte möglich
+# sein, heredoc_beg und body zu trennen, nur heredoc_beg im urspünglichen
+# statement zu lassen und den body in stmt_add zu übernehmen.
+
+class String; def bar; end; end; def foo(str) str; end; def bar; end
+
+<<-end
+  a
+end
+
+<<-end if bar
+  a
+end
+
+<<-end.bar
+  a
+end
+
+
+foo <<-eos
+  a
+eos
+
+foo <<-eos if bar
+  a
+eos
+
+foo <<-eos.bar
+  a
+eos
+
+
+foo(<<-eos)
+  a
+eos
+
+foo(<<-eos) if bar
+  a
+eos
+
+foo(<<-eos).bar
+  a
+eos
+
+foo(<<-eos.bar)
+  a
+eos
+
+
+foo(<<-eos
+  a
+eos
+)
+
+foo(<<-eos
+  a
+eos
+) if bar
+
+foo(<<-eos.bar
+  a
+eos
+)
+
+foo(<<-eos
+  a
+eos
+).bar
