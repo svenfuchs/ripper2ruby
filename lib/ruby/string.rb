@@ -14,7 +14,7 @@ module Ruby
     end
   end
   
-  class HereDoc < String
+  class Heredoc < String
   end
 
   class StringContent < Token

@@ -6,12 +6,8 @@ class Ripper
       end
 
       def on_string_literal(string)
-        if heredoc?
-          @heredoc_beg
-        else
-          string.rdelim = pop_token(:@tstring_end)
-          string
-        end
+        string.rdelim = pop_token(:@tstring_end) unless string.is_a?(Ruby::HeredocBegin)
+        string
       end
 
       def on_xstring_literal(string)
@@ -25,8 +21,13 @@ class Ripper
       end
 
       def on_string_add(string, content)
-        return string if heredoc?
-        string << content if string && content
+        if string.is_a?(Ruby::HeredocBegin)
+          @heredoc ||= Ruby::Heredoc.new
+          @heredoc << content
+          @heredoc_pos = Ruby::Node::Position.new(content.position.row, content.position.col + content.length)
+        else
+          string << content if string && content
+        end
         string
       end
       
@@ -46,10 +47,14 @@ class Ripper
       end
 
       def on_string_content(*args)
-        ldelim = pop_token(:@tstring_beg)
-        string = Ruby::String.new(ldelim)
-        tstring_stack << string
-        string
+        if ldelim = pop_token(:@heredoc_beg)
+          @heredoc_pos = Ruby::Node::Position.new(ldelim.position.row + 1, 0)
+          @heredoc_beg = Ruby::HeredocBegin.new(ldelim.token, ldelim.position, ldelim.whitespace)
+        else
+          string = Ruby::String.new(pop_token(:@tstring_beg))
+          tstring_stack << string
+          string
+        end
       end
 
       def on_tstring_content(token)
@@ -85,28 +90,24 @@ class Ripper
       
       def on_heredoc_beg(*args)
         token = push(super)
-        @heredoc_beg = pop_token(:@heredoc_beg)
-        @heredoc     = Ruby::HereDoc.new
-        
-        @string_stack << @heredoc_beg
       end
 
       def on_heredoc_end(*args)
         push(super)
+        @heredoc ||= Ruby::Heredoc.new
         @heredoc.rdelim = pop_token(:@heredoc_end)
-        pos = Ruby::Node::Position.new(@heredoc_beg.position.row + 1, 0)
-        @heredoc << Ruby::StringContent.new(extract_src(pos, @heredoc.rdelim.position), pos)
+        Ruby::StringContent.new(extract_src(@heredoc_pos, @heredoc.rdelim.position), @heredoc_pos)
       end
       
       protected
       
-        def heredoc?
-          !!@heredoc
-        end
-      
+        # def heredoc?
+        #   !!@heredoc
+        # end
+              
         def extra_heredoc_chars(token)
           if @heredoc && (token.newline? || token.comment?)
-            token.value += @heredoc.to_ruby
+            token.value += @heredoc.to_ruby # BIG HACK! ... somehow bubble the heredoc up to a more reasonable place
             @heredoc_beg = @heredoc = nil
           end
           false

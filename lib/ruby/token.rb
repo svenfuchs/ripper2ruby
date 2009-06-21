@@ -43,6 +43,9 @@ module Ruby
   
   class Keyword < Token
   end
+  
+  class HeredocBegin < Token
+  end
 
   class Variable < Token
   end
