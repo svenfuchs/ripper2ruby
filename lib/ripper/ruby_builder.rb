@@ -15,8 +15,8 @@ class Ripper
 
     NEWLINE           = [:@nl, :@ignored_nl]
     WHITESPACE        = [:@sp, :@comment] + NEWLINE
-    OPENERS           = [:@lparen, :@lbracket, :@lbrace, :@class, :@module, :@def, :@begin, :@while, :@until, 
-                         :@for, :@if, :@elsif, :@else, :@unless, :@case, :@when, :@embexpr_beg]
+    OPENERS           = [:@lparen, :@lbracket, :@lbrace, :'@|', :@class, :@module, :@def, :@begin, :@while, :@until, 
+                         :@for, :@if, :@elsif, :@else, :@unless, :@case, :@when, :@embexpr_beg, :@do, :@rescue]
     KEYWORDS          = [:@alias, :@and, :@BEGIN, :@begin, :@break, :@case, :@class, :@def, :@defined, 
                          :@do, :@else, :@elsif, :@END, :@end, :@ensure, :@false, :@for, :@if, :@in, 
                          :@module, :@next, :@nil, :@not, :@or, :@redo, :@rescue, :@retry, :@return, 
@@ -56,7 +56,8 @@ class Ripper
       end
 
       def push(sexp)
-        stack.push(Token.new(*sexp))
+        token = Token.new(*sexp)
+        stack.push(token) unless extra_heredoc_chars(token)
       end
 
       def pop(*args)

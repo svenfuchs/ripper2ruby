@@ -27,7 +27,8 @@ class Ripper
       end
 
       def on_args_add(args, arg)
-        args.separators += pop_tokens(:@comma).reverse
+        args = args.to_heredoc_args_list if arg.is_a?(Ruby::HereDoc)
+        args.separators += pop_tokens(:@comma).reverse unless extra_heredoc_stage?
         args << Ruby::Arg.new(arg)
         args
       end

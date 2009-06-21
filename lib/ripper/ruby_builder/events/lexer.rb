@@ -31,16 +31,14 @@ class Ripper
       end
       
       def closes_qwords?(token)
-        raise "tstring_stack is empty" if tstring_stack.empty?
-        raise "element on tstring_stack does not have an ldelim" if tstring_stack.last.ldelim.nil?
-        
+        return false if tstring_stack.empty? || tstring_stack.last.ldelim.nil?
         ldelim = tstring_stack.last.ldelim.token
         qwords = ldelim.gsub(/[^%w]/, '') == '%w'
-        
+      
         map = { '{' => '}', '(' => ')', '|' => '|' }
         key = ldelim.gsub(/[%w\s]/, '')
         closes = map[key] == token.gsub(/[%w\s]/, '')
-        
+      
         qwords && closes
       end
 

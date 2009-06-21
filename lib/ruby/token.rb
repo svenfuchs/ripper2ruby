@@ -4,7 +4,7 @@ module Ruby
   class Token < Node 
     attr_accessor :token, :position, :whitespace
 
-    def initialize(token, position = nil, whitespace = nil)
+    def initialize(token = '', position = nil, whitespace = nil)
       self.token = token
       self.position = position
       self.whitespace = whitespace
@@ -19,7 +19,7 @@ module Ruby
     end
     
     def position=(position)
-      @position = position.dup
+      @position = position.dup if position
     end
     
     def to_s

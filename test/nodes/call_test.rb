@@ -96,7 +96,7 @@ class CallTest < Test::Unit::TestCase
     assert_equal src, call.to_ruby
     assert_equal src, call.src
   end
-
+  
   define_method :"test call with a string with an embedded expression" do
     src = 'foo("#{bar}")'
     assert_equal src, build(src).first.to_ruby
@@ -198,6 +198,11 @@ class CallTest < Test::Unit::TestCase
     
     assert_equal src, call.to_ruby
     assert_equal [0, 8], call.arguments[1].position.to_a
+  end
+  
+  define_method :"test call with a call with a block as an arg" do
+    src = "foo(bar do |a| ; end)"
+    assert_equal src, build(src).first.to_ruby
   end
   
   define_method :"test call to self" do

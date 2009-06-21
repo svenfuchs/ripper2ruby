@@ -64,49 +64,51 @@ class BlockTest < Test::Unit::TestCase
   
   define_method :"test: an empty begin end block" do
     src = "begin\nend"
-    block = build(src).first
-    assert_equal src, block.to_ruby
+    assert_equal src, build(src).to_ruby
   end
   
   define_method :"test: a begin ; end block" do
     src = "begin ; end"
-    block = build(src).first
-    assert_equal src, block.to_ruby
+    assert_equal src, build(src).to_ruby
   end
   
   define_method :"test: a begin foo; end block" do
     src = "begin foo; end"
-    block = build(src).first
-    assert_equal src, block.to_ruby
+    assert_equal src, build(src).to_ruby
   end
   
   define_method :"test: a begin block with rescue without error_type" do
     src = "begin\nfoo\nrescue\nbar\nend"
-    block = build(src).first
-    assert_equal src, block.to_ruby
+    assert_equal src, build(src).to_ruby
   end
   
   define_method :"test: a begin block with rescue without an error_type" do
     src = "begin \n rescue A \n end"
-    block = build(src).first
-    assert_equal src, block.to_ruby
+    assert_equal src, build(src).to_ruby
   end
   
   define_method :"test: a begin block with rescue with a error_types and error_var" do
+    src = "begin foo\n rescue A => e\n bar\n end"
+    assert_equal src, build(src).to_ruby
+  end
+  
+  define_method :"test: a begin block with rescue with a multiple error_types and error_var" do
     src = "begin foo\n rescue A, B => e\n bar\n end"
-    block = build(src).first
-    assert_equal src, block.to_ruby
+    assert_equal src, build(src).to_ruby
   end
   
   define_method :"test: a begin block with multiple rescues and ensure" do
     src = "begin foo\n rescue A, B => e\n bar\nrescue C => e\n bam\nensure\nbaz\n end"
-    block = build(src).first
-    assert_equal src, block.to_ruby
+    assert_equal src, build(src).to_ruby
+  end
+  
+  define_method :"test: multiple rescue blocks" do
+    src = "begin\nrescue A => e\nrescue B\nend"
+    assert_equal src, build(src).to_ruby(true)
   end
   
   define_method :"test: line with a rescue modifier" do
     src = "foo rescue bar"
-    block = build(src).first
-    assert_equal src, block.to_ruby
+    assert_equal src, build(src).to_ruby
   end
 end

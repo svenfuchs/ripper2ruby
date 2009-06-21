@@ -12,7 +12,7 @@ class ArgsTest < Test::Unit::TestCase
     assert_equal src, args.src
   end
   
-  define_method :"test call arguments, 3 arguments and parantheses" do
+  define_method :"test call arguments, 3 arguments and parentheses" do
     src = "('a' , 'b', :c => :c)"
     args = build('t' + src).first.arguments
   
@@ -42,37 +42,28 @@ class ArgsTest < Test::Unit::TestCase
   end
   
   define_method :'test call arguments: t("foo") (string, no parentheses)' do
-    src = 'foo'
-    args = build('t ' + src).first.arguments
-  
-    assert_equal Ruby::ArgsList, args.class
-    assert_equal src, args.to_ruby
-    assert_equal src, args.src
+    src = 't foo'
+    assert_equal src, build(src).to_ruby
   end
   
-  define_method :"test call arguments: t :foo, :bar, :baz (3 symbols, no parantheses)" do
-    src = ":foo, :bar, :baz"
-    args = build('t ' + src).first.arguments
-  
-    assert_equal Ruby::ArgsList, args.class
-    assert_equal src, args.to_ruby
-    assert_equal src, args.src
+  define_method :"test call arguments: t :foo, :bar, :baz (3 symbols, no parentheses)" do
+    src = "t :foo, :bar, :baz"
+    assert_equal src, build(src).to_ruby
   end
   
   define_method :"test method call: t(:foo => :bar, :baz => :buz) (bare hash)" do
-    src = "(:foo => :bar, :baz => :buz)"
-    args = build('t' + src).first.arguments
+    src = "t(:foo => :bar, :baz => :buz)"
+    assert_equal src, build(src).to_ruby
+  end
   
-    assert_equal Ruby::ArgsList, args.class
-    assert_equal src, args.to_ruby
-    assert_equal src, args.src
+  define_method :"test method call: t :a => :a do end (bare hash, no parentheses, do block)" do
+    src = "t :a => :a do end"
+    assert_equal src, build(src).to_ruby
   end
   
   define_method :"test method call: t({ :foo => :bar, :baz => :buz }) (hash)" do
     src = "({ :foo => :bar, :baz => :buz })"
     args = build('t' + src).first.arguments
-  
-    assert_equal Ruby::ArgsList, args.class
     assert_equal src, args.to_ruby
     assert_equal src, args.src
   end
@@ -80,8 +71,6 @@ class ArgsTest < Test::Unit::TestCase
   define_method :"test method call: t([:foo, :bar]) (array)" do
     src = "([:foo, :bar, :baz])"
     args = build('t' + src).first.arguments
-  
-    assert_equal Ruby::ArgsList, args.class
     assert_equal src, args.to_ruby
     assert_equal src, args.src
   end
@@ -89,8 +78,6 @@ class ArgsTest < Test::Unit::TestCase
   define_method :"test method call: t(nil) (keyword)" do
     src = "(nil)"
     args = build('t' + src).first.arguments
-  
-    assert_equal Ruby::ArgsList, args.class
     assert_equal src, args.to_ruby
     assert_equal src, args.src
   end

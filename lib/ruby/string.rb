@@ -13,6 +13,9 @@ module Ruby
       map { |content| content.value }.join
     end
   end
+  
+  class HereDoc < String
+  end
 
   class StringContent < Token
     def value

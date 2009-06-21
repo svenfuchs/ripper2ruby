@@ -63,4 +63,11 @@ class MethodTest < Test::Unit::TestCase
     method = build(src).statements.first
     assert_equal src, method.to_ruby
   end
+
+  define_method :"test a method definition with a semicolon and a block in the body" do
+    src = "def foo ; bar { |k, v| k }  end"
+    method = build(src).first
+    assert_equal src, method.to_ruby
+    assert_equal src, method.src
+  end
 end

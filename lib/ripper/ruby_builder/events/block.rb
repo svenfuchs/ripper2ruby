@@ -7,16 +7,16 @@ class Ripper
       end
 
       def on_do_block(params, statements)
-        ldelim = pop_token(:@do)
         rdelim = pop_token(:@end)
         separators = pop_tokens(:@semicolon)
+        ldelim = pop_token(:@do)
         statements.to_block(separators, params, ldelim, rdelim)
       end
 
       def on_brace_block(params, statements)
-        ldelim = pop_token(:@lbrace)
         rdelim = pop_token(:@rbrace)
         separators = pop_tokens(:@semicolon)
+        ldelim = pop_token(:@lbrace)
         statements.to_block(separators, params, ldelim, rdelim)
       end
 
