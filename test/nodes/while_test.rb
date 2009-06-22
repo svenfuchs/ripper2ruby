@@ -18,6 +18,10 @@ class WhileTest < Test::Unit::TestCase
     assert_compiles_to_original "while (true)\n false end"
   end
 
+  define_method :'test while with do block' do
+    assert_compiles_to_original "while foo do ; end"
+  end
+
   define_method :'test begin do while block, semicolon separated' do
     assert_compiles_to_original "begin; false; end while true"
     assert_compiles_to_original "begin; false; end while (true)"
@@ -51,6 +55,10 @@ class UntilTest < Test::Unit::TestCase
   define_method :'test until block, newline separated' do
     assert_compiles_to_original "until true\n false end"
     assert_compiles_to_original "until (true)\n false end"
+  end
+
+  define_method :'test until with do block' do
+    assert_compiles_to_original "until foo do ; end"
   end
   
   define_method :'test begin do until block, semicolon separated' do

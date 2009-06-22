@@ -29,18 +29,6 @@ class Ripper
       def on_tstring_beg(*args)
         push(super)
       end
-      
-      def closes_qwords?(token)
-        return false if tstring_stack.empty? || tstring_stack.last.ldelim.nil?
-        ldelim = tstring_stack.last.ldelim.token
-        qwords = ldelim.gsub(/[^%w]/, '') == '%w'
-      
-        map = { '{' => '}', '(' => ')', '|' => '|' }
-        key = ldelim.gsub(/[%w\s]/, '')
-        closes = map[key] == token.gsub(/[%w\s]/, '')
-      
-        qwords && closes
-      end
 
       def on_tstring_end(token)
         push(super)
@@ -55,7 +43,7 @@ class Ripper
         push(super)
       end
       
-      def on_words_sep(*args)
+      def on_words_sep(token)
         push(super)
       end
       

@@ -29,8 +29,8 @@ class Ripper
       end
 
       def on_rescue(error_types, error_var, statements, block)
-        operator = pop_token(:'@=>')
-        identifier = pop_token(:@rescue)
+        identifier = pop_token(:@rescue, :pass => true)
+        operator = pop_token(:'@=>', :left => identifier)
 
         params = if error_types || error_var
           error_types = Ruby::Array.new(error_types) if error_types
@@ -69,7 +69,7 @@ class Ripper
         rdelim = pop_token(:@rparen) || pop_token(:'@|')
         ldelim = pop_token(:@lparen) || pop_token(:'@|')
         separators = pop_tokens(:@comma)
-
+        
         Ruby::Params.new(params, separators, ldelim, rdelim)
       end
 

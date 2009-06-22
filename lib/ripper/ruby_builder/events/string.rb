@@ -22,15 +22,14 @@ class Ripper
 
       def on_string_add(string, content)
         if string.is_a?(Ruby::HeredocBegin)
-          @heredoc ||= Ruby::Heredoc.new
-          @heredoc << content
-          @heredoc_pos = Ruby::Node::Position.new(content.position.row, content.position.col + content.length)
+          heredoc << content
+          heredoc_pos(content.position.row, content.position.col + content.length) # TODO doesn't work when content spans multiple lines!!
         else
           string << content if string && content
         end
         string
       end
-      
+
       def on_word_add(string, content)
         string << content
         string
@@ -48,7 +47,6 @@ class Ripper
 
       def on_string_content(*args)
         if ldelim = pop_token(:@heredoc_beg)
-          @heredoc_pos = Ruby::Node::Position.new(ldelim.position.row + 1, 0)
           @heredoc_beg = Ruby::HeredocBegin.new(ldelim.token, ldelim.position, ldelim.whitespace)
         else
           string = Ruby::String.new(pop_token(:@tstring_beg))
@@ -83,32 +81,40 @@ class Ripper
         variable.token = '#' + variable.token # HACK. from where can we obtain the hashmark?
         variable
       end
-      
-      def string_stack
-        @string_stack ||= []
-      end
-      
+
       def on_heredoc_beg(*args)
         token = push(super)
+        heredoc_pos(position.row + 1, 0)
       end
 
       def on_heredoc_end(*args)
         push(super)
-        @heredoc ||= Ruby::Heredoc.new
-        @heredoc.rdelim = pop_token(:@heredoc_end)
-        Ruby::StringContent.new(extract_src(@heredoc_pos, @heredoc.rdelim.position), @heredoc_pos)
+
+        if pos = heredoc.position # TODO clean this up
+          lines = heredoc.to_ruby.split("\n")
+          row = pos.row + lines.size - 1
+          col = lines.last.length
+          heredoc_pos(row, col)
+        end
+
+        heredoc.rdelim = pop_token(:@heredoc_end)
+        Ruby::StringContent.new(extract_src(heredoc_pos, heredoc.rdelim.position), heredoc_pos)
       end
-      
+
       protected
-      
-        # def heredoc?
-        #   !!@heredoc
-        # end
-              
+
+        def heredoc
+          @heredoc ||= Ruby::Heredoc.new
+        end
+
+        def heredoc_pos(*pos)
+          pos.empty? ? @heredoc_pos : @heredoc_pos = Ruby::Node::Position.new(*pos)
+        end
+
         def extra_heredoc_chars(token)
           if @heredoc && (token.newline? || token.comment?)
             token.value += @heredoc.to_ruby # BIG HACK! ... somehow bubble the heredoc up to a more reasonable place
-            @heredoc_beg = @heredoc = nil
+            @heredoc_pos = @heredoc_beg = @heredoc = nil
           end
           false
         end

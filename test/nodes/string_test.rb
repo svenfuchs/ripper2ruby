@@ -188,6 +188,11 @@ class StringTest < Test::Unit::TestCase
     assert_equal src, build(src).to_ruby(true)
   end
   
+  define_method :"test a do block with a heredoc and a nested embedded expression" do
+    src = "<<-eos\n  \#{\"\n    \#{sym}\n  \"}\neos"
+    assert_equal src, build(src).to_ruby(true)
+  end
+  
   define_method :"test a heredoc with a comment on the first line" do
     src = "<<-eos # comment\neos\nfoo\nfoo\n"
     assert_equal src, build(src).to_ruby(true)
@@ -208,7 +213,7 @@ class StringTest < Test::Unit::TestCase
     assert_equal src, build(src).to_ruby(true)
   end
   
-  
+
   # Ripper doesn't seem to recognize stacked heredocs. Only one on_heredoc_beg etc event is triggered.
 
   # define_method :"test a stacked quoted heredoc" do

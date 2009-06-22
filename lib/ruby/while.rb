@@ -4,13 +4,13 @@ module Ruby
   class While < NamedBlock
     child_accessor :expression
     
-    def initialize(identifier, expression, statements, separators, rdelim = nil)
+    def initialize(identifier, expression, statements, separators, ldelim = nil, rdelim = nil)
       self.expression = expression
-      super(identifier, statements, separators, nil, nil, rdelim)
+      super(identifier, statements, separators, nil, ldelim, rdelim)
     end
       
     def nodes
-      [identifier, expression, contents, rdelim].flatten.compact
+      [identifier, expression, ldelim, contents, rdelim].flatten.compact
     end
   end
   

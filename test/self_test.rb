@@ -2,6 +2,7 @@ require File.dirname(__FILE__) + '/test_helper'
 # require File.dirname(__FILE__) + '/vendor/diff'
 require 'diff/lcs'
 require 'diff/lcs/hunk'
+require 'erb/stripper'
 
 SRC = <<-eoc
 require 'ruby/node/source'
@@ -20,12 +21,11 @@ LIBS = {
     :path => '~/Development/shared/rails/rails',
     :exclude => [
       'tmail/obsolete.rb',                         # nested array access, queue opener tokens before pushing them?
-      'action_controller/verification.rb',
-      
-      'tmail/parser.rb',
-      
-      'environment.rb',                            # erb file
-      '/templates/',
+      'action_controller/verification.rb',         # nested array access, queue opener tokens before pushing them?
+      'active_support/ordered_hash.rb',            # nested array access, queue opener tokens before pushing them?
+    ],
+    :erb => [
+      %r(/templates|environment\.rb)
     ]
   },
   :ruby => {
@@ -53,15 +53,25 @@ class SelfTest < Test::Unit::TestCase
     src = File.open(filename, 'r:iso-8859-1') { |f| f.read } unless src.valid_encoding?
     src
   end
+  
+  def erb?(lib, filename)
+    lib[:erb].any? { |pattern| filename =~ pattern }
+  end
+  
+  def strip_erb(src)
+    Erb::Stripper.new.to_ruby(src)
+  end
 
-  def xtest_library_build
+  def test_library_build
     lib = LIBS[:rails]
     filenames(File.expand_path(lib[:path])).each do |filename|
-      next if filename <= '/Users/sven/Development/shared/rails/rails/activerecord/lib/active_record/associations.rb'
+      # next if filename <= '/Users/sven/Development/shared/rails/rails/railties/lib/rails_generator/generators/components/scaffold/scaffold_generator.rb'
       next if Array(lib[:exclude]).any? { |exclude| filename.index(exclude) }
 
       puts filename
       src = read_file(filename)
+      src = strip_erb(src) if erb?(lib, filename)
+      
       result = build(src).to_ruby
       unless src == result
         puts diff(src, result)
@@ -71,7 +81,7 @@ class SelfTest < Test::Unit::TestCase
     end
   end
 
-  def test_tmp_file
+  def xtest_tmp_file
     src = File.read(File.dirname(__FILE__) + '/fixtures/tmp.rb')
     result = build(src).to_ruby(true)
     puts diff(src, result)

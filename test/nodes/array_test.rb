@@ -43,6 +43,11 @@ class ArrayTest < Test::Unit::TestCase
     assert_equal src, array.src
   end
   
+  define_method :'test an empty wordlist' do
+    src = "%w()"
+    assert_equal src, build(src).to_ruby(true)
+  end
+  
   define_method :"test array access" do
     src = "foo[1]"
     call = build(src).first

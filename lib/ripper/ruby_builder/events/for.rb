@@ -4,9 +4,11 @@ class Ripper
       def on_for(variable, range, statements)
         rdelim     = pop_token(:@end)
         separators = pop_tokens(:@semicolon)
-        operator   = pop_token(:@in)
-        ldelim     = pop_token(:@for)
-        Ruby::For.new(variable, operator, range, statements, separators, ldelim, rdelim)
+        operator   = pop_token(:@in, :pass => true)
+        identifier = pop_token(:@for, :pass => true)
+        ldelim     = pop_token(:@do, :left => identifier, :right => rdelim)
+
+        Ruby::For.new(identifier, variable, operator, range, statements, separators, ldelim, rdelim)
       end
     end
   end

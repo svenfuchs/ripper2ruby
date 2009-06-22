@@ -57,7 +57,7 @@ class Ripper
       end
 
       def on_mrhs_add_star(assignment, ref)
-        star = pop_token(:'@*')
+        star = pop_token(:'@*', :right => ref, :pass => true)
         ref = Ruby::Arg.new(ref, star) if star
 
         assignment << ref

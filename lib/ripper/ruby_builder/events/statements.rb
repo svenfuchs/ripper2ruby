@@ -12,9 +12,10 @@ class Ripper
         program
       end
 
-      def on_body_stmt(body, rescue_block, something, ensure_block)
+      def on_body_stmt(body, rescue_block, else_block, ensure_block)
         body.separators += pop_tokens(:@semicolon)
-        body = body.to_chained_block(nil, [rescue_block, ensure_block].compact) if rescue_block || ensure_block
+        statements = [rescue_block, else_block, ensure_block].compact
+        body = body.to_chained_block(nil, statements) if rescue_block || ensure_block
         body
       end
       

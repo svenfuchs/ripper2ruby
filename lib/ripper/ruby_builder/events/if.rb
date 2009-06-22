@@ -28,7 +28,8 @@ class Ripper
       end
       
       def on_else(statements)
-        block = Ruby::Else.new(pop_token(:@else, :pass => true), statements)
+        keyword = pop_token(:@else, :pass => true)
+        block = Ruby::Else.new(keyword, statements)
       end
       
       def on_if_mod(expression, statement)

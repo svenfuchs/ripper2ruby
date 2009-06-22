@@ -1,18 +1,19 @@
 require 'ruby/statements'
 
 module Ruby
-  class For < Statements
+  class For < NamedBlock
     child_accessor :variable, :operator, :range
-    
-    def initialize(variable, operator, range, statements, separators, ldelim = nil, rdelim = nil)
+
+    def initialize(identifier, variable, operator, range, statements, separators, ldelim = nil, rdelim = nil)
       self.variable = variable
       self.operator = operator
       self.range = range
-      super(statements, separators, ldelim, rdelim)
+      super(identifier, statements, separators, nil, ldelim, rdelim)
     end
       
     def nodes
-      [ldelim, variable, operator, range, contents, rdelim].flatten.compact
+      [identifier, variable, operator, range, ldelim, contents, rdelim].flatten.compact
+      # [ldelim, variable, operator, range, contents, rdelim].flatten.compact
     end
   end
 end

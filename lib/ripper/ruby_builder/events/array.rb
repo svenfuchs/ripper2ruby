@@ -18,6 +18,7 @@ class Ripper
         words = Ruby::Array.new(nil, nil, pop_token(:@qwords_beg))
         # there's no reasonable event that lets us catch :@tstring_end, so we gotta keep our own stack
         tstring_stack << words
+        on_qwords_end if stack.peek.type == :@words_sep && closes_qwords?(stack.peek.value)
         words
       end
 
@@ -28,11 +29,23 @@ class Ripper
         array << arg
         array
       end
-      
-      def on_qwords_end(rdelim)
+
+      def on_qwords_end(rdelim = nil)
         array = tstring_stack.pop
-        array.rdelim = pop_token(:@tstring_end)
+        array.rdelim = pop_token(:@tstring_end) || pop_token(:@words_sep)
         array
+      end
+
+      def closes_qwords?(token)
+        return false if tstring_stack.empty? || tstring_stack.last.ldelim.nil?
+        ldelim = tstring_stack.last.ldelim.token
+        qwords = ldelim.gsub(/[^%w]/, '') == '%w'
+
+        map = { '{' => '}', '(' => ')', '|' => '|' }
+        key = ldelim.gsub(/[%w\s]/, '')
+        closes = map[key] == token.gsub(/[%w\s]/, '')
+
+        qwords && closes
       end
 
       def on_words_add(array, arg)
