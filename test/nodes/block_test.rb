@@ -106,14 +106,19 @@ class BlockTest < Test::Unit::TestCase
     src = "begin\nrescue A => e\nrescue B\nend"
     assert_equal src, build(src).to_ruby(true)
   end
-
+  
   define_method :"test: rescue and else block" do
     src = "begin\nrescue A\nelse\nend\n"
     assert_equal src, build(src).to_ruby(true)
   end
   
-  define_method :"test: line with a rescue modifier" do
+  define_method :"test: line with a rescue modifier yielding a method call" do
     src = "foo rescue bar"
+    assert_equal src, build(src).to_ruby
+  end
+
+  define_method :"test: line with a rescue modifier yielding an integer" do
+    src = "foo rescue 0"
     assert_equal src, build(src).to_ruby
   end
 end

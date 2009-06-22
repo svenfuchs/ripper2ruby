@@ -46,6 +46,11 @@ class ConstTest < Test::Unit::TestCase
     assert_equal src, build(src).first.to_ruby
   end
   
+  define_method :"test namespace separator with method call and const argument" do
+    src = 'A::foo(B)'
+    assert_equal src, build(src).first.to_ruby
+  end
+  
   define_method :"test a metaclass" do
     src = "class << self; self; end"
     const = build(src).first

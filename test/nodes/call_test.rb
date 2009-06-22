@@ -119,19 +119,14 @@ class CallTest < Test::Unit::TestCase
     src = "t('foo', 'bar'); t 'baz'"
     program = build(src)
     foo, baz = program.statements
-  
-    assert_equal Ruby::Call, foo.class
-    assert_equal nil, foo.target
-    assert_equal 't', foo.identifier.token
+      
     assert_equal "t('foo', 'bar')", foo.to_ruby
     assert_equal "t('foo', 'bar')", foo.src
-  
-    assert_equal nil, baz.target
-    assert_equal 't', baz.identifier.token
+      
     assert_equal "t 'baz'", baz.to_ruby
     assert_equal "t 'baz'", baz.src
   
-    assert_equal src, program.to_ruby
+    assert_equal src, program.to_ruby(true)
     assert_equal src, program.src
   end
   

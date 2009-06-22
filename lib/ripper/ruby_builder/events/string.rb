@@ -112,7 +112,7 @@ class Ripper
         end
 
         def extra_heredoc_chars(token)
-          if @heredoc && (token.newline? || token.comment?)
+          if @heredoc && token && (token.newline? || token.comment?)
             token.value += @heredoc.to_ruby # BIG HACK! ... somehow bubble the heredoc up to a more reasonable place
             @heredoc_pos = @heredoc_beg = @heredoc = nil
           end

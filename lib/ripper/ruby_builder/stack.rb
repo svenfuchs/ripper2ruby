@@ -1,3 +1,6 @@
+require 'ripper/ruby_builder/queue'
+require 'ripper/ruby_builder/whitespace'
+
 class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     class Stack < ::Array
@@ -5,20 +8,24 @@ class Ripper
         last || Token.new
       end
       
+      def queue
+        @queue ||= Queue.new
+      end
+      
+      def whitespace
+        @whitespace ||= Whitespace.new
+      end
+      
+      def whitespace?
+        !whitespace.empty?
+      end
+      
       def push(token)
-        if token.whitespace? && extra_whitespace?
-          return if token.position <= extra_whitespace.last
-          extra_whitespace.pop
+        return unless whitespace.aggregate(token)
+        tokens = queue << token
+        tokens.each do |token| 
+          self << token
         end
-        
-        if token.whitespace? && last && last.whitespace?
-          last.value += token.value
-          return last
-        end
-        
-        token.whitespace = pop_whitespace
-        self << token
-        token
       end
       
       alias :_pop :pop
@@ -42,7 +49,7 @@ class Ripper
         replace(self + ignored.reverse)
         tokens
       end
-      
+
       def ignore?(type)
         ignore_stack.flatten.include?(type)
       end
@@ -53,41 +60,8 @@ class Ripper
         ignore_stack.pop
         result
       end
-
-      def pop_one(*types)
-        options = types.last.is_a?(::Hash) ? types.pop : {}
-        options[:max] = 1
-        pop(*types << options).first
-      end
-      
-      def pop_whitespace
-        token = pop_one(*WHITESPACE)
-        token ? build_whitespace(token) : nil
-      end
-      
-      def build_whitespace(token)
-        Ruby::Whitespace.new(token.value, token.position)
-      end
-      
-      def extra_whitespace?
-        !extra_whitespace.empty?
-      end
-      
-      # ripper adds bogus whitespace from heredocs right after the heredoc has been 
-      # worked on (i.e. in on_stmts_add etc). clearly looks like a bug in ripper.
-      def announce_extra_whitespace(position)
-        extra_whitespace << position
-      end
       
       protected
-      
-        def ignore_stack
-          @ignore_stack ||= []
-        end
-      
-        def extra_whitespace 
-          @extra_whitespace ||= []
-        end
         
         def left_of?(right)
           right.nil? || last.nil? || last < right
@@ -106,6 +80,10 @@ class Ripper
           else
             last.value == value
           end
+        end
+      
+        def ignore_stack
+          @ignore_stack ||= []
         end
     end
   end

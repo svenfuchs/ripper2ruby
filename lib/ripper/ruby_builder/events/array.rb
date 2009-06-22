@@ -58,8 +58,12 @@ class Ripper
 
       def on_aref(target, args)
         args ||= Ruby::ArgsList.new
-        pop_token(:@lbracket, :pass => true).tap { |l| args.ldelim = l if l }
-        pop_token(:@rbracket, :pass => true).tap { |r| args.rdelim = r if r }
+
+        ldelim = pop_token(:@lbracket, :left => target)
+        rdelim = shift_token(:@rbracket, :pass => true, :left => ldelim)
+        args.ldelim = ldelim if ldelim
+        args.rdelim = rdelim if rdelim
+        
         Ruby::Call.new(target, nil, nil, args)
       end
 

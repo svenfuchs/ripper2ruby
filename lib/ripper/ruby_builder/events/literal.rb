@@ -8,25 +8,30 @@ class Ripper
 
       def on_kw(token)
         if @@tokens.include?(token)
-          return push(super)
+          push(super)
         elsif %w(nil false true).include?(token)
+          push
           build_literal(token, pop_whitespace)
         else
+          push
           Ruby::Keyword.new(token, position, pop_whitespace)
         end
       end
       
       def build_literal(token, whitespace)
+        push
         Ruby.const_get(token[0].upcase + token[1..-1]).new(token, position, whitespace)
       rescue NameError 
         Ruby::Keyword.new(token, position, whitespace)
       end
 
       def on_int(token)
+        push
         Ruby::Integer.new(token, position, pop_whitespace)
       end
       
       def on_float(token)
+        push
         Ruby::Float.new(token, position, pop_whitespace)
       end
       
@@ -39,10 +44,12 @@ class Ripper
       end
       
       def on_CHAR(token)
+        push
         Ruby::Char.new(token, position, pop_whitespace)
       end
       
       def on_label(label)
+        push
         Ruby::Label.new(label, position, pop_whitespace)
       end
     end

@@ -19,11 +19,7 @@ LIBS = {
   },
   :rails => {
     :path => '~/Development/shared/rails/rails',
-    :exclude => [
-      'tmail/obsolete.rb',                         # nested array access, queue opener tokens before pushing them?
-      'action_controller/verification.rb',         # nested array access, queue opener tokens before pushing them?
-      'active_support/ordered_hash.rb',            # nested array access, queue opener tokens before pushing them?
-    ],
+    :exclude => [],
     :erb => [
       %r(/templates|environment\.rb)
     ]
@@ -41,7 +37,7 @@ LIBS = {
 }
 
 
-class SelfTest < Test::Unit::TestCase
+class BuildTest < Test::Unit::TestCase
   include TestHelper
 
   def filenames(root)
@@ -65,7 +61,6 @@ class SelfTest < Test::Unit::TestCase
   def test_library_build
     lib = LIBS[:rails]
     filenames(File.expand_path(lib[:path])).each do |filename|
-      # next if filename <= '/Users/sven/Development/shared/rails/rails/railties/lib/rails_generator/generators/components/scaffold/scaffold_generator.rb'
       next if Array(lib[:exclude]).any? { |exclude| filename.index(exclude) }
 
       puts filename

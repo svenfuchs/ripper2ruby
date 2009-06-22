@@ -20,7 +20,7 @@ class IfTest < Test::Unit::TestCase
     expr = build(src).statements.first
     assert_equal src, expr.to_ruby
   end
-  #
+
   define_method :'test if block w/ then, not separated' do
     src = "if true then false end"
     expr = build(src).statements.first

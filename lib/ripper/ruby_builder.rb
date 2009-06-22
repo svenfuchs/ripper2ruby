@@ -15,8 +15,9 @@ class Ripper
 
     NEWLINE           = [:@nl, :@ignored_nl]
     WHITESPACE        = [:@sp, :@comment] + NEWLINE
-    OPENERS           = [:@lparen, :@lbracket, :@lbrace, :'@|', :@class, :@module, :@def, :@begin, :@while, :@until, 
+    OPENERS           = [:@lparen, :@lbracket, :@lbrace, :@class, :@module, :@def, :@begin, :@while, :@until, 
                          :@for, :@if, :@elsif, :@else, :@unless, :@case, :@when, :@embexpr_beg, :@do, :@rescue]
+                        # , :'@|'
     KEYWORDS          = [:@alias, :@and, :@BEGIN, :@begin, :@break, :@case, :@class, :@def, :@defined, 
                          :@do, :@else, :@elsif, :@END, :@end, :@ensure, :@false, :@for, :@if, :@in, 
                          :@module, :@next, :@nil, :@not, :@or, :@redo, :@rescue, :@retry, :@return, 
@@ -55,9 +56,10 @@ class Ripper
         Ruby::Node::Position.new(lineno - 1, column)
       end
 
-      def push(sexp)
-        token = Token.new(*sexp)
+      def push(sexp = nil)
+        token = Token.new(*sexp) if sexp
         stack.push(token) unless extra_heredoc_chars(token)
+        token
       end
 
       def pop(*args)
@@ -67,6 +69,13 @@ class Ripper
         else
           stack.pop(*args << options)
         end
+      end
+      
+      def shift(*args)
+        stack.reverse!
+        result = pop(*args)
+        stack.reverse!
+        result
       end
       
       def pop_one(*types)
@@ -80,9 +89,19 @@ class Ripper
         options[:max] = 1
         pop_tokens(*types << options).first
       end
+      
+      def shift_token(*types)
+        options = types.last.is_a?(::Hash) ? types.pop : {}
+        options[:max] = 1
+        shift_tokens(*types << options).first
+      end
 
       def pop_tokens(*types)
         pop(*types).map { |token| build_token(token) }.flatten.compact
+      end
+
+      def shift_tokens(*types)
+        shift(*types).map { |token| build_token(token) }.flatten.compact
       end
       
       def pop_operator(options = {})
@@ -106,8 +125,7 @@ class Ripper
       end
 
       def pop_whitespace
-        token = pop_one(*WHITESPACE)
-        token ? build_whitespace(token) : nil
+        stack.whitespace.pop
       end
 
       def stack_ignore(*types, &block)
@@ -121,13 +139,6 @@ class Ripper
       def build_whitespace(token)
         Ruby::Whitespace.new(token.value, token.position)
       end
-      
-      # def _extract_src(from, to)
-      #   lines = src.split("\n")[from.row..to.row]
-      #   lines[0] = lines.first[from.col..-1]
-      #   lines[lines.length - 1] = lines.last.slice(0, to.col)
-      #   lines.join("\n")
-      # end
 
       def extract_src(from, to)
         # TODO make Clip work with start/end positions and use it

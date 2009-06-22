@@ -8,6 +8,7 @@ class Ripper
       end
       
       def on_symbol(token)
+        push
         # happens for symbols that are also keywords, e.g. :if
         token = pop_token(token.type).to_identifier if token.respond_to?(:known?) && token.known?
         Ruby::Symbol.new(token, pop_token(:@symbeg))

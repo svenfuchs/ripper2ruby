@@ -73,13 +73,11 @@ class ArrayTest < Test::Unit::TestCase
     assert_equal src, call.src
   end
   
-  # define_method :"test array w/ nested array access" do
-  #   src = '[ foo[bar] ]'
-  #   pp sexp(src)
-  #   assert_equal src, build(src).to_ruby(true)
-  # end
-  
-  
+  define_method :"test array w/ nested array access" do
+    src = '[ foo[bar] ]'
+    assert_equal src, build(src).to_ruby(true)
+  end
+   
   define_method :"test array assignment" do
     src = "result[0] = :value"
     assignment = build(src).first

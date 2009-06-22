@@ -8,7 +8,7 @@ class Ripper
       def on_program(statements)
         program = statements.to_program(src, filename)
         program.separators += pop_tokens(:@semicolon)
-        program << Ruby::Token.new('', position, pop_whitespace) if stack.peek.whitespace?
+        program << Ruby::Token.new('', position, pop_whitespace) if stack.whitespace?
         program
       end
 
@@ -51,6 +51,7 @@ class Ripper
       end
       
       def on_backref(arg)
+        push
         Ruby::Variable.new(arg, position, pop_whitespace)
       end
     end

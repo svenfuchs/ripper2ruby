@@ -2,9 +2,15 @@ class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     module Const
       def on_const(token)
+        push
         identifier = Ruby::Identifier.new(token, position, pop_whitespace)
         const = Ruby::Const.new(identifier)
-        const.separator = pop_token(:'@::')
+        
+        # ugh
+        if stack.peek.position && stack.peek.position.col == identifier.position.col - 2
+          const.separator = pop_token(:'@::') 
+        end
+
         const
       end
       
