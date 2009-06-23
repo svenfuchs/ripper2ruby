@@ -3,7 +3,9 @@ class Ripper
     module Operator
       def on_unary(operator, operand)
         operator = pop_unary_operator(:pass => true, :right => operand)
-        Ruby::Unary.new(operator, operand) if operator
+        ldelim = pop_token(:@lparen, :left => operator)
+        rdelim = pop_token(:@rparen, :left => operator) if ldelim
+        Ruby::Unary.new(operator, operand, ldelim, rdelim) if operator
       end
 
       def on_binary(left, operator, right)

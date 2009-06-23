@@ -43,8 +43,13 @@ class ArrayTest < Test::Unit::TestCase
     assert_equal src, array.src
   end
   
-  define_method :'test an empty wordlist' do
+  define_method :'test an empty wordlist (using parentheses)' do
     src = "%w()"
+    assert_equal src, build(src).to_ruby(true)
+  end
+  
+  define_method :'test an empty wordlist (using brackets)' do
+    src = "%w[]"
     assert_equal src, build(src).to_ruby(true)
   end
   

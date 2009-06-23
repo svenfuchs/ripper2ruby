@@ -13,7 +13,7 @@ class Ripper
       def on_call(target, separator, identifier)
         # happens for symbols that are also keywords, e.g. :if
         identifier = pop_token(identifier.type).to_identifier if identifier.respond_to?(:known?) && identifier.known?
-        separator = pop_token(:@period, :"@::", :pass => true, :right => identifier)
+        separator = pop_token(:@period, :"@::", :left => target, :right => identifier)
         Ruby::Call.new(target, separator, identifier)
       end
 

@@ -48,7 +48,8 @@ module Ruby
     # end
     
     def <=>(other)
-      position <=> other.position
+        other = other.position if other.respond_to?(:position)
+        position <=> other
     end
     
     protected

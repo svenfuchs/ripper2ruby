@@ -1,16 +1,17 @@
 require 'ruby/node'
 
 module Ruby
-  class Unary < Aggregate
+  class Unary < DelimitedAggregate
     child_accessor :operator, :operand
 
-    def initialize(operator, operand)
+    def initialize(operator, operand, ldelim, rdelim)
       self.operator = operator or raise "operator can not be nil"
       self.operand = operand
+      super(ldelim, rdelim)
     end
     
     def nodes
-      [operator, operand]
+      [operator, ldelim, operand, rdelim]
     end
   end
   

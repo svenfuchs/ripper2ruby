@@ -82,8 +82,9 @@ class BuildTest < Test::Unit::TestCase
     end
   end
 
-  def xtest_tmp_file
+  def test_tmp_file
     src = File.read(File.dirname(__FILE__) + '/fixtures/tmp.rb')
+    # log(src)
     result = build(src).to_ruby(true)
     puts diff(src, result)
   end

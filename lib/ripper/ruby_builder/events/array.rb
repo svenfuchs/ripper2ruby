@@ -41,9 +41,9 @@ class Ripper
         ldelim = tstring_stack.last.ldelim.token
         qwords = ldelim.gsub(/[^%w]/, '') == '%w'
 
-        map = { '{' => '}', '(' => ')', '|' => '|' }
+        map = { '(' => ')', '[' => ']', '{' => '}' }
         key = ldelim.gsub(/[%w\s]/, '')
-        closes = map[key] == token.gsub(/[%w\s]/, '')
+        closes = (map[key] || key) == token.gsub(/[%w\s]/, '')
 
         qwords && closes
       end

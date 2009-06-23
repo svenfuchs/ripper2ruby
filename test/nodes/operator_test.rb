@@ -53,15 +53,19 @@ class OperatorTest < Test::Unit::TestCase
     assert_unary_operator(:!)
   end
   
-  define_method :'test operator: not 1 (not)' do
+  define_method :'test operator: not 1 (not, without parentheses)' do
     assert_unary_operator(:not, :src => 'not 1')
+  end
+  
+  define_method :'test operator: not(1) (not, with parentheses)' do
+    assert_unary_operator(:not, :src => 'not(1)')
   end
   
   define_method :'test operator: ~1 (complement/bitwise-not)' do
     assert_unary_operator(:~)
   end
   
-  define_method :'test operator: (!1) (complement/bitwise-not, parentheses)' do
+  define_method :'test operator: (!1) (complement/bitwise-not, enclosing parentheses)' do
     src = '(!1)'
     assert_equal src, build(src).to_ruby
   end

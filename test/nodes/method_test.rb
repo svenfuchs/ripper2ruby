@@ -32,8 +32,15 @@ class MethodTest < Test::Unit::TestCase
     assert_equal src, method.src
   end
   
-  define_method :"test a class method definition (using const)" do
-    src = "def A.foo(a, b = nil, c = :foo, *d, &block)\n        bar\n        baz\n      end"
+  define_method :"test a class method definition (using self, keyword)" do
+    src = "def self.for(options)\nend"
+    method = build(src).first
+    assert_equal src, method.to_ruby
+    assert_equal src, method.src
+  end
+  
+  define_method :"test a class method definition (using const) containing a class method call (using ::)" do
+    src = "def A.foo(a, b = nil, c = :foo, *d, &block)\n        A::B()\n        baz\n      end"
     method = build(src).first
     assert_equal src, method.to_ruby
     assert_equal src, method.src

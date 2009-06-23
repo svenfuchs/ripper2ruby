@@ -67,7 +67,11 @@ class LogSexpBuilder < Ripper::SexpBuilder
     events.each do |event|
       define_method :"on_#{event}" do |*args|
         event = super(*args).first
-        @@events << "#{(event.to_s + ' ').ljust(20, '.')} #{type}"
+
+        arg = args.first =~ /\s/ ? args.first.inspect : args.first
+        line = (event.to_s).ljust(20)
+        line += arg[0..30] if type == 'scanner'
+        @@events << line
         ')'
       end
     end
