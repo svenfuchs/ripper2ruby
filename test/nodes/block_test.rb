@@ -48,11 +48,18 @@ class BlockTest < Test::Unit::TestCase
     assert_equal src, call.src
   end
   
-  define_method :"test: an empty method call do_block" do
+  define_method :"test: method call w/ do_block" do
     src = "t do |(a, b), *c| end"
     call = build(src).first
     
     assert_equal Ruby::Block, call.block.class
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
+  define_method :"test: method call do_block with a block_arg" do
+    src = "t do |*a, &c| end"
+    call = build(src).first
     assert_equal src, call.to_ruby
     assert_equal src, call.src
   end
@@ -116,7 +123,7 @@ class BlockTest < Test::Unit::TestCase
     src = "foo rescue bar"
     assert_equal src, build(src).to_ruby
   end
-
+  
   define_method :"test: line with a rescue modifier yielding an integer" do
     src = "foo rescue 0"
     assert_equal src, build(src).to_ruby

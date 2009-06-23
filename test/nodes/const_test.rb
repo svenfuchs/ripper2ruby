@@ -51,6 +51,21 @@ class ConstTest < Test::Unit::TestCase
     assert_equal src, build(src).first.to_ruby
   end
   
+  define_method :"test namespace separator in a method definition" do
+    src = 'def A::foo(); end'
+    assert_equal src, build(src).first.to_ruby
+  end
+  
+  define_method :"test namespaced const after namespace separator in a method definition" do
+    src = "def A::foo(); end\n::B::C"
+    assert_equal src, build(src).to_ruby
+  end
+  
+  define_method :"test use const after namespace separator in a method definition" do
+    src = "def A::foo()\n    a = B\n  end"
+    assert_equal src, build(src).to_ruby
+  end
+  
   define_method :"test a metaclass" do
     src = "class << self; self; end"
     const = build(src).first

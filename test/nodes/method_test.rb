@@ -5,6 +5,7 @@ class MethodTest < Test::Unit::TestCase
 
   define_method :"test a method" do
     src = "def foo(a, b = nil, c = :foo, *d, &block)\n        bar\n        baz\n      end"
+    src = "def foo(a, &block)\nend"
     method = build(src).first
     assert_equal src, method.to_ruby
     assert_equal src, method.src
@@ -49,6 +50,7 @@ class MethodTest < Test::Unit::TestCase
   
   define_method :"test method definition: def | " do
     src = "def | ; end"
+    puts events(src)
     assert_equal src, build(src).to_ruby
   end
   

@@ -20,7 +20,15 @@ class Ripper
       end
       
       def on_paren(node)
-        node = build_statements(node, nil, pop_token(:@rparen), pop_token(:@lparen)) if stack.peek.type == :@rparen
+        if stack.peek.type == :@rparen
+          case node
+          when Ruby::Params
+            node.rdelim = pop_token(:@rparen)
+          else
+            node = build_statements(node, nil, pop_token(:@rparen), pop_token(:@lparen))
+          end
+        end
+        
         node
       end
 

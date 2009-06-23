@@ -47,7 +47,7 @@ class Ripper
       end
 
       def on_rescue_mod(expression, statements)
-        # positions are messed up when rescue mod succeedes an assignment, so we have to sort them
+        # positions are messed up on rescue mod after assignment, so we have to sort them
         statements, expression = *[statements, expression].sort
         expression = update_args(expression)
         identifier = pop_token(:@rescue, :pass => true)
@@ -55,6 +55,8 @@ class Ripper
       end
 
       def on_block_var(params, something)
+        # on_params was already fired on block_var before rdelimiting :@|, so we have to grab it
+        params.rdelim = pop_token(:'@|') if params.ldelim.token == '|' && params.rdelim.nil?
         params
       end
 
@@ -63,13 +65,12 @@ class Ripper
           operators = pop_tokens(:'@=')
           optional_params.map! { |left, right| Ruby::Assignment.new(left, right, operators.pop) }
         end
-
         params = (Array(params) + Array(optional_params) << rest_param << block_param).flatten.compact
 
-        rdelim = pop_token(:@rparen) || pop_token(:'@|')
-        ldelim = pop_token(:@lparen) || pop_token(:'@|')
+        ldelim, rdelim = *pop_tokens(:@lparen, :@rparen, :max => 2).reverse
+        ldelim, rdelim = *pop_tokens(:'@|', :max => 2).reverse unless ldelim
         separators = pop_tokens(:@comma)
-        
+
         Ruby::Params.new(params, separators, ldelim, rdelim)
       end
 

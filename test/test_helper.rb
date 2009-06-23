@@ -12,6 +12,10 @@ module TestHelper
   def build(src)
     Ripper::RubyBuilder.build(src)
   end
+	
+	def events(src)
+	  LogSexpBuilder.events(src)
+  end
   
   def assert_compiles_to_original(src)
     expr = build(src).statements.first
@@ -47,3 +51,26 @@ module TestHelper
 	  output << oldhunk.diff(format) << "\n"
 	end
 end
+
+class LogSexpBuilder < Ripper::SexpBuilder
+  @@events = ['']
+  
+  class << self
+    def events(src)
+      new(src).parse
+      @@events.join("\n")
+    end
+  end
+  
+  { 'scanner' => SCANNER_EVENTS, 'parser' => PARSER_EVENTS }.each do |type, events|
+    events.each do |event|
+      define_method :"on_#{event}" do |*args|
+        event = super(*args).first
+        @@events << "#{(event.to_s + ' ').ljust(20, '.')} #{type}"
+        ')'
+      end
+    end
+  end
+end
+
+

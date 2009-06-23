@@ -5,9 +5,9 @@ class Ripper
         push
         identifier = Ruby::Identifier.new(token, position, pop_whitespace)
         const = Ruby::Const.new(identifier)
-        
-        # ugh
-        if stack.peek.position && stack.peek.position.col == identifier.position.col - 2
+
+        # ugh, how to clean this up?
+        if stack.peek.type == :'@::' && stack.peek.position && stack.peek.position.col == identifier.position.col - 2
           const.separator = pop_token(:'@::') 
         end
 
