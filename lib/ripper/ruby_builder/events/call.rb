@@ -60,6 +60,7 @@ class Ripper
       end
 
       def on_undef(args)
+        args = Ruby::ArgsList.new(args, pop_tokens(:@comma))
         identifier = pop_token(:@undef, :pass => true).to_identifier
         Ruby::Call.new(nil, nil, identifier, args)
       end

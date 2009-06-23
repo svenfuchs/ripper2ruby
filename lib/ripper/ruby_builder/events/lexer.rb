@@ -3,6 +3,10 @@ class Ripper
     module Lexer
       # unimplemented = :tlambda, :tlambeg
       
+      def on_parse_error(msg)
+        raise ParseError.new("#{filename}:#{position.row + 1}: #{msg}")
+      end
+      
       def on_sp(*args)
         push(super)
       end
@@ -25,7 +29,7 @@ class Ripper
 
       def on_tstring_end(token)
         push(super)
-        on_qwords_end(token) if closes_qwords?(token)
+        on_words_end(token) if closes_words?(token)
       end
 
       def on_qwords_beg(*args)

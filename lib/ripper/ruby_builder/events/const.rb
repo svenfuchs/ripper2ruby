@@ -6,11 +6,10 @@ class Ripper
         identifier = Ruby::Identifier.new(token, position, pop_whitespace)
         const = Ruby::Const.new(identifier)
 
-        # ugh, how to clean this up?
-        if stack.peek.type == :'@::' && stack.peek.position && stack.peek.position.col == identifier.position.col - 2
-          const.separator = pop_token(:'@::') 
-        end
-
+        # ugh, how to clean this up? maybe eat namespaces at stack level (like whitespace)
+        # if stack.peek.type == :'@::' && stack.peek.position && stack.peek.position.col == 
+        pos = identifier.position(true)
+        const.separator = pop_token(:'@::', :pos => [pos.row, pos.col - 2])
         const
       end
       

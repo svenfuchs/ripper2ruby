@@ -31,11 +31,11 @@ class Ripper
       alias :_pop :pop
       def pop(*types)
         options = types.last.is_a?(::Hash) ? types.pop : {}
-        max, pass, value, left, right = options.values_at(:max, :pass, :value, :left, :right)
+        max, pass, value, pos, left, right = options.values_at(:max, :pass, :value, :pos, :left, :right)
         tokens, ignored = [], []
 
         while !empty? && !(max && tokens.length >= max)
-          if types.include?(last.type) && value_matches?(value) && left_of?(right) && right_of?(left)
+          if types.include?(last.type) && has_value?(value) && at?(pos) && left_of?(right) && right_of?(left)
             tokens << super()
           elsif ignore?(last.type)
             ignored << super()
@@ -62,6 +62,10 @@ class Ripper
       end
       
       protected
+      
+        def at?(pos)
+          pos.nil? || last.position == pos
+        end
         
         def left_of?(right)
           right.nil? || last.nil? || last < right
@@ -71,7 +75,7 @@ class Ripper
           left.nil? || last.nil? || left < last
         end
       
-        def value_matches?( value)
+        def has_value?( value)
           case value
           when nil
             true

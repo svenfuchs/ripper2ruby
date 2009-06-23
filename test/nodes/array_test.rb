@@ -48,11 +48,21 @@ class ArrayTest < Test::Unit::TestCase
     assert_equal src, build(src).to_ruby(true)
   end
   
+  define_method :'test an empty wordlist (interpolating, using parentheses)' do
+    src = "%W()"
+    assert_equal src, build(src).to_ruby(true)
+  end
+  
   define_method :'test an empty wordlist (using brackets)' do
     src = "%w[]"
     assert_equal src, build(src).to_ruby(true)
   end
   
+  define_method :'test an empty wordlist (interpolating, using brackets)' do
+    src = "%W[]"
+    assert_equal src, build(src).to_ruby(true)
+  end
+
   define_method :"test array access" do
     src = "foo[1]"
     call = build(src).first

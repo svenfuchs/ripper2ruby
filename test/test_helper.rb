@@ -3,16 +3,18 @@ $: << File.expand_path(File.dirname(__FILE__) + '/../lib')
 require 'ripper/ruby_builder'
 require 'test/unit'
 require 'pp'
+require 'highlighters/ansi'
 
 module TestHelper
-  def sexp(src)
-    Ripper::SexpBuilder.new(src).parse
-  end
-
-  def build(src)
-    Ripper::RubyBuilder.build(src)
+  def build(src, filename = nil)
+    Ripper::RubyBuilder.build(src, filename)
   end
 	
+  def sexp(src)
+    puts
+    pp Ripper::SexpBuilder.new(src).parse
+  end
+
 	def log(src)
 	  puts '', src
 	  puts '', LogSexpBuilder.events(src), ''
@@ -54,13 +56,23 @@ module TestHelper
 end
 
 class LogSexpBuilder < Ripper::SexpBuilder
-  @@events = []
-  
   class << self
     def events(src)
-      new(src).parse
-      @@events.join("\n")
+      parser = new(src)
+      parser.parse
+      parser.events.join("\n")
     end
+  end
+  
+  attr_reader :events
+  
+  def initialize(src)
+    @events = []
+    super
+  end
+  
+  def highlight(str)
+    Highlighters::Ansi.new(:bold, :green).highlight(str)
   end
   
   { 'scanner' => SCANNER_EVENTS, 'parser' => PARSER_EVENTS }.each do |type, events|
@@ -70,9 +82,12 @@ class LogSexpBuilder < Ripper::SexpBuilder
 
         arg = args.first =~ /\s/ ? args.first.inspect : args.first
         line = (event.to_s).ljust(20)
-        line += arg[0..30] if type == 'scanner'
-        @@events << line
-        ')'
+        if type == 'scanner'
+          line = line + arg[0..30] 
+        else
+          line = highlight(line)
+        end
+        self.events << line
       end
     end
   end

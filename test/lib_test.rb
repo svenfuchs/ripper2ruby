@@ -1,17 +1,7 @@
 require File.dirname(__FILE__) + '/test_helper'
-# require File.dirname(__FILE__) + '/vendor/diff'
 require 'diff/lcs'
 require 'diff/lcs/hunk'
 require 'erb/stripper'
-
-SRC = <<-eoc
-require 'ruby/node/source'
-
-module Ruby
-  class Node
-  end
-end
-eoc
 
 LIBS = {
   :self => {
@@ -27,8 +17,10 @@ LIBS = {
   :ruby => {
     :path => '/usr/local/ruby19/lib/ruby/1.9.1',
     :exclude => [
-      # 'tktable.rb'     # invalid array access syntax? sexp fails on: [idx [a, b]]
       'cgi/html.rb',     # uses stacked heredocs
+      # 'tk/namespace.rb', # uses arg_ambiguous 
+      # 'tktable.rb',      # parse error
+      # 'tktreectrl.rb'    # parse error
     ]
   },
   :adva_cms => {
@@ -63,38 +55,41 @@ class BuildTest < Test::Unit::TestCase
     Erb::Stripper.new.to_ruby(src)
   end
 
-  def xtest_library_build
+  def test_library_build
     lib = LIBS[:ruby]
     filenames(File.expand_path(lib[:path])).each do |filename|
       next if excluded?(lib, filename)
+      # next if filename < '/usr/local/ruby19/lib/ruby/1.9.1/tkextlib'
       
       puts filename
       src = read_file(filename)
       src = strip_erb(src) if erb?(lib, filename)
-      src = src.split('__END__').first
+      src = src.split(/^__END__$/).first
       
-      result = build(src).to_ruby
-      unless src == result
-        puts diff(src, result)
-        break
+      begin
+        result = build(src, filename).to_ruby(true)
+        unless src == result
+          puts diff(src, result)
+          break
+        end
+        assert_equal src, result
+      rescue Ripper::RubyBuilder::ParseError => e
+        puts e.message
       end
-      assert_equal src, result
     end
   end
 
-  def test_tmp_file
-    src = File.read(File.dirname(__FILE__) + '/fixtures/tmp.rb')
-    # log(src)
-    result = build(src).to_ruby(true)
+  def xtest_tmp_file
+    filename = File.dirname(__FILE__) + '/fixtures/tmp.rb'
+    src = File.read(filename)
+    result = build(src, filename).to_ruby(true)
     puts diff(src, result)
   end
 
-  def xtest_src
-    assert_equal SRC, build(SRC).to_ruby(true)
-  end
-
   def xtest_this
-    src = 'foo *args if bar?'
-    assert_equal src, build(src).to_ruby(true)
+    src = 'a+ a +a'
+    pp sexp(src)
+    log(src)
+    #assert_equal src, build(src).to_ruby(true)
   end
 end

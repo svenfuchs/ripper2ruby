@@ -7,9 +7,12 @@ Dir[File.dirname(__FILE__) + '/ruby_builder/events/*.rb'].each { |file| require 
 
 class Ripper
   class RubyBuilder < Ripper::SexpBuilder
+    class ParseError < RuntimeError
+    end
+
     class << self
-      def build(src)
-        new(src).parse
+      def build(src, filename = nil)
+        new(src, filename).parse
       end
     end
 

@@ -46,7 +46,6 @@ class HashTest < Test::Unit::TestCase
   
   define_method :'test a hash: { foo: bar } (Ruby 1.9 labels)' do
     src = "{ foo: bar }"
-    sexp(src)
     hash = hash(src)
     assert_equal Ruby::Hash, hash.class
     assert_equal src, hash.to_ruby

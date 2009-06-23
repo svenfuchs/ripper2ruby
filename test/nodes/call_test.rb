@@ -263,8 +263,8 @@ class CallTest < Test::Unit::TestCase
     assert_equal src, call.src
   end
   
-  define_method :"test call undef with a method name" do
-    src = "undef puts"
+  define_method :"test call undef with method names" do
+    src = "undef foo, bar, baz"
     call = build(src).statements.first
     assert_equal src, call.to_ruby
     assert_equal src, call.src
