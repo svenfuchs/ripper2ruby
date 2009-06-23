@@ -56,7 +56,10 @@ class Ripper
 
       def on_block_var(params, something)
         # on_params was already fired on block_var before rdelimiting :@|, so we have to grab it
-        params.rdelim = pop_token(:'@|') if params.ldelim.token == '|' && params.rdelim.nil?
+        # params.rdelim = pop_token(:'@|') if params.ldelim.token == '|' && params.rdelim.nil?
+        params.rdelim = pop_token(:'@|')
+        # params.separators = pop_tokens(:@comma)
+        params.ldelim = pop_token(:'@|')
         params
       end
 
@@ -66,12 +69,9 @@ class Ripper
           optional_params.map! { |left, right| Ruby::Assignment.new(left, right, operators.pop) }
         end
         params = (Array(params) + Array(optional_params) << rest_param << block_param).flatten.compact
+        separators = pop_tokens(:@comma).reverse
 
-        ldelim, rdelim = *pop_tokens(:@lparen, :@rparen, :max => 2).reverse
-        ldelim, rdelim = *pop_tokens(:'@|', :max => 2).reverse unless ldelim
-        separators = pop_tokens(:@comma)
-
-        Ruby::Params.new(params, separators, ldelim, rdelim)
+        Ruby::Params.new(params, separators) #, ldelim, rdelim)
       end
 
       def on_rest_param(param)

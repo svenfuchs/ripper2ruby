@@ -27,8 +27,8 @@ LIBS = {
   :ruby => {
     :path => '/usr/local/ruby19/lib/ruby/1.9.1',
     :exclude => [
-      # 'tktable.rb'                # invalid array access syntax? sexp fails on: [idx [a, b]]
-      'cgi/html.rb' # uses stacked heredocs
+      # 'tktable.rb'     # invalid array access syntax? sexp fails on: [idx [a, b]]
+      'cgi/html.rb',     # uses stacked heredocs
     ]
   },
   :adva_cms => {
@@ -63,14 +63,15 @@ class BuildTest < Test::Unit::TestCase
     Erb::Stripper.new.to_ruby(src)
   end
 
-  def test_library_build
+  def xtest_library_build
     lib = LIBS[:ruby]
     filenames(File.expand_path(lib[:path])).each do |filename|
       next if excluded?(lib, filename)
-
+      
       puts filename
       src = read_file(filename)
       src = strip_erb(src) if erb?(lib, filename)
+      src = src.split('__END__').first
       
       result = build(src).to_ruby
       unless src == result

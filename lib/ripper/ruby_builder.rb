@@ -120,6 +120,10 @@ class Ripper
         pop_tokens(*TERNARY_OPERATORS, options)
       end
 
+      def pop_ternary_operator(options = {})
+        pop_token(*TERNARY_OPERATORS, options)
+      end
+
       def pop_assignment_operator(options = {})
         pop_token(*ASSIGN_OPERATORS, options)
       end

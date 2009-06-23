@@ -5,13 +5,16 @@ class Ripper
     class Token
       include Comparable
 
-      attr_accessor :type, :value, :whitespace, :comments, :position
+      attr_accessor :type, :value, :whitespace, :position
 
       def initialize(type = nil, value = nil, position = nil)
         @type = normalize_type(type, value)
         @value = value
-        @comments = []
         @position = Ruby::Node::Position.new(position[0] - 1, position[1]) if position
+      end
+      
+      def comments
+        @comments ||= []
       end
 
       def newline?

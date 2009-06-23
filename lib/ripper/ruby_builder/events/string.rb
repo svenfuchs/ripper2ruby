@@ -78,7 +78,9 @@ class Ripper
       end
 
       def on_string_dvar(variable)
-        variable.token = '#' + variable.token # HACK. from where can we obtain the hashmark?
+        ldelim = pop_token(:@embvar)
+        # variable.ldelim = ldelim # TODO add ldelim to variables
+        variable.token = ldelim.to_ruby + variable.token
         variable
       end
 

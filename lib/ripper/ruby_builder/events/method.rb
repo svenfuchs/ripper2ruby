@@ -4,7 +4,7 @@ class Ripper
       def on_def(identifier, params, body)
         if identifier.respond_to?(:type)
           # TODO how to clean this up? happens in def | ; end, def class; end etc
-          params.ldelim = nil if identifier.type == :'@|' && params.ldelim.token == '|'
+          # params.ldelim = nil if identifier.type == :'@|' && params.ldelim.token == '|'
           pop_token(identifier.type)
         end
         identifier = identifier.to_identifier if identifier.respond_to?(:to_identifier)

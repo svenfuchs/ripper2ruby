@@ -1,15 +1,8 @@
 class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     module Lexer
-      unimplemented = :__end__, :embvar, :tlambda, :tlambeg
+      # unimplemented = :tlambda, :tlambeg
       
-      # unimplemented.each do |type|
-      #   define_method :"on_#{type}" do |*args|
-      #     p super(*args)
-      #     super(*args)
-      #   end
-      # end
-       
       def on_sp(*args)
         push(super)
       end
@@ -121,6 +114,15 @@ class Ripper
       
       def on_embdoc_end(doc)
         push([:@comment, doc, position])
+      end
+      
+      def on_embvar(*args)
+        push(super)
+      end
+      
+      def on___end__(*args)
+        # TODO
+        super
       end
     end
   end

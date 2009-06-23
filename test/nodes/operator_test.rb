@@ -217,8 +217,13 @@ class OperatorTest < Test::Unit::TestCase
     assert_equal src, build(src).to_ruby
   end
   
-  define_method :'test operator order in an expression with multiple ternary operators' do
-    src = "a ? c : d ? f : g"
+  define_method :'test operator order in an expression with multiple ternary operators (1)' do
+    src = "a ? b : c ? d : e"
+    assert_equal src, build(src).to_ruby(true)
+  end
+  
+  define_method :'test operator order in an expression with multiple ternary operators (2)' do
+    src = "a ? b ? c : d : e"
     assert_equal src, build(src).to_ruby(true)
   end
 end

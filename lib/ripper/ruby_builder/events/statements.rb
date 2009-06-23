@@ -22,9 +22,12 @@ class Ripper
       def on_paren(node)
         if stack.peek.type == :@rparen
           case node
-          when Ruby::Params
+          when Ruby::List
             node.rdelim = pop_token(:@rparen)
+            node.separators += pop_tokens(:@comma, :@semicolon)
+            node.ldelim = pop_token(:@lparen)
           else
+            p 'in: on_paren', node
             node = build_statements(node, nil, pop_token(:@rparen), pop_token(:@lparen))
           end
         end
@@ -39,7 +42,7 @@ class Ripper
       end
 
       def on_stmts_new
-        build_statements #(nil, pop_tokens(:@semicolon))
+        Ruby::Statements.new
       end
     
       def on_void_stmt

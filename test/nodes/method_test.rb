@@ -3,23 +3,37 @@ require File.dirname(__FILE__) + '/../test_helper'
 class MethodTest < Test::Unit::TestCase
   include TestHelper
 
-  define_method :"test a method" do
+  define_method :"test a method definition" do
     src = "def foo(a, b = nil, c = :foo, *d, &block)\n        bar\n        baz\n      end"
-    src = "def foo(a, &block)\nend"
     method = build(src).first
     assert_equal src, method.to_ruby
     assert_equal src, method.src
   end
   
-  define_method :"test a method with an options hash" do
+  define_method :"test a method definition with an options hash" do
     src = "def foo(a, b = {})\nend"
     method = build(src).first
     assert_equal src, method.to_ruby
     assert_equal src, method.src
   end
   
-  define_method :"test a class method" do
+  define_method :"test a method definition without parentheses" do
+    src = "def foo a, b = nil, c = :foo, *d, &block\n        bar\n        baz\n      end"
+    src = "def foo a, b\nend"
+    method = build(src).first
+    assert_equal src, method.to_ruby
+    assert_equal src, method.src
+  end
+  
+  define_method :"test a class method definition (using self)" do
     src = "def self.foo(a, b = nil, c = :foo, *d, &block)\n        bar\n        baz\n      end"
+    method = build(src).first
+    assert_equal src, method.to_ruby
+    assert_equal src, method.src
+  end
+  
+  define_method :"test a class method definition (using const)" do
+    src = "def A.foo(a, b = nil, c = :foo, *d, &block)\n        bar\n        baz\n      end"
     method = build(src).first
     assert_equal src, method.to_ruby
     assert_equal src, method.src
@@ -50,7 +64,6 @@ class MethodTest < Test::Unit::TestCase
   
   define_method :"test method definition: def | " do
     src = "def | ; end"
-    puts events(src)
     assert_equal src, build(src).to_ruby
   end
   

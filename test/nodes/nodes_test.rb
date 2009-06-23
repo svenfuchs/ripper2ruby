@@ -16,6 +16,7 @@ class NodesTest < Test::Unit::TestCase
   Dir["#{File.dirname(__FILE__)}/../fixtures/**/*.rb"].sort.each do |filename|
     # puts filename
     define_method :"test: #{filename} compiles to the original src" do
+      next if filename.index('tmp.rb')
       src = File.read(filename)
       assert_equal src, build(src).to_ruby
     end

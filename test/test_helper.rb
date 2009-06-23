@@ -13,8 +13,9 @@ module TestHelper
     Ripper::RubyBuilder.build(src)
   end
 	
-	def events(src)
-	  LogSexpBuilder.events(src)
+	def log(src)
+	  puts '', src
+	  puts '', LogSexpBuilder.events(src), ''
   end
   
   def assert_compiles_to_original(src)
@@ -53,7 +54,7 @@ module TestHelper
 end
 
 class LogSexpBuilder < Ripper::SexpBuilder
-  @@events = ['']
+  @@events = []
   
   class << self
     def events(src)

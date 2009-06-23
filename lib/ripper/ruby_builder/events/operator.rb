@@ -12,7 +12,8 @@ class Ripper
       end
 
       def on_ifop(condition, left, right)
-        operators = pop_ternary_operators(:pass => true, :max => 2).reverse
+        operators = pop_ternary_operator(:left => condition, :right => left),
+                    pop_ternary_operator(:left => left, :right => right)
         Ruby::IfOp.new(condition, left, right, operators)
       end
     end
