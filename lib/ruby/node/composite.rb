@@ -16,7 +16,7 @@ module Ruby
           if object.respond_to?(:parent=)
             object.parent = self.parent 
           elsif object.respond_to?(:each)
-            object.each { |o| o.parent = parent if object.respond_to?(:parent=) }
+            object.each { |o| o.try(:parent=, parent) }
           end
           super
         end
@@ -27,7 +27,7 @@ module Ruby
         end
       
         def parent=(parent)
-          each { |object| object.parent = parent if object.respond_to?(:parent=) }
+          each { |object| object.try(:parent=, parent) }
           @parent = parent
         end
 

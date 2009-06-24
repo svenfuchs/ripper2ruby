@@ -8,8 +8,8 @@ class Ripper
 
       def on_arg_paren(args)
         args ||= Ruby::ArgsList.new # will be nil when call has an empty arglist, e.g. I18n.t()
-        pop_token(:@lparen).tap { |l| args.ldelim = l if l }
-        pop_token(:@rparen).tap { |r| args.rdelim = r if r }
+        args.rdelim ||= pop_token(:@rparen)
+        args.ldelim ||= pop_token(:@lparen)
         args
       end
       
@@ -24,7 +24,6 @@ class Ripper
       end
 
       def on_args_add(args, arg)
-        args = args.to_heredoc_args_list if arg.is_a?(Ruby::Heredoc)
         args << Ruby::Arg.new(arg)
         args
       end

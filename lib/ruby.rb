@@ -3,6 +3,8 @@ Dir[File.dirname(__FILE__) + '/ruby/*.rb'].each do |file|
 end
 
 module Ruby
+  include Conversions
+  
   @@context_width = 2
   
   class << self

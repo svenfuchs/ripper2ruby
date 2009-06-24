@@ -27,8 +27,13 @@ class ArrayTest < Test::Unit::TestCase
     assert_equal src, build(src).to_ruby
   end
   
-  define_method :'test a multiline wordlist array %w(\nfoo bar\n) (parentheses)' do
-    src = "%w(\nfoo bar\n)"
+  define_method :'test a multiline wordlist array %w(\nfoo bar\n)' do
+    src = "%w(\nfoo bar\n).foo"
+    assert_equal src, build(src).to_ruby(true)
+  end
+  
+  define_method :'test a multiline wordlist array w/ extra whitespace %w( \nfoo bar\n )' do
+    src = "%w( \nfoo bar\n ).foo"
     assert_equal src, build(src).to_ruby(true)
   end
   

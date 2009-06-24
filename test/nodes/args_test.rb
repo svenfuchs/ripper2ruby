@@ -79,7 +79,7 @@ class ArgsTest < Test::Unit::TestCase
     args = build('t' + src).first.arguments
     foo, bar = args
   
-    args[0] = baz = Ruby::Symbol.from_native(:baz)
+    args[0] = baz = Ruby.from_native(:baz)
     assert_equal args, baz.parent.parent # baz is wrapped into an Arg
     assert_equal [0, 2], baz.position.to_a
   end

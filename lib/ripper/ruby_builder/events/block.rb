@@ -26,7 +26,7 @@ class Ripper
       end
 
       def on_rescue(error_types, error_var, statements, block)
-        identifier = pop_token(:@rescue, :pass => true)
+        identifier = pop_token(:@rescue)
         operator = pop_token(:'@=>', :left => identifier)
 
         params = if error_types || error_var
@@ -34,7 +34,6 @@ class Ripper
           errors = Ruby::Assoc.new(error_types, error_var, operator)
           Ruby::Params.new(errors)
         end
-
         statements.to_chained_block(identifier, block, nil, params)
       end
 
@@ -44,10 +43,10 @@ class Ripper
       end
 
       def on_rescue_mod(expression, statements)
+        args = Ruby::ArgsList.new(args) unless args.is_a?(Ruby::List)
         # positions are messed up on rescue mod after assignment, so we have to sort them
         statements, expression = *[statements, expression].sort
-        expression = update_args(expression)
-        identifier = pop_token(:@rescue, :pass => true)
+        identifier = pop_token(:@rescue)
         Ruby::RescueMod.new(identifier, expression, statements)
       end
 

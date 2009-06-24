@@ -10,7 +10,7 @@ module Ruby
     end
       
     def nodes
-      [identifier, expression, ldelim, contents, rdelim].flatten.compact
+      [identifier, expression, ldelim, elements, rdelim].flatten.compact
     end
   end
   
@@ -23,7 +23,7 @@ module Ruby
     end
       
     def nodes
-      [contents, identifier, expression].flatten.compact
+      [elements, identifier, expression].flatten.compact
     end
   end
   

@@ -21,8 +21,7 @@ class Ripper
     WHITESPACE        = [:@sp, :@comment] + NEWLINE
     OPENERS           = [:@lparen, :@lbracket, :@lbrace, :@class, :@module, :@def, :@begin, :@while, :@until, 
                          :@for, :@if, :@elsif, :@else, :@unless, :@case, :@when, :@embexpr_beg, :@do, :@rescue,
-                         :'@=']
-                        # , :'@|'
+                         :'@='] # , :'@|'
     KEYWORDS          = [:@alias, :@and, :@BEGIN, :@begin, :@break, :@case, :@class, :@def, :@defined, 
                          :@do, :@else, :@elsif, :@END, :@end, :@ensure, :@false, :@for, :@if, :@in, 
                          :@module, :@next, :@nil, :@not, :@or, :@redo, :@rescue, :@retry, :@return, 
@@ -114,6 +113,10 @@ class Ripper
         shift(*types).map { |token| build_token(token) }.flatten.compact
       end
       
+      def pop_identifier(type, options = {})
+        pop_token(type, options).to_identifier
+      end
+      
       def pop_operator(options = {})
         pop_token(*OPERATORS, options)
       end
@@ -139,7 +142,7 @@ class Ripper
       end
 
       def pop_context
-        stack.buffer.flush
+        stack.context.get
       end
 
       def stack_ignore(*types, &block)

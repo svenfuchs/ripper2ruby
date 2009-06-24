@@ -1,7 +1,7 @@
 require 'ruby/node'
 
 module Ruby
-  class Assignment < Aggregate
+  class Assignment < Aggregate # TODO DelimitedList
     child_accessor :left, :right, :operator
 
     def initialize(left, right, operator)
@@ -26,7 +26,7 @@ module Ruby
     end
     
     def nodes
-      [ldelim, star, contents, rdelim].flatten.compact
+      [ldelim, star, elements, rdelim].flatten.compact
     end
   end
 end

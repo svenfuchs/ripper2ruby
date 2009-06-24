@@ -5,10 +5,6 @@ require 'ruby/backfit/args'
 module Ruby
   class ArgsList < DelimitedList
     include Backfit::ArgsList
-    
-    def to_heredoc_args_list
-      HeredocArgsList.new(elements, ldelim, rdelim)
-    end
   end
   
   class HeredocArgsList < ArgsList

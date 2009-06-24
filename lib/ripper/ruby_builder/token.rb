@@ -62,8 +62,7 @@ class Ripper
       end
     
       def <=>(other)
-        other = other.position if other.respond_to?(:position)
-        position <=> other
+        position <=> (other.respond_to?(:position) ? other.position : other)
       end
       
       protected

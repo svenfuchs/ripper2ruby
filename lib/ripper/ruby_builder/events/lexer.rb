@@ -29,7 +29,7 @@ class Ripper
 
       def on_tstring_end(token)
         push(super)
-        on_words_end(token) if closes_words?(token)
+        on_words_sep(token) && on_words_end(token) if closes_words?(token)
       end
 
       def on_qwords_beg(*args)
@@ -42,14 +42,16 @@ class Ripper
       
       def on_words_sep(token)
         token.each_char do |token|
-          case token
-          when "\n"
-            push([:@nl, token, super[2]]) # TODO fix positions for each char
-          when /\s+/
-            push([:@sp, token, super[2]])
-          else
-            push([:@words_end, token, super[2]])
-          end
+          try_trigger_whitespace(token, super[2]) || push([:@words_end, token, super[2]])
+        end
+      end
+      
+      def try_trigger_whitespace(token, position)
+        case token
+        when "\n"
+          push([:@nl, token, position])
+        when /\s+/
+          push([:@sp, token, position])
         end
       end
       

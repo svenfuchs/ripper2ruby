@@ -6,7 +6,7 @@ module Ruby
       end
     
       def []=(key, value)
-        value = from_native(value, nil, ' ') unless value.is_a?(Node)
+        value = Ruby.from_native(value, nil, ' ') unless value.is_a?(Node)
         if assoc = detect { |assoc| assoc.key.value == key }
           assoc.value = value
         else

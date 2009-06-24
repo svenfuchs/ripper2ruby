@@ -1,5 +1,5 @@
 require 'ripper/ruby_builder/queue'
-require 'ripper/ruby_builder/buffer'
+require 'ripper/ruby_builder/context'
 
 class Ripper
   class RubyBuilder < Ripper::SexpBuilder
@@ -12,12 +12,12 @@ class Ripper
         @queue ||= Queue.new
       end
 
-      def buffer
-        @buffer ||= Buffer.new
+      def context
+        @context ||= Context.new
       end
 
       def push(token)
-        return if buffer.aggregate(token)
+        return if context.aggregate(token)
         tokens = queue << token
         tokens.each do |token|
           self << token
@@ -27,11 +27,11 @@ class Ripper
       alias :_pop :pop
       def pop(*types)
         options = types.last.is_a?(::Hash) ? types.pop : {}
-        max, pass, value, pos, left, right = options.values_at(:max, :pass, :value, :pos, :left, :right)
+        max, pass = options.delete(:max), options.delete(:pass)
         tokens, ignored = [], []
 
         while !empty? && !(max && tokens.length >= max)
-          if types.include?(last.type) && has_value?(value) && at?(pos) && left_of?(right) && right_of?(left)
+          if types.include?(last.type) && matches?(options)
             tokens << super()
           elsif ignore?(last.type)
             ignored << super()
@@ -59,6 +59,25 @@ class Ripper
 
       protected
 
+        def ignore_stack
+          @ignore_stack ||= []
+        end
+      
+        def matches?(conditions)
+          conditions.inject(true) do |result, (type, value)|
+            result && case type
+            when :value
+              has_value?(value)
+            when :pos
+              at?(value)
+            when :right
+              left_of?(value)
+            when :left
+              right_of?(value)
+            end
+          end
+        end
+
         def at?(pos)
           pos.nil? || last.position == pos
         end
@@ -80,10 +99,6 @@ class Ripper
           else
             last.value == value
           end
-        end
-
-        def ignore_stack
-          @ignore_stack ||= []
         end
     end
   end

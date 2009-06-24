@@ -24,6 +24,12 @@ class Ripper
         token = pop_token(:@gvar)
         Ruby::Variable.new(token.token, token.position, token.context)
       end
+
+      def on_backref(arg)
+        push(super)
+        token = pop_token(:@backref)
+        Ruby::Variable.new(token.token, token.position, token.context)
+      end
     end
   end
 end

@@ -51,8 +51,12 @@ class BuildTest # < Test::Unit::TestCase
         src = read_src(filename, lib)
         begin
           result = build(src, filename).to_ruby(true)
-          errors[name] << filename + "\nresult differs from source:\n#{diff(src, result)}\n" unless src == result
-          putc '.'
+          if src == result
+            putc '.'
+          else
+            errors[name] << filename + "\nresult differs from source:\n#{diff(src, result)}\n" 
+            putc 'o'
+          end
         rescue RuntimeError => e
           line = e.message
           line = filename + ':' + line unless line.index(filename)

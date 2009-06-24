@@ -9,7 +9,7 @@ class Ripper
       end
       
       def on_while_mod(expression, statement)
-        expression = update_args(expression)
+        expression = Ruby::ArgsList.new(expression) unless expression.is_a?(Ruby::List)
         Ruby::WhileMod.new(pop_token(:@while), expression, statement)
       end
       
@@ -21,7 +21,7 @@ class Ripper
       end
 
       def on_until_mod(expression, statement)
-        expression = update_args(expression)
+        expression = Ruby::ArgsList.new(expression) unless expression.is_a?(Ruby::List)
         Ruby::UntilMod.new(pop_token(:@until), expression, statement)
       end
     end

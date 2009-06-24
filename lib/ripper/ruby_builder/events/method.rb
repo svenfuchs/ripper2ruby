@@ -3,10 +3,9 @@ class Ripper
     module Method
       def on_def(identifier, params, body)
         rdelim = pop_token(:@end)
-        ldelim = pop_token(:@def, :pass => true) # the identifier might be an opener, e.g. def class; end
-
-        pop_token(identifier.type, :left => ldelim, :right => rdelim) if identifier.respond_to?(:type)
-        identifier = identifier.to_identifier if identifier.respond_to?(:to_identifier)
+        ldelim = pop_token(:@def, :pass => true) 
+        # the identifier might be an opener, e.g. def class; end
+        identifier = pop_identifier(identifier.type, :left => ldelim, :right => rdelim) if identifier.respond_to?(:type)
 
         Ruby::Method.new(nil, nil, identifier, params, body, ldelim, rdelim)
       end
@@ -14,9 +13,7 @@ class Ripper
       def on_defs(target, separator, identifier, params, body)
         rdelim = pop_token(:@end)
         ldelim = pop_token(:@def, :pass => true)
-
-        pop_token(identifier.type, :left => ldelim, :right => rdelim) if identifier.respond_to?(:type)
-        identifier = identifier.to_identifier if identifier.respond_to?(:to_identifier)
+        identifier = pop_identifier(identifier.type, :left => ldelim, :right => rdelim) if identifier.respond_to?(:type)
         separator = pop_token(:@period, :'@::')
 
         Ruby::Method.new(target, separator, identifier, params, body, ldelim, rdelim)

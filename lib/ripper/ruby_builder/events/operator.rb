@@ -2,7 +2,7 @@ class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     module Operator
       def on_unary(operator, operand)
-        operator = pop_unary_operator(:pass => true, :right => operand)
+        operator = pop_unary_operator(:pass => true, :right => operand) # e.g. not(1)
         ldelim = pop_token(:@lparen, :left => operator)
         rdelim = pop_token(:@rparen, :left => operator) if ldelim
         Ruby::Unary.new(operator, operand, ldelim, rdelim) if operator

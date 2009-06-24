@@ -22,8 +22,9 @@ class Ripper
 
       def on_string_add(string, content)
         if string.is_a?(Ruby::HeredocBegin)
+          # TODO doesn't work when content spans multiple lines!!
           heredoc << content
-          heredoc_pos(content.position.row, content.position.col + content.length) # TODO doesn't work when content spans multiple lines!!
+          heredoc_pos(content.position.row, content.position.col + content.length) 
         else
           string << content if string && content
         end
@@ -49,9 +50,8 @@ class Ripper
         if ldelim = pop_token(:@heredoc_beg)
           @heredoc_beg = Ruby::HeredocBegin.new(ldelim.token, ldelim.position, ldelim.context)
         else
-          string = Ruby::String.new(pop_token(:@tstring_beg))
-          tstring_stack << string
-          string
+          tstring_stack << Ruby::String.new(pop_token(:@tstring_beg))
+          tstring_stack.last
         end
       end
 
@@ -62,15 +62,19 @@ class Ripper
 
       def on_xstring_new(*args)
         ldelim = pop(:@symbeg, :@backtick, :@regexp_beg, :max => 1, :pass => true).first
-        string = if ldelim.type == :@symbeg
-          Ruby::DynaSymbol.new(build_token(ldelim))
-        elsif ldelim.type == :@regexp_beg
-          Ruby::Regexp.new(build_token(ldelim))
+        tstring_stack << build_xstring(ldelim)
+        tstring_stack.last
+      end
+      
+      def build_xstring(token)
+        case token.type
+        when :@symbeg
+          Ruby::DynaSymbol.new(build_token(token))
+        when :@regexp_beg
+          Ruby::Regexp.new(build_token(token))
         else
-          Ruby::ExecutableString.new(build_token(ldelim))
+          Ruby::ExecutableString.new(build_token(token))
         end
-        tstring_stack << string
-        string
       end
 
       def on_word_new
