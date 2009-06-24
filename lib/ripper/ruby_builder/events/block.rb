@@ -8,22 +8,19 @@ class Ripper
 
       def on_do_block(params, statements)
         rdelim = pop_token(:@end)
-        separators = pop_tokens(:@semicolon)
         ldelim = pop_token(:@do)
-        statements.to_block(separators, params, ldelim, rdelim)
+        statements.to_block(params, ldelim, rdelim)
       end
 
       def on_brace_block(params, statements)
         rdelim = pop_token(:@rbrace)
-        separators = pop_tokens(:@semicolon)
         ldelim = pop_token(:@lbrace)
-        statements.to_block(separators, params, ldelim, rdelim)
+        statements.to_block(params, ldelim, rdelim)
       end
 
       def on_begin(body)
         body = body.to_named_block unless body.respond_to?(:identifier)
         body.identifier = pop_token(:@begin)
-        body.separators += pop_tokens(:@semicolon)
         body.rdelim = pop_token(:@end)
         body
       end
@@ -61,7 +58,7 @@ class Ripper
         # gosh, yes. ripper regards empty param delims (as in in do || ; end) as an operator
         if params.rdelim.nil? && params.ldelim.nil? && stack.peek.type == :'@||'
           op = pop_token(:'@||')
-          params.ldelim = Ruby::Token.new('|', op.position, op.whitespace)
+          params.ldelim = Ruby::Token.new('|', op.position, op.context)
           params.rdelim = Ruby::Token.new('|', op.position).tap { |o| o.position.col += 1 }
         end
         
@@ -74,9 +71,8 @@ class Ripper
           optional_params.map! { |left, right| Ruby::Assignment.new(left, right, operators.pop) }
         end
         params = (Array(params) + Array(optional_params) << rest_param << block_param).flatten.compact
-        separators = pop_tokens(:@comma).reverse
 
-        Ruby::Params.new(params, separators) #, ldelim, rdelim)
+        Ruby::Params.new(params)
       end
 
       def on_rest_param(param)

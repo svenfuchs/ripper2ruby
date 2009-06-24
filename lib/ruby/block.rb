@@ -4,9 +4,9 @@ module Ruby
   class Block < Statements
     child_accessor :params
     
-    def initialize(statements, separators = nil, params = nil, ldelim = nil, rdelim = nil)
+    def initialize(statements, params = nil, ldelim = nil, rdelim = nil)
       self.params = params
-      super(statements, separators, ldelim, rdelim)
+      super(statements, ldelim, rdelim)
     end
     
     def nodes
@@ -17,9 +17,9 @@ module Ruby
   class NamedBlock < Block
     child_accessor :identifier
     
-    def initialize(identifier, statements, separators = nil, params = nil, ldelim = nil, rdelim = nil)
+    def initialize(identifier, statements, params = nil, ldelim = nil, rdelim = nil)
       self.identifier = identifier
-      super(statements, separators, params, ldelim, rdelim)
+      super(statements, params, ldelim, rdelim)
     end
     
     def nodes
@@ -30,9 +30,9 @@ module Ruby
   class ChainedBlock < NamedBlock
     child_accessor :blocks
 
-    def initialize(identifier, blocks, statements, separators = nil, params = nil, ldelim = nil, rdelim = nil)
+    def initialize(identifier, blocks, statements, params = nil, ldelim = nil, rdelim = nil)
       self.blocks = Array(blocks) || []
-      super(identifier, statements, separators, params, ldelim, rdelim)
+      super(identifier, statements, params, ldelim, rdelim)
     end
     
     def nodes

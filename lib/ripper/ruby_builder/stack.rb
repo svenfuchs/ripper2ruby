@@ -1,33 +1,29 @@
 require 'ripper/ruby_builder/queue'
-require 'ripper/ruby_builder/whitespace'
+require 'ripper/ruby_builder/buffer'
 
 class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     class Stack < ::Array
       def peek
-        last || Token.new
+        last
       end
-      
+
       def queue
         @queue ||= Queue.new
       end
-      
-      def whitespace
-        @whitespace ||= Whitespace.new
+
+      def buffer
+        @buffer ||= Buffer.new
       end
-      
-      def whitespace?
-        !whitespace.empty?
-      end
-      
+
       def push(token)
-        return unless whitespace.aggregate(token)
+        return if buffer.aggregate(token)
         tokens = queue << token
-        tokens.each do |token| 
+        tokens.each do |token|
           self << token
         end
       end
-      
+
       alias :_pop :pop
       def pop(*types)
         options = types.last.is_a?(::Hash) ? types.pop : {}
@@ -53,28 +49,28 @@ class Ripper
       def ignore?(type)
         ignore_stack.flatten.include?(type)
       end
-      
+
       def ignore_types(*types)
         ignore_stack.push(types)
         result = yield
         ignore_stack.pop
         result
       end
-      
+
       protected
-      
+
         def at?(pos)
           pos.nil? || last.position == pos
         end
-        
+
         def left_of?(right)
           right.nil? || last.nil? || last < right
         end
-        
+
         def right_of?(left)
           left.nil? || last.nil? || left < last
         end
-      
+
         def has_value?( value)
           case value
           when nil
@@ -85,7 +81,7 @@ class Ripper
             last.value == value
           end
         end
-      
+
         def ignore_stack
           @ignore_stack ||= []
         end

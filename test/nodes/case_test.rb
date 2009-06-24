@@ -44,28 +44,28 @@ class CaseTest < Test::Unit::TestCase
     assert_equal src, expr.to_ruby
     assert_equal src, expr.src
   end
-
+  
   define_method :'test when expression (1)' do
     src = "case a; when 1; 2 end"
     expr = build(src).first
     assert_equal src, expr.to_ruby
     assert_equal src, expr.src
   end
-
+  
   define_method :'test when expression (2)' do
     src = "case a; when 1, 2; 2 end"
     expr = build(src).first
     assert_equal src, expr.to_ruby
     assert_equal src, expr.src
   end
-
+  
   define_method :'test when expression (3)' do
     src = "case a; when (1; 2), (3; 4;); 2 end"
     expr = build(src).first
     assert_equal src, expr.to_ruby
     assert_equal src, expr.src
   end
-
+  
   define_method :'test case block, semicolon separated (4)' do
     src = "case (true); when 1; false; when 2, 3, 4; nil; else; nil; end"
     expr = build(src).first

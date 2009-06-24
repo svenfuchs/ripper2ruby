@@ -1,5 +1,6 @@
 require 'ripper'
 require 'ruby'
+require 'ruby/node/context'
 require 'ripper/ruby_builder/token'
 require 'ripper/ruby_builder/stack'
 
@@ -19,13 +20,16 @@ class Ripper
     NEWLINE           = [:@nl, :@ignored_nl]
     WHITESPACE        = [:@sp, :@comment] + NEWLINE
     OPENERS           = [:@lparen, :@lbracket, :@lbrace, :@class, :@module, :@def, :@begin, :@while, :@until, 
-                         :@for, :@if, :@elsif, :@else, :@unless, :@case, :@when, :@embexpr_beg, :@do, :@rescue]
+                         :@for, :@if, :@elsif, :@else, :@unless, :@case, :@when, :@embexpr_beg, :@do, :@rescue,
+                         :'@=']
                         # , :'@|'
     KEYWORDS          = [:@alias, :@and, :@BEGIN, :@begin, :@break, :@case, :@class, :@def, :@defined, 
                          :@do, :@else, :@elsif, :@END, :@end, :@ensure, :@false, :@for, :@if, :@in, 
                          :@module, :@next, :@nil, :@not, :@or, :@redo, :@rescue, :@retry, :@return, 
                          :@self, :@super, :@then, :@true, :@undef, :@unless, :@until, :@when, :@while, 
                          :@yield]
+                         
+    SEPARATORS        = [:@semicolon, :@comma] # , :'@::'
     
     UNARY_OPERATORS   = [:'@+', :'@-', :'@!', :'@~', :@not]
     BINARY_OPERATORS  = [:'@**', :'@*', :'@/', :'@%', :'@+', :'@-', :'@<<', :'@>>', :'@&', :'@|', :'@^', 
@@ -134,8 +138,8 @@ class Ripper
         pop_token(*ASSIGN_OPERATORS, options)
       end
 
-      def pop_whitespace
-        stack.whitespace.pop
+      def pop_context
+        stack.buffer.flush
       end
 
       def stack_ignore(*types, &block)
@@ -143,11 +147,7 @@ class Ripper
       end
       
       def build_token(token)
-        Ruby::Token.new(token.value, token.position, token.whitespace) if token
-      end
-      
-      def build_whitespace(token)
-        Ruby::Whitespace.new(token.value, token.position)
+        Ruby::Token.new(token.value, token.position, token.context) if token
       end
 
       def extract_src(from, to)

@@ -39,8 +39,8 @@ class BlockTest < Test::Unit::TestCase
   
   define_method :"test: a method call block with arguments" do
     src = "t do |(a, b), *c|\n        foo\n        bar\n      end"
+    src = "t do |(a)|;end"
     call = build(src).first
-    
     assert_equal Ruby::Block, call.block.class
     assert_equal src, call.to_ruby
     assert_equal src, call.src

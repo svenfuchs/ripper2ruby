@@ -15,20 +15,16 @@ class Ripper
       
       def on_args_add_block(args, block)
         args << Ruby::Arg.new(block, pop_token(:'@&')) if block
-        separators = pop_tokens(:@comma).reverse
-        args.separators += separators if separators
         args
       end
       
       def on_args_add_star(args, arg)
-        args.separators += pop_tokens(:@comma).reverse
         args << Ruby::Arg.new(arg, pop_token(:'@*', :pass => true))
         args
       end
 
       def on_args_add(args, arg)
         args = args.to_heredoc_args_list if arg.is_a?(Ruby::Heredoc)
-        args.separators += pop_tokens(:@comma).reverse
         args << Ruby::Arg.new(arg)
         args
       end

@@ -6,7 +6,7 @@ module Ruby
   
   class String < DelimitedList
     def initialize(ldelim = nil, rdelim = nil)
-      super(nil, nil, ldelim, rdelim)
+      super(nil, ldelim, rdelim)
     end
     
     def value

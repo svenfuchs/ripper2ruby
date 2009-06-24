@@ -13,30 +13,15 @@ class ArgsTest < Test::Unit::TestCase
   end
   
   define_method :"test call arguments, 3 arguments and parentheses" do
-    src = "('a' , 'b', :c => :c)"
-    args = build('t' + src).first.arguments
-  
-    assert_equal Ruby::ArgsList, args.class
-    assert_equal src, args.to_ruby
-    assert_equal src, args.src
-  
-    assert_equal '(', args.ldelim.token
-    assert_equal ')', args.rdelim.token
-    assert_equal '',  args.ldelim.whitespace.to_s
-  
-    assert_equal 2,   args.separators.length
-    assert_equal ',', args.separators[0].token
-    assert_equal ' ', args.separators[0].whitespace.to_s
-    assert_equal ',', args.separators[1].token
-    assert_equal '',  args.separators[1].whitespace.to_s
-  
-    assert_equal [0, 1], args.position.to_a
-    assert_equal 21, args.length
+    src = "t('a' , 'b', :c => :c)"
+    call = build(src)
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
   end
   
   define_method :'test call arguments: t(:a => a, :b => b, &block)' do
     src = 't(:a => a, :b => b, &c)'
-    call = build(src).first
+    call = build(src)
     assert_equal src, call.to_ruby
     assert_equal src, call.src
   end

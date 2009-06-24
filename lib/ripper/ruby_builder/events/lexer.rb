@@ -41,7 +41,16 @@ class Ripper
       end
       
       def on_words_sep(token)
-        push(super)
+        token.each_char do |token|
+          case token
+          when "\n"
+            push([:@nl, token, super[2]]) # TODO fix positions for each char
+          when /\s+/
+            push([:@sp, token, super[2]])
+          else
+            push([:@words_end, token, super[2]])
+          end
+        end
       end
       
       def on_embexpr_beg(*args)

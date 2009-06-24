@@ -5,14 +5,14 @@ require 'ruby/node/source'
 module Ruby
   class Node
     class << self
-      def from_native(object, position = nil, whitespace = nil)
-        from_ruby(object.inspect, position, whitespace)
+      def from_native(object, position = nil, context = nil)
+        from_ruby(object.inspect, position, context)
       end
       
-      def from_ruby(src, position = nil, whitespace = nil)
+      def from_ruby(src, position = nil, context = nil)
         Ripper::RubyBuilder.new(src).parse.statements.first.tap do |node|
           node.position = position if position
-          node.whitespace = whitespace if whitespace
+          node.context = context if context
         end
       end
     end
@@ -29,27 +29,17 @@ module Ruby
       position[1]
     end
 
-    def length(whitespace = false)
-      to_ruby(whitespace).length
-    end
-
-    def to_ruby(whitespace = false)
-      nodes = self.nodes.compact
-      first = nodes.shift
-      (first ? first.to_ruby(whitespace) : '') + nodes.map { |node| node.to_ruby(true) }.join
+    def length(context = false)
+      to_ruby(context).length
     end
     
     def nodes
       []
     end
     
-    # def flatten_nodes
-    #   nodes.map{ |n| [n] + n.nodes }.flatten.compact
-    # end
-    
     def <=>(other)
-        other = other.position if other.respond_to?(:position)
-        position <=> other
+      other = other.position if other.respond_to?(:position)
+      position <=> other
     end
     
     protected
@@ -62,10 +52,10 @@ module Ruby
         self.class.from_native(*args)
       end
     
-      def to_node(node, position, whitespace)
+      def to_node(node, position, context)
         node = from_native(node) unless node.is_a?(Node)
         node.position = position
-        node.whitespace = whitespace
+        node.context = context
         node
       end
 

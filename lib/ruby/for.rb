@@ -4,16 +4,15 @@ module Ruby
   class For < NamedBlock
     child_accessor :variable, :operator, :range
 
-    def initialize(identifier, variable, operator, range, statements, separators, ldelim = nil, rdelim = nil)
+    def initialize(identifier, variable, operator, range, statements, ldelim = nil, rdelim = nil)
       self.variable = variable
       self.operator = operator
       self.range = range
-      super(identifier, statements, separators, nil, ldelim, rdelim)
+      super(identifier, statements, nil, ldelim, rdelim)
     end
       
     def nodes
       [identifier, variable, operator, range, ldelim, contents, rdelim].flatten.compact
-      # [ldelim, variable, operator, range, contents, rdelim].flatten.compact
     end
   end
 end

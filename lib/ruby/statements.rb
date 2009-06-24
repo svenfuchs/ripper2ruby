@@ -6,37 +6,36 @@ module Ruby
       elements
     end
     
-    def to_block(separators = [], params = nil, ldelim = nil, rdelim = nil)
-      Block.new(statements, self.separators + separators, params, ldelim, rdelim)
+    def to_block(params = nil, ldelim = nil, rdelim = nil)
+      Block.new(statements, params, ldelim, rdelim)
     end
     
-    def to_named_block(identifier = nil, separators = [], params = nil, ldelim = nil, rdelim = nil)
-      NamedBlock.new(identifier = nil, statements, self.separators + separators, params, ldelim, rdelim)
+    def to_named_block(identifier = nil, params = nil, ldelim = nil, rdelim = nil)
+      NamedBlock.new(identifier = nil, statements, params, ldelim, rdelim)
     end
     
-    def to_chained_block(identifier = nil, blocks = nil, separators = [], params = nil, ldelim = nil, rdelim = nil)
+    def to_chained_block(identifier = nil, blocks = nil, params = nil, ldelim = nil, rdelim = nil)
       ldelim ||= self.ldelim
       rdelim ||= self.rdelim
       identifier ||= self.identifier if respond_to?(:identifier)
-      separators = self.separators + Array(separators)
-      ChainedBlock.new(identifier, blocks, statements, separators, params, ldelim, rdelim)
+      ChainedBlock.new(identifier, blocks, statements, params, ldelim, rdelim)
     end
     
     def to_program(src, filename)
-      Program.new(src, filename, elements, separators)
+      Program.new(src, filename, elements)
     end
   end
   
   class Program < Statements
     attr_accessor :src, :filename
 
-    def initialize(src, filename, statements, separators)
+    def initialize(src, filename, statements)
       self.src = src
       self.filename = filename
-      super(statements, separators)
+      super(statements)
     end
     
-    def to_ruby(whitespace = false)
+    def to_ruby(context = false)
       super(true)
     end
     

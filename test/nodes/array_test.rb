@@ -16,7 +16,6 @@ class ArrayTest < Test::Unit::TestCase
   define_method :'test a wordlist array %w(foo bar) (parentheses)' do
     src = '%w(foo bar)'
     array = build(src).first
-  
     assert_equal Ruby::Array, array.class
     assert_equal %w(foo bar), array.value
     assert_equal src, array.to_ruby
@@ -62,7 +61,7 @@ class ArrayTest < Test::Unit::TestCase
     src = "%W[]"
     assert_equal src, build(src).to_ruby(true)
   end
-
+  
   define_method :"test array access" do
     src = "foo[1]"
     call = build(src).first

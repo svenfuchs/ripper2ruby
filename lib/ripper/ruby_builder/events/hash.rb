@@ -3,10 +3,8 @@ class Ripper
     module Hash
       def on_hash(assocs)
         rdelim = pop_token(:@rbrace)
-        # , :pass => true ... won't work with nested hashes / dangling commas
-        separators = assocs ? pop_tokens(:@comma, :max => assocs.length, :right => rdelim).reverse : nil
         ldelim = pop_token(:@lbrace)
-        Ruby::Hash.new(assocs, separators, ldelim, rdelim)
+        Ruby::Hash.new(assocs, ldelim, rdelim)
       end
 
       def on_assoclist_from_args(args)
@@ -14,8 +12,7 @@ class Ripper
       end
 
       def on_bare_assoc_hash(assocs)
-        separators = assocs ? pop_tokens(:@comma, :max => assocs.length - 1, :pass => true, :right => assocs.last).reverse : nil
-        Ruby::Hash.new(assocs, separators)
+        Ruby::Hash.new(assocs)
       end
 
       def on_assoc_new(key, value)

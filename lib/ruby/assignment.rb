@@ -19,10 +19,10 @@ module Ruby
     attr_accessor :kind
     child_accessor :star
 
-    def initialize(kind, elements = [], separators = [], ldelim = nil, rdelim = nil, star = nil)
+    def initialize(kind, elements = [], ldelim = nil, rdelim = nil, star = nil)
       self.kind = kind
       self.star = star
-      super(elements, separators, ldelim, rdelim)
+      super(elements, ldelim, rdelim)
     end
     
     def nodes

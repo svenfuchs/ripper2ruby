@@ -5,7 +5,7 @@ class Ripper
     class Token
       include Comparable
 
-      attr_accessor :type, :value, :whitespace, :position
+      attr_accessor :type, :value, :position, :context
 
       def initialize(type = nil, value = nil, position = nil)
         @type = normalize_type(type, value)
@@ -37,6 +37,14 @@ class Ripper
         OPERATORS.include?(type)
       end
       
+      def separator?
+        SEPARATORS.include?(type)
+      end
+      
+      def context?
+        whitespace? or separator?
+      end
+      
       def known?
         keyword? || operator? || opener? || whitespace? || [:@backtick].include?(type)
       end
@@ -50,7 +58,7 @@ class Ripper
       end
 
       def to_identifier
-        Ruby::Identifier.new(value, position, whitespace)
+        Ruby::Identifier.new(value, position, context)
       end
     
       def <=>(other)

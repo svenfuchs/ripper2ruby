@@ -17,30 +17,28 @@ class Ripper
       end
 
       def on_mlhs_new
-        Ruby::MultiAssignment.new(:left, nil, nil, pop_token(:@lparen))
+        Ruby::MultiAssignment.new(:left, nil, pop_token(:@lparen))
       end
 
       def on_mlhs_add(assignment, ref)
         assignment << ref
-        if stack.peek && assignment < stack.peek # assignment.position && 
-          separator = pop_token(:@comma)
-          assignment.separators << separator if separator
-        end
         assignment
       end
 
       def on_mlhs_paren(arg)
-        arg.rdelim = pop_token(:@rparen) if arg.is_a?(Ruby::MultiAssignment)
+        if arg.is_a?(Ruby::MultiAssignment)
+          arg.rdelim ||= pop_token(:@rparen) 
+          arg.ldelim ||= pop_token(:@lparen) 
+        end
         arg
       end
 
       def on_mrhs_new
-        separators = pop_tokens(:@comma).reverse
-        Ruby::MultiAssignment.new(:right, nil, separators)
+        Ruby::MultiAssignment.new(:right, nil)
       end
 
       def on_mrhs_new_from_args(args)
-        Ruby::MultiAssignment.new(:right, args.elements, args.separators)
+        Ruby::MultiAssignment.new(:right, args.elements)
       end
 
       def on_mrhs_add(assignment, ref)

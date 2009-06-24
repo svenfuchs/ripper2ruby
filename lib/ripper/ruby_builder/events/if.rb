@@ -3,7 +3,6 @@ class Ripper
     module If
       def update_args(args)
         args = Ruby::ArgsList.new(args) unless args.is_a?(Ruby::List)
-        args.separators += pop_tokens(:@semicolon)
         args
       end
       

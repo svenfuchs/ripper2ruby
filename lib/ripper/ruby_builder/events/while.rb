@@ -3,10 +3,9 @@ class Ripper
     module While
       def on_while(expression, statements)
         rdelim = pop_token(:@end)
-        separators = pop_tokens(:@semicolon)
         ldelim = pop_token(:@do)
         identifier = pop_token(:@while)
-        Ruby::While.new(identifier, expression, statements, separators, ldelim, rdelim)
+        Ruby::While.new(identifier, expression, statements, ldelim, rdelim)
       end
       
       def on_while_mod(expression, statement)
@@ -16,10 +15,9 @@ class Ripper
       
       def on_until(expression, statements)
         rdelim = pop_token(:@end)
-        separators = pop_tokens(:@semicolon)
         ldelim = pop_token(:@do)
         identifier = pop_token(:@until)
-        Ruby::Until.new(identifier, expression, statements, separators, ldelim, rdelim)
+        Ruby::Until.new(identifier, expression, statements, ldelim, rdelim)
       end
 
       def on_until_mod(expression, statement)

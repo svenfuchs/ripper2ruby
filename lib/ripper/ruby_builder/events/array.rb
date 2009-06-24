@@ -7,35 +7,43 @@ class Ripper
       def on_array(args)
         rdelim = pop_token(:@rbracket)
         ldelim = pop_token(:@lbracket)
-        args ? args.to_array(ldelim, rdelim) : Ruby::Array.new(nil, nil, ldelim, rdelim)
+        args ? args.to_array(ldelim, rdelim) : Ruby::Array.new(nil, ldelim, rdelim)
       end
 
       def on_words_new(*args)
-        words = Ruby::Array.new(nil, nil, pop_token(:@words_beg))
+        ldelim = pop_token(:@words_beg)
+        rdelim = pop_token(:@words_end)
+        words = Ruby::Array.new(nil, ldelim, rdelim)
         tstring_stack << words
-        on_words_end if stack.peek.type == :@words_sep && closes_words?(stack.peek.value)
         words
       end
 
       def on_qwords_new(*args)
-        words = Ruby::Array.new(nil, nil, pop_token(:@qwords_beg))
-        # there's no reasonable event that lets us catch :@tstring_end, so we gotta keep our own stack
+        ldelim = pop_token(:@qwords_beg)
+        rdelim = pop_token(:@words_end)
+        words = Ruby::Array.new(nil, ldelim, rdelim)
+        # TODO there's no reasonable event that lets us catch :@tstring_end, so we gotta keep our own stack?
         tstring_stack << words
-        on_words_end if stack.peek.type == :@words_sep && closes_words?(stack.peek.value)
         words
       end
 
+      def on_words_add(array, arg)
+        rdelim = pop_token(:@words_end)
+        array.rdelim = rdelim if rdelim
+        array << arg
+        array
+      end
+
       def on_qwords_add(array, arg)
-        tokens = pop_tokens(:@words_sep)
-        array.separators += tokens.select { |t| t.token =~ /^\s*$/ }
-        array.rdelim = (tokens - array.separators).first
+        rdelim = pop_token(:@words_end)
+        array.rdelim = rdelim if rdelim
         array << arg
         array
       end
 
       def on_words_end(rdelim = nil)
         array = tstring_stack.pop
-        array.rdelim = pop_token(:@tstring_end) || pop_token(:@words_sep)
+        array.rdelim ||= pop_token(:@tstring_end) || pop_token(:@words_sep)
         array
       end
 
@@ -49,14 +57,6 @@ class Ripper
         closes = (map[key] || key) == token.gsub(/[%w\s]/i, '')
 
         words && closes
-      end
-
-      def on_words_add(array, arg)
-        tokens = pop_tokens(:@words_sep)
-        array.separators += tokens.select { |t| t.token =~ /^\s*$/ }
-        array.rdelim = (tokens - array.separators).first
-        array << arg
-        array
       end
 
       def on_aref(target, args)

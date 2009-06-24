@@ -1,15 +1,16 @@
 require 'ruby/aggregate'
 
 module Ruby
-  class Const < Aggregate
-    child_accessor :identifier, :namespace, :separator
+  class Const < DelimitedAggregate
+    child_accessor :identifier, :namespace
     
-    def initialize(identifier = nil)
-      self.identifier = identifier
+    def initialize(token = nil, position = nil, context = nil, ldelim = nil)
+      self.identifier = Ruby::Identifier.new(token, position, context)
+      super(ldelim)
     end
     
     def nodes
-      [namespace, separator, identifier].compact
+      [namespace, ldelim, identifier].compact
     end
   end
   

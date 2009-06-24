@@ -7,7 +7,7 @@ module Ruby
     include Backfit::ArgsList
     
     def to_heredoc_args_list
-      HeredocArgsList.new(elements, separators, ldelim, rdelim)
+      HeredocArgsList.new(elements, ldelim, rdelim)
     end
   end
   
@@ -15,7 +15,7 @@ module Ruby
     def nodes
       nodes = elements
       heredoc = nodes.shift.arg
-      [nodes, separators, ldelim, rdelim, heredoc.ldelim, heredoc.elements, heredoc.rdelim].flatten.compact.sort
+      [nodes, ldelim, rdelim, heredoc.ldelim, heredoc.elements, heredoc.rdelim].flatten.compact.sort
     end
     
     def heredoc

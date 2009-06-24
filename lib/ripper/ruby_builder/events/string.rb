@@ -47,7 +47,7 @@ class Ripper
 
       def on_string_content(*args)
         if ldelim = pop_token(:@heredoc_beg)
-          @heredoc_beg = Ruby::HeredocBegin.new(ldelim.token, ldelim.position, ldelim.whitespace)
+          @heredoc_beg = Ruby::HeredocBegin.new(ldelim.token, ldelim.position, ldelim.context)
         else
           string = Ruby::String.new(pop_token(:@tstring_beg))
           tstring_stack << string
@@ -56,7 +56,7 @@ class Ripper
       end
 
       def on_tstring_content(token)
-        content = Ruby::StringContent.new(token, position)
+        content = Ruby::StringContent.new(token, position, pop_context)
         content
       end
 

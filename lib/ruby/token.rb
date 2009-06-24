@@ -2,17 +2,17 @@ require 'ruby/node'
 
 module Ruby
   class Token < Node 
-    attr_accessor :token, :position, :whitespace
+    attr_accessor :token, :position, :context
 
-    def initialize(token = '', position = nil, whitespace = nil)
+    def initialize(token = '', position = nil, context = nil)
       self.token = token
-      self.position = position
-      self.whitespace = whitespace
+      self.position = position if position
+      self.context = context if context
     end
     
-    def position(whitespace = false)
-      if whitespace
-        self.whitespace.position rescue @position
+    def position(context = false)
+      if context
+        self.context.position rescue @position
       else
         @position
       end
@@ -26,12 +26,14 @@ module Ruby
       token.to_s
     end
     
-    def to_ruby(whitespace = false)
-      (whitespace ? self.whitespace.to_s : '') + token.to_s
+    def to_ruby(context = false)
+      ruby = ''
+      ruby += self.context.to_ruby(context) if context && self.context
+      ruby + token.to_s
     end
       
     def to_identifier
-      Identifier.new(token, position, whitespace) 
+      Identifier.new(token, position, context) 
     end
   end
   
@@ -60,7 +62,7 @@ module Ruby
   
   class Identifier < Token
     def to_variable
-      Variable.new(token, position, whitespace) 
+      Variable.new(token, position, context) 
     end
   end
 end

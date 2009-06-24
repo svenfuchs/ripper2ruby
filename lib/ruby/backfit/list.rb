@@ -7,11 +7,11 @@ module Ruby
       end
     
       def pop
-        [elements.pop, separators.pop]
+        [elements.pop]
       end
     
       def []=(ix, element)
-        element = to_node(element, self[ix].position, self[ix].whitespace)
+        element = to_node(element, self[ix].position, self[ix].context)
         super
       end
     end

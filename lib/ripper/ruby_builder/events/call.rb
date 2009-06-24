@@ -101,7 +101,7 @@ class Ripper
         ldelim = pop_token(:@lparen, :left => token)
         rdelim = pop_token(:@rparen) if ldelim
 
-        args = Ruby::ArgsList.new(ref, nil, ldelim, rdelim)
+        args = Ruby::ArgsList.new(ref, ldelim, rdelim)
         Ruby::Call.new(nil, nil, token.to_identifier, args)
       end
       

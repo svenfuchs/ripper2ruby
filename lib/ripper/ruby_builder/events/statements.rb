@@ -1,16 +1,16 @@
 class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     module Statements
-      def build_statements(statements = nil, separators = nil, rdelim = nil, ldelim = nil)
-        node = Ruby::Statements.new(statements, separators, ldelim, rdelim)
-      end
-      
       def on_program(statements)
         program = statements.to_program(src, filename)
-        program.separators += pop_tokens(:@semicolon)
         
-        whitespace = Ruby::Whitespace.new([pop_whitespace, trailing_whitespace].compact.join)
-        program << Ruby::Token.new('', position, whitespace) unless whitespace.empty?
+        # TODO trailing whitespace
+        if context = pop_context
+          program << Ruby::Token.new('', position, context)
+        end
+        
+        # context = Ruby::Whitespace.new([pop_context, trailing_whitespace].compact.join)
+        # program << Ruby::Token.new('', position, whitespace) unless whitespace.empty?
         # program << Ruby::Token.new('', position, trailing_whitespace) # unless whitespace.empty?
         # program << Ruby::Token.new('', position, pop_whitespace) if stack.whitespace?
         
@@ -18,7 +18,6 @@ class Ripper
       end
 
       def on_body_stmt(body, rescue_block, else_block, ensure_block)
-        body.separators += pop_tokens(:@semicolon)
         statements = [rescue_block, else_block, ensure_block].compact
         body = body.to_chained_block(nil, statements) if rescue_block || ensure_block
         body
@@ -31,11 +30,11 @@ class Ripper
           # when Ruby::List
           if node.is_a?(Ruby::List) && node.ldelim.nil? && node.rdelim.nil?
             node.rdelim = pop_token(:@rparen)
-            node.separators += pop_tokens(:@comma, :@semicolon)
             node.ldelim = pop_token(:@lparen)
           else
-            # p 'in: on_paren', node
-            node = build_statements(node, nil, pop_token(:@rparen), pop_token(:@lparen))
+            rdelim = pop_token(:@rparen)
+            ldelim = pop_token(:@lparen)
+            node = Ruby::Statements.new(node, ldelim, rdelim)
           end
         end
         
@@ -43,7 +42,6 @@ class Ripper
       end
 
       def on_stmts_add(target, statement)
-        target.separators += pop_tokens(:@semicolon)
         target.elements << statement if statement
         target
       end
@@ -70,7 +68,7 @@ class Ripper
       
       def on_backref(arg)
         push
-        Ruby::Variable.new(arg, position, pop_whitespace)
+        Ruby::Variable.new(arg, position, pop_context)
       end
     end
   end

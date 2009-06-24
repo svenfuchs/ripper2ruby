@@ -4,9 +4,9 @@ module Ruby
   class While < NamedBlock
     child_accessor :expression
     
-    def initialize(identifier, expression, statements, separators, ldelim = nil, rdelim = nil)
+    def initialize(identifier, expression, statements, ldelim = nil, rdelim = nil)
       self.expression = expression
-      super(identifier, statements, separators, nil, ldelim, rdelim)
+      super(identifier, statements, nil, ldelim, rdelim)
     end
       
     def nodes
