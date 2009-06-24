@@ -3,7 +3,7 @@
 # source code
 
 require 'erb'
-$KCODE = 'u'
+$KCODE = 'u' if RUBY_VERSION < '1.9'
 
 module Erb
   class Scanner < ERB::Compiler::Scanner

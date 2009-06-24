@@ -98,14 +98,21 @@ class MethodTest < Test::Unit::TestCase
   
   define_method :"test a method definition with a semicolon and a block in the body" do
     src = "def foo ; bar { |k, v| k }  end"
-    method = build(src).first
+    method = build(src)
     assert_equal src, method.to_ruby
     assert_equal src, method.src
   end
   
-  define_method :"test a method definition with an identifier that is also a keyword (?)" do
+  define_method :"test a method definition with an identifier that is also a keyword (?) (class)" do
     src = "class A\n  def class\n  end\nend"
-    method = build(src).first
+    method = build(src)
+    assert_equal src, method.to_ruby
+    assert_equal src, method.src
+  end
+  
+  define_method :"test a method definition with an identifier that is also a keyword (?) (end)" do
+    src = "def end\nend"
+    method = build(src)
     assert_equal src, method.to_ruby
     assert_equal src, method.src
   end

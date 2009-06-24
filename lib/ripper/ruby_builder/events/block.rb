@@ -55,11 +55,16 @@ class Ripper
       end
 
       def on_block_var(params, something)
-        # on_params was already fired on block_var before rdelimiting :@|, so we have to grab it
-        # params.rdelim = pop_token(:'@|') if params.ldelim.token == '|' && params.rdelim.nil?
         params.rdelim = pop_token(:'@|')
-        # params.separators = pop_tokens(:@comma)
         params.ldelim = pop_token(:'@|')
+
+        # gosh, yes. ripper regards empty param delims (as in in do || ; end) as an operator
+        if params.rdelim.nil? && params.ldelim.nil? && stack.peek.type == :'@||'
+          op = pop_token(:'@||')
+          params.ldelim = Ruby::Token.new('|', op.position, op.whitespace)
+          params.rdelim = Ruby::Token.new('|', op.position).tap { |o| o.position.col += 1 }
+        end
+        
         params
       end
 

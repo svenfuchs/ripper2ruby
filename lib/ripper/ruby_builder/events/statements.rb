@@ -8,7 +8,12 @@ class Ripper
       def on_program(statements)
         program = statements.to_program(src, filename)
         program.separators += pop_tokens(:@semicolon)
-        program << Ruby::Token.new('', position, pop_whitespace) if stack.whitespace?
+        
+        whitespace = Ruby::Whitespace.new([pop_whitespace, trailing_whitespace].compact.join)
+        program << Ruby::Token.new('', position, whitespace) unless whitespace.empty?
+        # program << Ruby::Token.new('', position, trailing_whitespace) # unless whitespace.empty?
+        # program << Ruby::Token.new('', position, pop_whitespace) if stack.whitespace?
+        
         program
       end
 
@@ -21,13 +26,15 @@ class Ripper
       
       def on_paren(node)
         if stack.peek.type == :@rparen
-          case node
-          when Ruby::List
+          # TODO crap. this should test more specifically for ArgList, Hash etc.
+          # case node
+          # when Ruby::List
+          if node.is_a?(Ruby::List) && node.ldelim.nil? && node.rdelim.nil?
             node.rdelim = pop_token(:@rparen)
             node.separators += pop_tokens(:@comma, :@semicolon)
             node.ldelim = pop_token(:@lparen)
           else
-            p 'in: on_paren', node
+            # p 'in: on_paren', node
             node = build_statements(node, nil, pop_token(:@rparen), pop_token(:@lparen))
           end
         end

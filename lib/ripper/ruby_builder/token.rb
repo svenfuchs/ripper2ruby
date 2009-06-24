@@ -38,7 +38,7 @@ class Ripper
       end
       
       def known?
-        keyword? || operator? || opener? || whitespace?
+        keyword? || operator? || opener? || whitespace? || [:@backtick].include?(type)
       end
       
       def comment?

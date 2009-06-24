@@ -156,7 +156,21 @@ class CallTest < Test::Unit::TestCase
   
   define_method :"test call with nested call/parantheses" do
     src = "t(:a, b(:b))"
-    call = build(src).first
+    call = build(src)
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
+  define_method :"test call with nested call/parantheses" do
+    src = "t(:a, b(:b))"
+    call = build(src)
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
+  define_method :"test call with a symbol that is a backtick" do
+    src = "t(:`)"
+    call = build(src)
     assert_equal src, call.to_ruby
     assert_equal src, call.src
   end

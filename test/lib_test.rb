@@ -1,7 +1,5 @@
 require File.dirname(__FILE__) + '/test_helper'
-require 'diff/lcs'
-require 'diff/lcs/hunk'
-require 'erb/stripper'
+require File.dirname(__FILE__) + '/lib_test_helper'
 
 LIBS = {
   :self => {
@@ -11,85 +9,74 @@ LIBS = {
     :path => '~/Development/shared/rails/rails',
     :exclude => [],
     :erb => [
-      %r(/templates|environment\.rb)
+      %r(/templates/|environment\.rb)
     ]
   },
   :ruby => {
     :path => '/usr/local/ruby19/lib/ruby/1.9.1',
     :exclude => [
       'cgi/html.rb',     # uses stacked heredocs
-      # 'tk/namespace.rb', # uses arg_ambiguous 
+      # 'tk/namespace.rb', # uses arg_ambiguous
       # 'tktable.rb',      # parse error
       # 'tktreectrl.rb'    # parse error
     ]
   },
   :adva_cms => {
     :path => '~/Development/projects/adva_cms/adva_cms',
-    :exclude => []
+    :exclude => [
+      %r(/templates/|environment\.rb)
+    ]
   }
 }
 
+class BuildTest # < Test::Unit::TestCase
+  include TestHelper, LibTestHelper
 
-class BuildTest < Test::Unit::TestCase
-  include TestHelper
+  def test_library_build(options = {})
+    only = options[:only]
+    libs = Array(options[:only] || LIBS.keys)
 
-  def filenames(root)
-    Dir["#{root}/**/*.rb"].sort
-  end
+    puts "We're going to parse and rebuild the files from the following libraries: #{libs.join(', ')}."
+    puts "We'll report an error if the rebuilt code is not exactly the same as the original source."
+    puts "Let's go ..."
+    errors = {}
 
-  def read_file(filename)
-    src = File.read(filename)
-    src = File.open(filename, 'r:iso-8859-1') { |f| f.read } unless src.valid_encoding?
-    src
-  end
-  
-  def excluded?(lib, filename)
-    Array(lib[:exclude]).any? { |exclude| filename.index(exclude) }
-  end
-  
-  def erb?(lib, filename)
-    Array(lib[:erb]).any? { |pattern| filename =~ pattern }
-  end
-  
-  def strip_erb(src)
-    Erb::Stripper.new.to_ruby(src)
-  end
+    libs.each do |name|
+      puts "\ntesting files for lib: #{name}"
 
-  def test_library_build
-    lib = LIBS[:ruby]
-    filenames(File.expand_path(lib[:path])).each do |filename|
-      next if excluded?(lib, filename)
-      # next if filename < '/usr/local/ruby19/lib/ruby/1.9.1/tkextlib'
-      
-      puts filename
-      src = read_file(filename)
-      src = strip_erb(src) if erb?(lib, filename)
-      src = src.split(/^__END__$/).first
-      
-      begin
-        result = build(src, filename).to_ruby(true)
-        unless src == result
-          puts diff(src, result)
-          break
+      lib = LIBS[name]
+      errors[name] = []
+      filenames(File.expand_path(lib[:path])).each do |filename|
+        next if excluded?(lib, filename)
+        src = read_src(filename, lib)
+        begin
+          result = build(src, filename).to_ruby(true)
+          errors[name] << filename + "\nresult differs from source:\n" + diff(src, result) unless src == result
+          putc '.'
+        rescue RuntimeError => e
+          line = e.message
+          line = filename + ':' + line unless line.index(filename)
+          errors[name] << line + "\n"
+          putc e.is_a?(Ripper::RubyBuilder::ParseError) ? 'x' : 'e'
         end
-        assert_equal src, result
-      rescue Ripper::RubyBuilder::ParseError => e
-        puts e.message
       end
     end
+
+    report(errors)
   end
 
-  def xtest_tmp_file
+  def test_tmp_file
     filename = File.dirname(__FILE__) + '/fixtures/tmp.rb'
-    src = File.read(filename)
-    result = build(src, filename).to_ruby(true)
+    src = read_src(filename)
+    result = build(src, filename).to_ruby(true) || ''
     puts diff(src, result)
   end
 
-  def xtest_this
+  def test_this
     src = 'a+ a +a'
-    pp sexp(src)
-    log(src)
-    #assert_equal src, build(src).to_ruby(true)
+    result = build(src).to_ruby(true) || ''
+    puts diff(src, result)
   end
 end
+
+BuildTest.new.test_library_build

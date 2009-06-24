@@ -62,12 +62,19 @@ class ArgsTest < Test::Unit::TestCase
   end
   
   define_method :"test method call: t({ :foo => :bar, :baz => :buz }) (hash)" do
-    src = "({ :foo => :bar, :baz => :buz })"
-    args = build('t' + src).first.arguments
-    assert_equal src, args.to_ruby
-    assert_equal src, args.src
+    src = "t({ :foo => :bar, :baz => :buz })"
+    call = build(src)
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
   end
   
+  define_method :"test method call: t({ :foo => :bar }) (hash, leading whitespace)" do
+    src = 't ({ :foo => :bar })'
+    call = build(src)
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+
   define_method :"test method call: t([:foo, :bar]) (array)" do
     src = "([:foo, :bar, :baz])"
     args = build('t' + src).first.arguments

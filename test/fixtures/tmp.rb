@@ -1,1 +1,2 @@
-tk_send('get', item *args)
+def end
+end

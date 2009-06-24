@@ -39,6 +39,14 @@ module Ruby
     def inspect
       token.inspect
     end
+    
+    def +(other)
+      token.to_s + other.token.to_s
+    end
+    
+    def empty?
+      token.empty?
+    end
   end
   
   class Keyword < Token

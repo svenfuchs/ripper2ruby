@@ -42,14 +42,17 @@ class Ripper
     include Lexer, Statements, Const, Method, Call, Block, Args, Assignment, Operator,
             If, Case, For, While, Identifier, Literal, String, Symbol, Array, Hash
 
-    attr_reader :src, :filename, :stack, :tstring_stack
+    attr_reader :src, :filename, :stack, :tstring_stack, :trailing_whitespace
 
     def initialize(src, filename = nil, lineno = nil)
-      @src = src || filename && File.read(filename)
+      @src = src ||= filename && File.read(filename) || ''
+      @src.gsub!(/([\s\n]*)\Z/) { |s| @trailing_whitespace = Ruby::Whitespace.new(s) and nil }
+
       @filename = filename
       @stack = []
       @stack = Stack.new
       @tstring_stack = []
+
       super
     end
 
@@ -150,7 +153,7 @@ class Ripper
       def extract_src(from, to)
         # TODO make Clip work with start/end positions and use it
         lines = Ruby::Node::Text.split(src)
-        lines[from.row] = lines[from.row][from.col..-1]
+        lines[from.row] = lines[from.row][from.col..-1] # || ''
         lines[to.row] = lines[to.row][0, to.col]
         lines[from.row..to.row].join
       end

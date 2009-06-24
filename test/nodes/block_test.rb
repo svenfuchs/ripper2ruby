@@ -21,6 +21,13 @@ class BlockTest < Test::Unit::TestCase
     assert_equal src, call.src
   end
   
+  define_method :"test method call block with empty params" do
+    src = "t do ||\nfoo\n end"
+    call = build(src).first
+    assert_equal src, call.to_ruby
+    assert_equal src, call.src
+  end
+  
   define_method :"test method call block with semicolon delimited statements" do
     src = "t do ;; ;foo ; ;;bar; ; end"
     call = build(src).first

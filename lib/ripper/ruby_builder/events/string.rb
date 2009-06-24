@@ -108,17 +108,29 @@ class Ripper
         def heredoc
           @heredoc ||= Ruby::Heredoc.new
         end
-
+        
         def heredoc_pos(*pos)
           pos.empty? ? @heredoc_pos : @heredoc_pos = Ruby::Node::Position.new(*pos)
         end
 
         def extra_heredoc_chars(token)
-          if @heredoc && token && (token.newline? || token.comment?)
+          if extra_heredoc_stage? && extra_heredoc_char?(token)
             token.value += @heredoc.to_ruby # BIG HACK! ... somehow bubble the heredoc up to a more reasonable place
-            @heredoc_pos = @heredoc_beg = @heredoc = nil
+            clear_heredoc!
           end
           false
+        end
+        
+        def extra_heredoc_stage?
+          @heredoc && heredoc.rdelim
+        end
+        
+        def extra_heredoc_char?(token)
+          token && (token.newline? || token.comment?)
+        end
+        
+        def clear_heredoc!
+          @heredoc_pos = @heredoc_beg = @heredoc = nil
         end
     end
   end

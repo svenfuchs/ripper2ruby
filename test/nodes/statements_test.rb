@@ -61,7 +61,7 @@ class StatementsTest < Test::Unit::TestCase
   end
   
   define_method :"test a statement with preceding and succeding whitespace" do
-    src = "\n foo \n"
+    src = "\n foo \n  \n"
     assert_equal src, build(src).to_ruby
   end
 end

@@ -26,6 +26,16 @@ module TestHelper
     assert_equal src, expr.src
   end
   
+  def highlight(str)
+    green = Highlighters::Ansi.new(:green)
+    red = Highlighters::Ansi.new(:red)
+    str.split("\n").map do |line|
+      line = green.highlight(line) if line =~ /^\+/
+      line = red.highlight(line) if line =~ /^\-/
+      line
+    end.join("\n")
+  end
+  
   # some ruby cookbook
 	def diff(data_old, data_new, format=:unified, context_lines=3)
   	data_old = data_old.split(/\n/).map! { |e| e.chomp }
@@ -37,8 +47,7 @@ module TestHelper
 	  file_length_difference = 0
 	  diffs.each do |piece|
 	    begin
-	      hunk = Diff::LCS::Hunk.new(data_old, data_new, piece, context_lines,
-	                                 file_length_difference)
+	      hunk = Diff::LCS::Hunk.new(data_old, data_new, piece, context_lines, file_length_difference)
 	      file_length_difference = hunk.file_length_difference
 	      next unless oldhunk
 	      if (context_lines > 0) and hunk.overlaps?(oldhunk)
@@ -52,6 +61,7 @@ module TestHelper
 	    end
 	  end
 	  output << oldhunk.diff(format) << "\n"
+	  highlight(output)
 	end
 end
 
