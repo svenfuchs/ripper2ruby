@@ -8,11 +8,6 @@ module Ruby
       end
 
       def src(context = false)
-        # p position(context)
-        # p length(context)
-        # p position(false)
-        # p length(false)
-        # p root.src
         root? ? @src : Ruby::Node::Text.new(root.src).clip(position(context), length(context)).to_s
       end
 

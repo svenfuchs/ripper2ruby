@@ -5,11 +5,9 @@ module Ruby
     attr_writer :context
 
     def position(context = false)
-      if context
-        self.context.position rescue position(false)
-      else
-        nodes.each { |n| return n.position.dup if n } && nil
-      end
+      nodes = self.nodes
+      nodes.unshift(self.context) if context
+      nodes.compact.each { |n| return n.position.dup if n } && nil
     end
 
     def position=(position)

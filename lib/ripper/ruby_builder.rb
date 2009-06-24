@@ -29,7 +29,7 @@ class Ripper
                          :@self, :@super, :@then, :@true, :@undef, :@unless, :@until, :@when, :@while, 
                          :@yield]
                          
-    SEPARATORS        = [:@semicolon, :@comma] # , :'@::'
+    SEPARATORS        = [:@semicolon, :@comma, :'@::']
     
     UNARY_OPERATORS   = [:'@+', :'@-', :'@!', :'@~', :@not]
     BINARY_OPERATORS  = [:'@**', :'@*', :'@/', :'@%', :'@+', :'@-', :'@<<', :'@>>', :'@&', :'@|', :'@^', 

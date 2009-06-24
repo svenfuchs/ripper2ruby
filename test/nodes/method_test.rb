@@ -25,13 +25,13 @@ class MethodTest < Test::Unit::TestCase
     assert_equal src, method.src
   end
   
-  define_method :"test a class method definition (using self)" do
-    src = "def self.foo(a, b = nil, c = :foo, *d, &block)\n        bar\n        baz\n      end"
+  define_method :"test a class method definition calling a class method (namespace seps)" do
+    src = "def A::foo()\nB::foo()\n end"
     method = build(src).first
     assert_equal src, method.to_ruby
     assert_equal src, method.src
   end
-  
+
   define_method :"test a class method definition (using self, keyword)" do
     src = "def self.for(options)\nend"
     method = build(src).first
@@ -45,6 +45,7 @@ class MethodTest < Test::Unit::TestCase
     assert_equal src, method.to_ruby
     assert_equal src, method.src
   end
+
   
   define_method :"test method definition: def foo(b = :b, c=:c); end (optional args w/ whitespace differences)" do
     src = 'def foo(a = 1, b=2); end'

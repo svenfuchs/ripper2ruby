@@ -22,7 +22,7 @@ LIBS = {
     ]
   },
   :adva_cms => {
-    :path => '~/Development/projects/adva_cms/adva_cms',
+    :path => '~/Development/projects/adva_cms/adva_cms/vendor/adva',
     :exclude => [
       %r(/templates/|environment\.rb)
     ]
@@ -51,7 +51,7 @@ class BuildTest # < Test::Unit::TestCase
         src = read_src(filename, lib)
         begin
           result = build(src, filename).to_ruby(true)
-          errors[name] << filename + "\nresult differs from source:\n" + diff(src, result) unless src == result
+          errors[name] << filename + "\nresult differs from source:\n#{diff(src, result)}\n" unless src == result
           putc '.'
         rescue RuntimeError => e
           line = e.message
