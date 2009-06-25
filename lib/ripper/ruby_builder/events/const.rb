@@ -1,24 +1,17 @@
 class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     module Const
-      def on_const(token)
-        push(super)
-        token = pop_token(:@const)
-        ldelim = pop_token(:'@::')
-        Ruby::Const.new(token.token, token.position, token.context, ldelim)
-      end
-      
       def on_class(const, super_class, body)
-        ldelim = pop_token(:@class)
-        operator = super_class ? pop_token(:'@<') : nil
         rdelim = pop_token(:@end)
+        operator = super_class ? pop_token(:'@<') : nil
+        ldelim = pop_token(:@class)
         Ruby::Class.new(const, operator, super_class, body, ldelim, rdelim)
       end
       
       def on_sclass(super_class, body)
-        ldelim = pop_token(:@class)
-        operator = pop_token(:'@<<')
         rdelim = pop_token(:@end)
+        operator = pop_token(:'@<<')
+        ldelim = pop_token(:@class)
         Ruby::Class.new(nil, operator, super_class, body, ldelim, rdelim)
       end
 
@@ -29,16 +22,19 @@ class Ripper
       end
       
       def on_const_path_ref(namespace, const)
+        const.ldelim ||= pop_token(:'@::')
         const.namespace = namespace
         const
       end
       
       def on_const_path_field(namespace, const)
+        const.ldelim ||= pop_token(:'@::')
         const.namespace = namespace
         const
       end
       
       def on_top_const_ref(const)
+        const.ldelim ||= pop_token(:'@::')
         const
       end
     end

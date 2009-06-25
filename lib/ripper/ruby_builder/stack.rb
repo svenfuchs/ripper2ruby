@@ -4,18 +4,13 @@ require 'ripper/ruby_builder/context'
 class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     class Stack < ::Array
-      def peek
-        last
-      end
+      attr_reader :queue, :context
 
-      def queue
-        @queue ||= Queue.new
+      def initialize
+        @queue = Queue.new
+        @context = Context.new
       end
-
-      def context
-        @context ||= Context.new
-      end
-
+      
       def push(token)
         return if context.aggregate(token)
         tokens = queue << token
@@ -28,26 +23,30 @@ class Ripper
       def pop(*types)
         options = types.last.is_a?(::Hash) ? types.pop : {}
         max, pass = options.delete(:max), options.delete(:pass)
-        tokens, ignored = [], []
+        @ignored, tokens = [], []
 
         while !empty? && !(max && tokens.length >= max)
           if types.include?(last.type) && matches?(options)
-            tokens << super()
+            tokens << _pop()
           elsif ignore?(last.type)
-            ignored << super()
+            ignore!
           elsif last.opener? && !pass
             break
           else
-            ignored << super()
+            ignore!
           end
         end
 
-        replace(self + ignored.reverse)
+        replace(self + @ignored)
         tokens
       end
 
       def ignore?(type)
         ignore_stack.flatten.include?(type)
+      end
+      
+      def ignore!
+        @ignored.unshift(_pop())
       end
 
       def ignore_types(*types)

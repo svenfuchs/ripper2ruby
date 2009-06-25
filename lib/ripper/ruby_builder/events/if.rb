@@ -2,7 +2,7 @@ class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     module If
       def build_if(klass, type, expression, statements, else_block)
-        args = Ruby::ArgsList.new(args) unless args.is_a?(Ruby::List)
+        # args = Ruby::ArgsList.new(args) unless args.is_a?(Ruby::List)
         rdelim = pop_token(:@end)
         ldelim = pop_token(:@then)
         identifier = pop_token(type)
@@ -27,12 +27,12 @@ class Ripper
       end
       
       def on_if_mod(expression, statement)
-        args = Ruby::ArgsList.new(args) unless args.is_a?(Ruby::List)
+        # args = Ruby::ArgsList.new(args) unless args.is_a?(Ruby::List)
         Ruby::IfMod.new(pop_token(:@if), expression, statement)
       end
       
       def on_unless_mod(expression, statement)
-        args = Ruby::ArgsList.new(args) unless args.is_a?(Ruby::List)
+        # args = Ruby::ArgsList.new(args) unless args.is_a?(Ruby::List)
         Ruby::UnlessMod.new(pop_token(:@unless), expression, statement)
       end
     end

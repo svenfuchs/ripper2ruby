@@ -6,7 +6,6 @@ class Ripper
         identifier = pop_token(:@for, :pass => true)
         ldelim     = pop_token(:@do, :left => identifier, :right => rdelim)
         operator   = pop_token(:@in, :pass => true)
-
         Ruby::For.new(identifier, variable, operator, range, statements, ldelim, rdelim)
       end
     end

@@ -1,7 +1,7 @@
 require 'ruby/node'
 
 module Ruby
-  class Assignment < Aggregate # TODO DelimitedList
+  class Assignment < Aggregate
     child_accessor :left, :right, :operator
 
     def initialize(left, right, operator)
@@ -17,16 +17,16 @@ module Ruby
 
   class MultiAssignment < DelimitedList
     attr_accessor :kind
-    child_accessor :star
+    child_accessor :splat
 
-    def initialize(kind, elements = [], ldelim = nil, rdelim = nil, star = nil)
+    def initialize(kind, elements = [], ldelim = nil, rdelim = nil, splat = nil)
       self.kind = kind
-      self.star = star
+      self.splat = splat
       super(elements, ldelim, rdelim)
     end
     
     def nodes
-      [ldelim, star, elements, rdelim].flatten.compact
+      [ldelim, splat, elements, rdelim].flatten.compact
     end
   end
 end

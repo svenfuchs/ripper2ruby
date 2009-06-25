@@ -1,9 +1,6 @@
 class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     module Array
-      # elements and separators are collected in on_args_add
-      # confusingly ripper throws the same events
-
       def on_array(args)
         rdelim = pop_token(:@rbracket)
         ldelim = pop_token(:@lbracket)
@@ -22,7 +19,7 @@ class Ripper
         rdelim = pop_token(:@words_end)
         ldelim = pop_token(:@qwords_beg)
         words = Ruby::Array.new(nil, ldelim, rdelim)
-        tstring_stack << words # there's no @qwords_end event, so we have to hook into @tstring_end
+        tstring_stack << words # there's no @qwords_end event, so we hook into @tstring_end
         words
       end
 

@@ -22,11 +22,10 @@ class Ripper
 
       def on_string_add(string, content)
         if string.is_a?(Ruby::HeredocBegin)
-          # TODO doesn't work when content spans multiple lines!!
-          heredoc << content
+          heredoc << content # TODO doesn't work when content spans multiple lines, or does it?
           heredoc_pos(content.position.row, content.position.col + content.length) 
-        else
-          string << content if string && content
+        elsif string && content
+          string << content 
         end
         string
       end
@@ -96,7 +95,7 @@ class Ripper
       def on_heredoc_end(*args)
         push(super)
 
-        if pos = heredoc.position # TODO clean this up
+        if pos = heredoc.position # TODO position calculation, move to position
           lines = heredoc.to_ruby.split("\n")
           row = pos.row + lines.size - 1
           col = lines.last.length
@@ -119,7 +118,7 @@ class Ripper
 
         def extra_heredoc_chars(token)
           if extra_heredoc_stage? && extra_heredoc_char?(token)
-            token.value += @heredoc.to_ruby # BIG HACK! ... somehow bubble the heredoc up to a more reasonable place
+            token.token += @heredoc.to_ruby # BIG HACK! ... somehow bubble the heredoc up to a more reasonable place
             clear_heredoc!
           end
           false

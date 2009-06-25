@@ -5,18 +5,14 @@ class Ripper
     class Token
       include Comparable
 
-      attr_accessor :type, :value, :position, :context
+      attr_accessor :type, :token, :position, :context
 
-      def initialize(type = nil, value = nil, position = nil)
-        @type = normalize_type(type, value)
-        @value = value
+      def initialize(type = nil, token = nil, position = nil)
+        @type = normalize_type(type, token)
+        @token = token
         @position = Ruby::Node::Position.new(position[0] - 1, position[1]) if position
       end
       
-      def comments
-        @comments ||= []
-      end
-
       def newline?
         NEWLINE.include?(type)
       end
@@ -54,11 +50,11 @@ class Ripper
       end
 
       def to_sexp
-        [type, value, [row + 1, column]]
+        [type, token, [row + 1, column]]
       end
 
       def to_identifier
-        Ruby::Identifier.new(value, position, context)
+        Ruby::Identifier.new(token, position, context)
       end
     
       def <=>(other)
@@ -67,12 +63,12 @@ class Ripper
       
       protected
       
-        def normalize_type(type, value)
+        def normalize_type(type, token)
           case type 
           when :@kw
-            :"@#{value.gsub(/\W/, '')}"
+            :"@#{token.gsub(/\W/, '')}"
           when :@op
-            :"@#{value}"
+            :"@#{token}"
           else
             type
           end

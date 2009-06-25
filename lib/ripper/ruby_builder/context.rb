@@ -24,10 +24,10 @@ class Ripper
           false
         elsif token.whitespace?
           context.whitespace ||= Ruby::Whitespace.new('', token.position)
-          context.whitespace.token += token.value
+          context.whitespace.token += token.token
           true
         elsif token.separator?
-          separator = Ruby::Token.new(token.value, token.position, get)
+          separator = Ruby::Token.new(token.token, token.position, get)
           self.context = Ruby::Context.new(nil, separator)
           true
         else

@@ -21,14 +21,14 @@ class Ripper
     WHITESPACE        = [:@sp, :@comment] + NEWLINE
     OPENERS           = [:@lparen, :@lbracket, :@lbrace, :@class, :@module, :@def, :@begin, :@while, :@until, 
                          :@for, :@if, :@elsif, :@else, :@unless, :@case, :@when, :@embexpr_beg, :@do, :@rescue,
-                         :'@='] # , :'@|'
+                         :'@=', :'@::']
     KEYWORDS          = [:@alias, :@and, :@BEGIN, :@begin, :@break, :@case, :@class, :@def, :@defined, 
                          :@do, :@else, :@elsif, :@END, :@end, :@ensure, :@false, :@for, :@if, :@in, 
                          :@module, :@next, :@nil, :@not, :@or, :@redo, :@rescue, :@retry, :@return, 
                          :@self, :@super, :@then, :@true, :@undef, :@unless, :@until, :@when, :@while, 
                          :@yield]
                          
-    SEPARATORS        = [:@semicolon, :@comma, :'@::']
+    SEPARATORS        = [:@semicolon, :@comma]
     
     UNARY_OPERATORS   = [:'@+', :'@-', :'@!', :'@~', :@not]
     BINARY_OPERATORS  = [:'@**', :'@*', :'@/', :'@%', :'@+', :'@-', :'@<<', :'@>>', :'@&', :'@|', :'@^', 
@@ -150,7 +150,7 @@ class Ripper
       end
       
       def build_token(token)
-        Ruby::Token.new(token.value, token.position, token.context) if token
+        Ruby::Token.new(token.token, token.position, token.context) if token
       end
 
       def extract_src(from, to)

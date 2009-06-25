@@ -80,12 +80,12 @@ class IfTest < Test::Unit::TestCase
     assert_equal src, build(src).to_ruby(true)
   end
   
-  define_method :'test if modifier after call multiassignment with a star' do
+  define_method :'test if modifier after call multiassignment with a splat' do
     src = 'foo, bar = *baz if bum'
     assert_equal src, build(src).to_ruby(true)
   end
   
-  define_method :'test if modifier after call with a star argument' do
+  define_method :'test if modifier after call with a splat argument' do
     src = 'foo *args if bar?'
     assert_equal src, build(src).to_ruby(true)
   end

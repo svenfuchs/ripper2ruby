@@ -3,10 +3,6 @@ require 'ruby/node'
 module Ruby
   class Statements < DelimitedList
     include Conversions::Statements
-    
-    def statements
-      elements
-    end
   end
   
   class Program < Statements
@@ -17,6 +13,8 @@ module Ruby
       self.filename = filename
       super(statements)
     end
+    
+    alias :statements :elements
     
     def to_ruby(context = false)
       super(true)

@@ -42,16 +42,14 @@ class Ripper
       
       def on_words_sep(token)
         token.each_char do |token|
-          try_trigger_whitespace(token, super[2]) || push([:@words_end, token, super[2]])
-        end
-      end
-      
-      def try_trigger_whitespace(token, position)
-        case token
-        when "\n"
-          push([:@nl, token, position])
-        when /\s+/
-          push([:@sp, token, position])
+          case token
+          when "\n"
+            push([:@nl, token, position])
+          when /\s+/
+            push([:@sp, token, position])
+          else
+            push([:@words_end, token, position])
+          end
         end
       end
       

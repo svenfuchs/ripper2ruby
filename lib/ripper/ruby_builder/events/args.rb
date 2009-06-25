@@ -7,7 +7,7 @@ class Ripper
       end
 
       def on_arg_paren(args)
-        args ||= Ruby::ArgsList.new # will be nil when call has an empty arglist, e.g. I18n.t()
+        args ||= Ruby::ArgsList.new
         args.rdelim ||= pop_token(:@rparen)
         args.ldelim ||= pop_token(:@lparen)
         args
