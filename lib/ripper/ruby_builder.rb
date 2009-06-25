@@ -152,6 +152,13 @@ class Ripper
       def build_token(token)
         Ruby::Token.new(token.token, token.position, token.context) if token
       end
+      
+      def build_keyword(token)
+        klass = Ruby.const_get(token.token[0].upcase + token.token[1..-1])
+        klass.new(token, token.position, token.context)
+      rescue NameError 
+        Ruby::Keyword.new(token, token.position, token.context)
+      end
 
       def extract_src(from, to)
         # TODO make Clip work with start/end positions and use it

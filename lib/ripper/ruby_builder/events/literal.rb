@@ -8,21 +8,11 @@ class Ripper
 
       def on_kw(token)
         if @@tokens.include?(token)
-          push(super)
-        elsif %w(nil false true).include?(token)
-          push
-          build_literal(token, pop_context)
+          push(super) # these aren't passed to the next parser event, so we need them on the stack
         else
-          push
-          Ruby::Keyword.new(token, position, pop_context)
+          push(super)
+          build_keyword(pop_token(:"@#{token}"))
         end
-      end
-      
-      def build_literal(token, context)
-        push
-        Ruby.const_get(token[0].upcase + token[1..-1]).new(token, position, context)
-      rescue NameError 
-        Ruby::Keyword.new(token, position, context)
       end
 
       def on_int(token)

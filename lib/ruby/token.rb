@@ -45,9 +45,30 @@ module Ruby
   class HeredocBegin < Token
   end
 
-  class Variable < Token
+  class Identifier < Token
   end
 
-  class Identifier < Token
+  class Variable < Token
+  end
+  
+  class DelimitedVariable < DelimitedAggregate
+    child_accessor :identifier
+    
+    def initialize(identifier, ldelim = nil)
+      self.identifier = identifier
+      super(ldelim)
+    end
+    
+    def value
+      identifier.token.to_sym
+    end
+    
+    def nodes
+      [ldelim, identifier].compact
+    end
+
+    def method_missing(method, *args, &block)
+      identifier.respond_to?(method) ? identifier.send(method, *args, &block) : super
+    end
   end
 end

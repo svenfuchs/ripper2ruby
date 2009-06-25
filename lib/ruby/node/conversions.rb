@@ -32,10 +32,6 @@ module Ruby
       def to_identifier
         Identifier.new(token, position, context)
       end
-
-      def to_variable
-        Variable.new(token, position, context)
-      end
     end
 
     module List
