@@ -12,7 +12,7 @@ module Ruby
     end
       
     def nodes
-      [identifier, variable, operator, range, ldelim, contents, rdelim].flatten.compact
+      [identifier, variable, operator, range, ldelim, elements, rdelim].flatten.compact
     end
   end
 end

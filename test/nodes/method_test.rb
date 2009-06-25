@@ -24,13 +24,6 @@ class MethodTest < Test::Unit::TestCase
     assert_equal src, method.to_ruby
     assert_equal src, method.src
   end
-  
-  define_method :"test a class method definition calling a class method (namespace seps)" do
-    src = "def A::foo()\nB::foo()\n end"
-    method = build(src).first
-    assert_equal src, method.to_ruby
-    assert_equal src, method.src
-  end
 
   define_method :"test a class method definition (using self, keyword)" do
     src = "def self.for(options)\nend"
@@ -39,13 +32,6 @@ class MethodTest < Test::Unit::TestCase
     assert_equal src, method.src
   end
   
-  define_method :"test a class method definition (using const) containing a class method call (using ::)" do
-    src = "def A.foo(a, b = nil, c = :foo, *d, &block)\n        A::B()\n        baz\n      end"
-    method = build(src).first
-    assert_equal src, method.to_ruby
-    assert_equal src, method.src
-  end
-
   
   define_method :"test method definition: def foo(b = :b, c=:c); end (optional args w/ whitespace differences)" do
     src = 'def foo(a = 1, b=2); end'
@@ -58,7 +44,7 @@ class MethodTest < Test::Unit::TestCase
     assert_equal src, method.to_ruby
   end
   
-  define_method :"test: method definition: def t(*) end (a single star)" do
+  define_method :"test: method definition: def t(*) end (a single splat)" do
     src = "def t(*) end"
     call = build(src).statements.first
     assert_equal src, call.to_ruby

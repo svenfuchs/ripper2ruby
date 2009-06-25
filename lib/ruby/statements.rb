@@ -2,28 +2,7 @@ require 'ruby/node'
 
 module Ruby
   class Statements < DelimitedList
-    def statements
-      elements
-    end
-    
-    def to_block(params = nil, ldelim = nil, rdelim = nil)
-      Block.new(statements, params, ldelim, rdelim)
-    end
-    
-    def to_named_block(identifier = nil, params = nil, ldelim = nil, rdelim = nil)
-      NamedBlock.new(identifier = nil, statements, params, ldelim, rdelim)
-    end
-    
-    def to_chained_block(identifier = nil, blocks = nil, params = nil, ldelim = nil, rdelim = nil)
-      ldelim ||= self.ldelim
-      rdelim ||= self.rdelim
-      identifier ||= self.identifier if respond_to?(:identifier)
-      ChainedBlock.new(identifier, blocks, statements, params, ldelim, rdelim)
-    end
-    
-    def to_program(src, filename)
-      Program.new(src, filename, elements)
-    end
+    include Conversions::Statements
   end
   
   class Program < Statements
@@ -34,6 +13,8 @@ module Ruby
       self.filename = filename
       super(statements)
     end
+    
+    alias :statements :elements
     
     def to_ruby(context = false)
       super(true)

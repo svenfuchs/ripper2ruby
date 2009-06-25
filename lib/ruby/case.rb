@@ -24,7 +24,7 @@ module Ruby
     end
       
     def nodes
-      [identifier, expression, ldelim, contents, blocks, rdelim].flatten.compact
+      [identifier, expression, ldelim, elements, blocks, rdelim].flatten.compact
     end
   end
 end

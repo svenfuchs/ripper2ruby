@@ -79,18 +79,18 @@ class ArgsTest < Test::Unit::TestCase
     args = build('t' + src).first.arguments
     foo, bar = args
   
-    args[0] = baz = Ruby::Symbol.from_native(:baz)
+    args[0] = baz = Ruby.from_native(:baz)
     assert_equal args, baz.parent.parent # baz is wrapped into an Arg
     assert_equal [0, 2], baz.position.to_a
   end
   
-  define_method :"test: args with a starred call" do
+  define_method :"test: args with a splat call" do
     src = "t(*a.b)"
     call = build(src).statements.first
     assert_equal src, call.to_ruby
   end
   
-  define_method :"test: args with a star and block" do
+  define_method :"test: args with a splat and block" do
     src = "t(*a.b { |c| c.d })"
     call = build(src).statements.first
     assert_equal src, call.to_ruby

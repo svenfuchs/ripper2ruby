@@ -22,10 +22,10 @@ class Ripper
 
       def on_string_add(string, content)
         if string.is_a?(Ruby::HeredocBegin)
-          heredoc << content
-          heredoc_pos(content.position.row, content.position.col + content.length) # TODO doesn't work when content spans multiple lines!!
-        else
-          string << content if string && content
+          heredoc << content # TODO doesn't work when content spans multiple lines, or does it?
+          heredoc_pos(content.position.row, content.position.col + content.length) 
+        elsif string && content
+          string << content 
         end
         string
       end
@@ -49,9 +49,8 @@ class Ripper
         if ldelim = pop_token(:@heredoc_beg)
           @heredoc_beg = Ruby::HeredocBegin.new(ldelim.token, ldelim.position, ldelim.context)
         else
-          string = Ruby::String.new(pop_token(:@tstring_beg))
-          tstring_stack << string
-          string
+          tstring_stack << Ruby::String.new(pop_token(:@tstring_beg))
+          tstring_stack.last
         end
       end
 
@@ -62,15 +61,19 @@ class Ripper
 
       def on_xstring_new(*args)
         ldelim = pop(:@symbeg, :@backtick, :@regexp_beg, :max => 1, :pass => true).first
-        string = if ldelim.type == :@symbeg
-          Ruby::DynaSymbol.new(build_token(ldelim))
-        elsif ldelim.type == :@regexp_beg
-          Ruby::Regexp.new(build_token(ldelim))
+        tstring_stack << build_xstring(ldelim)
+        tstring_stack.last
+      end
+      
+      def build_xstring(token)
+        case token.type
+        when :@symbeg
+          Ruby::DynaSymbol.new(build_token(token))
+        when :@regexp_beg
+          Ruby::Regexp.new(build_token(token))
         else
-          Ruby::ExecutableString.new(build_token(ldelim))
+          Ruby::ExecutableString.new(build_token(token))
         end
-        tstring_stack << string
-        string
       end
 
       def on_word_new
@@ -92,7 +95,7 @@ class Ripper
       def on_heredoc_end(*args)
         push(super)
 
-        if pos = heredoc.position # TODO clean this up
+        if pos = heredoc.position # TODO position calculation, move to position
           lines = heredoc.to_ruby.split("\n")
           row = pos.row + lines.size - 1
           col = lines.last.length
@@ -115,7 +118,7 @@ class Ripper
 
         def extra_heredoc_chars(token)
           if extra_heredoc_stage? && extra_heredoc_char?(token)
-            token.value += @heredoc.to_ruby # BIG HACK! ... somehow bubble the heredoc up to a more reasonable place
+            token.token += @heredoc.to_ruby # BIG HACK! ... somehow bubble the heredoc up to a more reasonable place
             clear_heredoc!
           end
           false

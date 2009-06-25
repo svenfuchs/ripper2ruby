@@ -1,19 +1,16 @@
 class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     module Assignment
-      # simple assignments, e.g. a = b
       def on_assign(left, right)
-        Ruby::Assignment.new(left, right, pop_token(:'@=', :pass => true))
+        Ruby::Assignment.new(left, right, pop_token(:'@='))
       end
 
-      # mass assignments, e.g. a, b = c, d
       def on_massign(left, right)
-        Ruby::Assignment.new(left, right, pop_token(:'@=', :pass => true))
+        Ruby::Assignment.new(left, right, pop_token(:'@='))
       end
       
-      # operator assignment (?), e.g. a ||= b; a += 1
       def on_opassign(left, operator, right)
-        Ruby::Assignment.new(left, right, pop_assignment_operator(:pass => true))
+        Ruby::Assignment.new(left, right, pop_assignment_operator)
       end
 
       def on_mlhs_new
@@ -47,18 +44,12 @@ class Ripper
       end
 
       def on_mlhs_add_star(assignment, ref)
-        star = pop_token(:'@*')
-        ref = Ruby::Arg.new(ref, star) if star
-
-        assignment << ref
+        assignment << Ruby::Arg.new(ref, pop_token(:'@*'))
         assignment
       end
 
       def on_mrhs_add_star(assignment, ref)
-        star = pop_token(:'@*', :right => ref, :pass => true)
-        ref = Ruby::Arg.new(ref, star) if star
-
-        assignment << ref
+        assignment << Ruby::Arg.new(ref, pop_token(:'@*'))
         assignment
       end
     end

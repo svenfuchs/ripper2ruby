@@ -38,7 +38,7 @@ class LiteralsTest < Test::Unit::TestCase
   define_method :"test false" do
     src = 'false'
     literal = build(src).first
-    assert literal.is_a?(Ruby::False)
+    assert_equal Ruby::False, literal.class
     assert_equal false, literal.value
     assert_equal src, literal.to_ruby
   end

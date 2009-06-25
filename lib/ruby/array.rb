@@ -17,7 +17,7 @@ module Ruby
     end
     
     def value
-      operator.token == '..' ? left.value..right.value : left.value...right.value
+      operator.token == '..' ? (left.value..right.value) : (left.value...right.value)
     end
     
     def nodes

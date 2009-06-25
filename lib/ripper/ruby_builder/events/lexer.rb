@@ -29,7 +29,7 @@ class Ripper
 
       def on_tstring_end(token)
         push(super)
-        on_words_end(token) if closes_words?(token)
+        on_words_sep(token) && on_words_end(token) if closes_words?(token)
       end
 
       def on_qwords_beg(*args)
@@ -44,11 +44,11 @@ class Ripper
         token.each_char do |token|
           case token
           when "\n"
-            push([:@nl, token, super[2]]) # TODO fix positions for each char
+            push([:@nl, token, position])
           when /\s+/
-            push([:@sp, token, super[2]])
+            push([:@sp, token, position])
           else
-            push([:@words_end, token, super[2]])
+            push([:@words_end, token, position])
           end
         end
       end

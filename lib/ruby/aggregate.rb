@@ -21,19 +21,10 @@ module Ruby
     def context=(context)
       nodes.each { |n| return n.context = context if n }
     end
-    
-    def context
-      nodes.each { |n| return n.context if n } && nil
-    end
-    
-    def context=(context)
-      nodes.each { |n| return n.context = context if n }
-    end
 
     def to_ruby(context = false)
       nodes = self.nodes.compact
-      first = nodes.shift
-      (first ? first.to_ruby(context) : '') + nodes.map { |node| node.to_ruby(true) }.join
+      (nodes.shift.try(:to_ruby, context) || '') + nodes.map { |node| node.to_ruby(true) }.join
     end
   end
   

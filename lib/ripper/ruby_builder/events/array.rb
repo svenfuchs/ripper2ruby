@@ -1,9 +1,6 @@
 class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     module Array
-      # elements and separators are collected in on_args_add
-      # confusingly ripper throws the same events
-
       def on_array(args)
         rdelim = pop_token(:@rbracket)
         ldelim = pop_token(:@lbracket)
@@ -11,70 +8,62 @@ class Ripper
       end
 
       def on_words_new(*args)
-        ldelim = pop_token(:@words_beg)
         rdelim = pop_token(:@words_end)
+        ldelim = pop_token(:@words_beg)
         words = Ruby::Array.new(nil, ldelim, rdelim)
         tstring_stack << words
         words
       end
 
       def on_qwords_new(*args)
-        ldelim = pop_token(:@qwords_beg)
         rdelim = pop_token(:@words_end)
+        ldelim = pop_token(:@qwords_beg)
         words = Ruby::Array.new(nil, ldelim, rdelim)
-        # TODO there's no reasonable event that lets us catch :@tstring_end, so we gotta keep our own stack?
-        tstring_stack << words
+        tstring_stack << words # there's no @qwords_end event, so we hook into @tstring_end
         words
       end
 
       def on_words_add(array, arg)
-        rdelim = pop_token(:@words_end)
-        array.rdelim = rdelim if rdelim
+        array.rdelim ||= pop_token(:@words_end)
         array << arg
         array
       end
 
       def on_qwords_add(array, arg)
-        rdelim = pop_token(:@words_end)
-        array.rdelim = rdelim if rdelim
+        array.rdelim ||= pop_token(:@words_end)
         array << arg
         array
       end
 
       def on_words_end(rdelim = nil)
         array = tstring_stack.pop
-        array.rdelim ||= pop_token(:@tstring_end) || pop_token(:@words_sep)
+        array.rdelim ||= pop_token(:@tstring_end, :@words_sep)
         array
-      end
-
-      def closes_words?(token)
-        return false if tstring_stack.empty? || tstring_stack.last.ldelim.nil?
-        ldelim = tstring_stack.last.ldelim.token
-        words  = ldelim.gsub(/[^%w]/i, '').downcase == '%w'
-
-        map = { '(' => ')', '[' => ']', '{' => '}' }
-        key = ldelim.gsub(/[%w\s]/i, '')
-        closes = (map[key] || key) == token.gsub(/[%w\s]/i, '')
-
-        words && closes
       end
 
       def on_aref(target, args)
         args ||= Ruby::ArgsList.new
-
-        ldelim = pop_token(:@lbracket, :left => target)
-        rdelim = shift_token(:@rbracket, :pass => true, :left => ldelim)
-        args.ldelim = ldelim if ldelim
-        args.rdelim = rdelim if rdelim
-        
+        args.ldelim ||= pop_token(:@lbracket, :left => target)
+        args.rdelim ||= shift_token(:@rbracket, :pass => true, :left => args.ldelim)
         Ruby::Call.new(target, nil, nil, args)
       end
 
       def on_aref_field(target, args)
-        pop_token(:@lbracket, :pass => true).tap { |l| args.ldelim = l if l }
-        pop_token(:@rbracket, :pass => true).tap { |r| args.rdelim = r if r }
+        args ||= Ruby::ArgsList.new
+        args.ldelim ||= pop_token(:@lbracket, :left => target)
+        args.rdelim ||= shift_token(:@rbracket, :pass => true, :left => args.ldelim)
         Ruby::Call.new(target, nil, nil, args)
       end
+      
+      protected
+      
+        WORD_DELIMITER_MAP = { '(' => ')', '[' => ']', '{' => '}' }
+      
+        def closes_words?(token)
+          return false unless tstring_stack.last.try(:ldelim)
+          return false unless tstring_stack.last.ldelim.token =~ /^%w\s*([^\s]*)/i
+          (WORD_DELIMITER_MAP[$1] || $1) == token.gsub(/[%w\s]/i, '')
+        end
     end
   end
 end

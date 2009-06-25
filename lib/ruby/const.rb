@@ -9,6 +9,10 @@ module Ruby
       super(ldelim)
     end
     
+    def position(*)
+      super
+    end
+    
     def nodes
       [namespace, ldelim, identifier].compact
     end

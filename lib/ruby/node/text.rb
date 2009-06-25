@@ -8,8 +8,7 @@ module Ruby
           str.gsub(/\n/, "\n\000").split(/\000/)
         end
       end
-    
-      # excerpt from source :lines, preceding and succeeding :width lines
+
       class Context
         attr_reader :lines, :line, :row, :width
 

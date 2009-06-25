@@ -1,23 +1,18 @@
 require 'ripper/ruby_builder/queue'
-require 'ripper/ruby_builder/buffer'
+require 'ripper/ruby_builder/context'
 
 class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     class Stack < ::Array
-      def peek
-        last
-      end
+      attr_reader :queue, :context
 
-      def queue
-        @queue ||= Queue.new
+      def initialize
+        @queue = Queue.new
+        @context = Context.new
       end
-
-      def buffer
-        @buffer ||= Buffer.new
-      end
-
+      
       def push(token)
-        return if buffer.aggregate(token)
+        return if context.aggregate(token)
         tokens = queue << token
         tokens.each do |token|
           self << token
@@ -27,27 +22,31 @@ class Ripper
       alias :_pop :pop
       def pop(*types)
         options = types.last.is_a?(::Hash) ? types.pop : {}
-        max, pass, value, pos, left, right = options.values_at(:max, :pass, :value, :pos, :left, :right)
-        tokens, ignored = [], []
+        max, pass = options.delete(:max), options.delete(:pass)
+        @ignored, tokens = [], []
 
         while !empty? && !(max && tokens.length >= max)
-          if types.include?(last.type) && has_value?(value) && at?(pos) && left_of?(right) && right_of?(left)
-            tokens << super()
+          if types.include?(last.type) && matches?(options)
+            tokens << _pop()
           elsif ignore?(last.type)
-            ignored << super()
+            ignore!
           elsif last.opener? && !pass
             break
           else
-            ignored << super()
+            ignore!
           end
         end
 
-        replace(self + ignored.reverse)
+        replace(self + @ignored)
         tokens
       end
 
       def ignore?(type)
         ignore_stack.flatten.include?(type)
+      end
+      
+      def ignore!
+        @ignored.unshift(_pop())
       end
 
       def ignore_types(*types)
@@ -58,6 +57,25 @@ class Ripper
       end
 
       protected
+
+        def ignore_stack
+          @ignore_stack ||= []
+        end
+      
+        def matches?(conditions)
+          conditions.inject(true) do |result, (type, value)|
+            result && case type
+            when :value
+              has_value?(value)
+            when :pos
+              at?(value)
+            when :right
+              left_of?(value)
+            when :left
+              right_of?(value)
+            end
+          end
+        end
 
         def at?(pos)
           pos.nil? || last.position == pos
@@ -80,10 +98,6 @@ class Ripper
           else
             last.value == value
           end
-        end
-
-        def ignore_stack
-          @ignore_stack ||= []
         end
     end
   end

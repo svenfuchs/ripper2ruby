@@ -7,7 +7,7 @@ module Ruby
     
     def value
       code = to_ruby(false)
-      code = "{#{code}}" unless code =~ /^\s*{/
+      code = "{#{code}}" unless ldelim
       eval(code) rescue {}
     end
   end

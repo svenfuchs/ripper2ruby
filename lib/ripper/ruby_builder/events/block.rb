@@ -19,22 +19,16 @@ class Ripper
       end
 
       def on_begin(body)
-        body = body.to_named_block unless body.respond_to?(:identifier)
-        body.identifier = pop_token(:@begin)
+        body = body.to_named_block unless body.is_a?(Ruby::NamedBlock)
         body.rdelim = pop_token(:@end)
+        body.identifier = pop_token(:@begin)
         body
       end
 
-      def on_rescue(error_types, error_var, statements, block)
-        identifier = pop_token(:@rescue, :pass => true)
+      def on_rescue(types, var, statements, block)
+        identifier = pop_token(:@rescue)
         operator = pop_token(:'@=>', :left => identifier)
-
-        params = if error_types || error_var
-          error_types = Ruby::Array.new(error_types) if error_types
-          errors = Ruby::Assoc.new(error_types, error_var, operator)
-          Ruby::Params.new(errors)
-        end
-
+        params = Ruby::RescueParams.new(types, var, operator)
         statements.to_chained_block(identifier, block, nil, params)
       end
 
@@ -44,41 +38,42 @@ class Ripper
       end
 
       def on_rescue_mod(expression, statements)
-        # positions are messed up on rescue mod after assignment, so we have to sort them
+        args = Ruby::ArgsList.new(args) unless args.is_a?(Ruby::List)
         statements, expression = *[statements, expression].sort
-        expression = update_args(expression)
-        identifier = pop_token(:@rescue, :pass => true)
+        identifier = pop_token(:@rescue)
         Ruby::RescueMod.new(identifier, expression, statements)
       end
 
       def on_block_var(params, something)
         params.rdelim = pop_token(:'@|')
         params.ldelim = pop_token(:'@|')
-
-        # gosh, yes. ripper regards empty param delims (as in in do || ; end) as an operator
-        if params.rdelim.nil? && params.ldelim.nil? && stack.peek.type == :'@||'
-          op = pop_token(:'@||')
-          params.ldelim = Ruby::Token.new('|', op.position, op.context)
-          params.rdelim = Ruby::Token.new('|', op.position).tap { |o| o.position.col += 1 }
-        end
-        
+        params.ldelim, params.rdelim = empty_block_params_delimiters(params) if stack.last.type == :'@||'
         params
       end
 
-      def on_params(params, optional_params, rest_param, something, block_param)
-        if optional_params
-          operators = pop_tokens(:'@=')
-          optional_params.map! { |left, right| Ruby::Assignment.new(left, right, operators.pop) }
-        end
-        params = (Array(params) + Array(optional_params) << rest_param << block_param).flatten.compact
-
+      def on_params(params, optionals, rest, something, block)
+        optionals = to_assignments(optionals) if optionals
+        params = (Array(params) + Array(optionals) << rest << block).flatten.compact
         Ruby::Params.new(params)
       end
 
       def on_rest_param(param)
-        star = pop_token(:'@*')
-        Ruby::RestParam.new(param, star)
+        Ruby::RestParam.new(param, pop_token(:'@*'))
       end
+      
+      protected
+      
+        def to_assignments(array)
+          array.reverse.map { |left, right| Ruby::Assignment.new(left, right, pop_token(:'@=')) }.reverse
+        end
+      
+        # gosh, yes. ripper regards empty block param delims (as in in do || ; end) as an operator
+        def empty_block_params_delimiters(params)
+          op = pop_token(:'@||')
+          ldelim = Ruby::Token.new('|', op.position, op.context)
+          rdelim = Ruby::Token.new('|', op.position).tap { |o| o.position.col += 1 }
+          [ldelim, rdelim]
+        end
     end
   end
 end

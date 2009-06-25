@@ -3,6 +3,7 @@ require 'ruby/backfit/list'
 
 module Ruby
   class List < Aggregate
+    include Conversions::List
     include Backfit::List
     
     child_accessor :elements
@@ -12,15 +13,7 @@ module Ruby
     end
     
     def nodes
-      contents
-    end
-    
-    def contents
-      elements #.flatten.compact.sort
-    end
-    
-    def to_array(ldelim, rdelim)
-      Ruby::Array.new(elements, ldelim, rdelim)
+      elements
     end
     
     def method_missing(method, *args, &block)

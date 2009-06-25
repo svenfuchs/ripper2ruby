@@ -1,6 +1,12 @@
 class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     module Identifier
+      def on_const(token)
+        push(super)
+        token = pop_token(:@const)
+        Ruby::Const.new(token.token, token.position, token.context)
+      end
+      
       def on_ident(token)
         push(super)
         token = pop_token(:@ident)
@@ -22,6 +28,12 @@ class Ripper
       def on_gvar(token)
         push(super)
         token = pop_token(:@gvar)
+        Ruby::Variable.new(token.token, token.position, token.context)
+      end
+
+      def on_backref(arg)
+        push(super)
+        token = pop_token(:@backref)
         Ruby::Variable.new(token.token, token.position, token.context)
       end
     end
