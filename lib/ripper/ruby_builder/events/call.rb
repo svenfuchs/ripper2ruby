@@ -11,7 +11,7 @@ class Ripper
       end
 
       def on_call(target, separator, identifier)
-        # happens for symbols that are also keywords, e.g. :if, TODO maybe invent Ruby::Keyword?
+        # happens for symbols that are also keywords, e.g. :if
         identifier = pop_identifier(identifier.type) if identifier.try(:known?)
         separator = pop_token(:@period, :"@::", :left => target, :right => identifier)
         Ruby::Call.new(target, separator, identifier)
@@ -95,12 +95,10 @@ class Ripper
         Ruby::Call.new(nil, nil, identifier)
       end
 
-      # TODO defined?(A), technically not a method call ... have Defined < Call for this?
       def on_defined(ref)
         identifer = pop_identifier(:@defined, :pass => true)
         ldelim = pop_token(:@lparen, :left => identifer)
         rdelim = pop_token(:@rparen) if ldelim
-
         args = Ruby::ArgsList.new(ref, ldelim, rdelim)
         Ruby::Call.new(nil, nil, identifer, args)
       end

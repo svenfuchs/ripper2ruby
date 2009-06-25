@@ -42,7 +42,7 @@ class Ripper
       end
 
       def on_var_ref(ref)
-        ref.instance_of?(Ruby::Identifier) ? ref.to_variable : ref
+        ref.instance_of?(Ruby::Identifier) ? Ruby::Variable.new(ref.token, ref.position, ref.context) : ref
       end
 
       def on_const_ref(const)
