@@ -1,5 +1,5 @@
 module Ruby
-  module Backfit
+  module Alternation
     module List
       def <<(element)
         elements << element

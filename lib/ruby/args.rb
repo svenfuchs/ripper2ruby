@@ -1,10 +1,10 @@
 require 'ruby/aggregate'
 require 'ruby/list'
-require 'ruby/backfit/args'
+require 'ruby/alternation/args'
 
 module Ruby
   class ArgsList < DelimitedList
-    include Backfit::ArgsList
+    include Alternation::ArgsList
   end
   
   class HeredocArgsList < ArgsList
