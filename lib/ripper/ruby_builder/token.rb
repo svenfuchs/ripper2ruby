@@ -8,9 +8,9 @@ class Ripper
       attr_accessor :type, :token, :position, :context
 
       def initialize(type = nil, token = nil, position = nil)
-        @type = normalize_type(type, token)
+        @type = token_type(type, token)
         @token = token
-        @position = Ruby::Node::Position.new(position[0] - 1, position[1]) if position
+        @position = position if position
       end
       
       def newline?
@@ -63,7 +63,7 @@ class Ripper
       
       protected
       
-        def normalize_type(type, token)
+        def token_type(type, token)
           case type 
           when :@kw
             :"@#{token.gsub(/\W/, '')}"

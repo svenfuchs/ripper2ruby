@@ -19,23 +19,23 @@ class Ripper
 
     NEWLINE           = [:@nl, :@ignored_nl]
     WHITESPACE        = [:@sp, :@comment] + NEWLINE
-    OPENERS           = [:@lparen, :@lbracket, :@lbrace, :@class, :@module, :@def, :@begin, :@while, :@until, 
+    OPENERS           = [:@lparen, :@lbracket, :@lbrace, :@class, :@module, :@def, :@begin, :@while, :@until,
                          :@for, :@if, :@elsif, :@else, :@unless, :@case, :@when, :@embexpr_beg, :@do, :@rescue,
                          :'@=', :'@::']
-    KEYWORDS          = [:@alias, :@and, :@BEGIN, :@begin, :@break, :@case, :@class, :@def, :@defined, 
-                         :@do, :@else, :@elsif, :@END, :@end, :@ensure, :@false, :@for, :@if, :@in, 
-                         :@module, :@next, :@nil, :@not, :@or, :@redo, :@rescue, :@retry, :@return, 
-                         :@self, :@super, :@then, :@true, :@undef, :@unless, :@until, :@when, :@while, 
+    KEYWORDS          = [:@alias, :@and, :@BEGIN, :@begin, :@break, :@case, :@class, :@def, :@defined,
+                         :@do, :@else, :@elsif, :@END, :@end, :@ensure, :@false, :@for, :@if, :@in,
+                         :@module, :@next, :@nil, :@not, :@or, :@redo, :@rescue, :@retry, :@return,
+                         :@self, :@super, :@then, :@true, :@undef, :@unless, :@until, :@when, :@while,
                          :@yield]
-                         
+
     SEPARATORS        = [:@semicolon, :@comma]
-    
+
     UNARY_OPERATORS   = [:'@+', :'@-', :'@!', :'@~', :@not]
-    BINARY_OPERATORS  = [:'@**', :'@*', :'@/', :'@%', :'@+', :'@-', :'@<<', :'@>>', :'@&', :'@|', :'@^', 
-                         :'@>', :'@>=', :'@<', :'@<=', :'@<=>', :'@==', :'@===', :'@!=', :'@=~', :'@!~', 
+    BINARY_OPERATORS  = [:'@**', :'@*', :'@/', :'@%', :'@+', :'@-', :'@<<', :'@>>', :'@&', :'@|', :'@^',
+                         :'@>', :'@>=', :'@<', :'@<=', :'@<=>', :'@==', :'@===', :'@!=', :'@=~', :'@!~',
                          :'@&&', :'@||', :@and, :@or]
     TERNARY_OPERATORS = [:'@?', :'@:']
-    ASSIGN_OPERATORS  = [:'@=', :'@+=', :'@-=', :'@*=', :'@**=', :'@%=', :'@/=', :'@|=', :'@&=', :'@^=', 
+    ASSIGN_OPERATORS  = [:'@=', :'@+=', :'@-=', :'@*=', :'@**=', :'@%=', :'@/=', :'@|=', :'@&=', :'@^=',
                          :'@[]=', :'@||=', :'@&&=', :'@<<=', :'@>>=']
     ACCESS_OPERATORS  = [:'@[]']
 
@@ -62,75 +62,43 @@ class Ripper
     protected
 
       def position
-        Ruby::Node::Position.new(lineno - 1, column)
+        Ruby::Node::Position.new(lineno.to_i - 1, column)
       end
 
       def push(sexp = nil)
-        token = Token.new(*sexp) if sexp
+        token = Token.new(sexp[0], sexp[1], position) if sexp
         stack.push(token) unless extra_heredoc_chars(token)
         token
       end
 
       def pop(*args)
-        options = args.last.is_a?(::Hash) ? args.pop : {}
-        if types = options[:ignore]
-          stack_ignore(types) { stack.pop(*args << options) }
-        else
-          stack.pop(*args << options)
-        end
+        stack.pop(*args)
       end
-      
-      def shift(*args)
-        stack.reverse!
-        result = pop(*args)
-        stack.reverse!
-        result
-      end
-      
-      def pop_one(*types)
-        options = types.last.is_a?(::Hash) ? types.pop : {}
-        options[:max] = 1
-        pop(*types << options).first
-      end
-      
+
       def pop_token(*types)
         options = types.last.is_a?(::Hash) ? types.pop : {}
         options[:max] = 1
         pop_tokens(*types << options).first
-      end
-      
-      def shift_token(*types)
-        options = types.last.is_a?(::Hash) ? types.pop : {}
-        options[:max] = 1
-        shift_tokens(*types << options).first
       end
 
       def pop_tokens(*types)
         pop(*types).map { |token| build_token(token) }.flatten.compact
       end
 
-      def shift_tokens(*types)
-        shift(*types).map { |token| build_token(token) }.flatten.compact
-      end
-      
       def pop_identifier(type, options = {})
         pop_token(type, options).to_identifier
       end
-      
+
       def pop_operator(options = {})
         pop_token(*OPERATORS, options)
       end
-      
+
       def pop_unary_operator(options = {})
         pop_token(*UNARY_OPERATORS, options)
       end
 
       def pop_binary_operator(options = {})
         pop_token(*BINARY_OPERATORS, options)
-      end
-
-      def pop_ternary_operators(options = {})
-        pop_tokens(*TERNARY_OPERATORS, options)
       end
 
       def pop_ternary_operator(options = {})
@@ -145,18 +113,14 @@ class Ripper
         stack.context.get
       end
 
-      def stack_ignore(*types, &block)
-        stack.ignore_types(*types, &block)
-      end
-      
       def build_token(token)
         Ruby::Token.new(token.token, token.position, token.context) if token
       end
-      
+
       def build_keyword(token)
         klass = Ruby.const_get(token.token[0].upcase + token.token[1..-1])
         klass.new(token, token.position, token.context)
-      rescue NameError 
+      rescue NameError
         Ruby::Keyword.new(token, token.position, token.context)
       end
 
