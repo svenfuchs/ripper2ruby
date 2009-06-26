@@ -1,3 +1,4 @@
+require 'core_ext/hash/delete_at'
 require 'ripper/ruby_builder/queue'
 require 'ripper/ruby_builder/context'
 
@@ -22,45 +23,26 @@ class Ripper
       alias :_pop :pop
       def pop(*types)
         options = types.last.is_a?(::Hash) ? types.pop : {}
-        max, pass = options.delete(:max), options.delete(:pass)
-        @ignored, tokens = [], []
+        max, pass, revert = options.delete_at(:max, :pass, :reverse)
+        ignored, tokens = [], []
+        reverse! if revert
 
         while !empty? && !(max && tokens.length >= max)
           if types.include?(last.type) && matches?(options)
             tokens << _pop()
-          elsif ignore?(last.type)
-            ignore!
           elsif last.opener? && !pass
             break
           else
-            ignore!
+            ignored.unshift(_pop())
           end
         end
 
-        replace(self + @ignored)
+        replace(self + ignored)
+        reverse! if revert
         tokens
       end
 
-      def ignore?(type)
-        ignore_stack.flatten.include?(type)
-      end
-      
-      def ignore!
-        @ignored.unshift(_pop())
-      end
-
-      def ignore_types(*types)
-        ignore_stack.push(types)
-        result = yield
-        ignore_stack.pop
-        result
-      end
-
       protected
-
-        def ignore_stack
-          @ignore_stack ||= []
-        end
       
         def matches?(conditions)
           conditions.inject(true) do |result, (type, value)|

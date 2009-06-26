@@ -44,14 +44,14 @@ class Ripper
       def on_aref(target, args)
         args ||= Ruby::ArgsList.new
         args.ldelim ||= pop_token(:@lbracket, :left => target)
-        args.rdelim ||= shift_token(:@rbracket, :pass => true, :left => args.ldelim)
+        args.rdelim ||= pop_token(:@rbracket, :reverse => true, :pass => true, :left => args.ldelim)
         Ruby::Call.new(target, nil, nil, args)
       end
 
       def on_aref_field(target, args)
         args ||= Ruby::ArgsList.new
         args.ldelim ||= pop_token(:@lbracket, :left => target)
-        args.rdelim ||= shift_token(:@rbracket, :pass => true, :left => args.ldelim)
+        args.rdelim ||= pop_token(:@rbracket, :reverse => true, :pass => true, :left => args.ldelim)
         Ruby::Call.new(target, nil, nil, args)
       end
       
