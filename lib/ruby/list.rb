@@ -1,10 +1,10 @@
 require 'ruby/node'
-require 'ruby/backfit/list'
+require 'ruby/alternation/list'
 
 module Ruby
   class List < Aggregate
     include Conversions::List
-    include Backfit::List
+    include Alternation::List
     
     child_accessor :elements
     

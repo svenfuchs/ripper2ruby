@@ -1,5 +1,5 @@
 module Ruby
-  module Backfit
+  module Alternation
     module Hash
       def [](key)
         each { |assoc| return assoc.value if assoc.key.value == key } or nil

@@ -1,9 +1,9 @@
 require 'ruby/assoc'
-require 'ruby/backfit/hash'
+require 'ruby/alternation/hash'
 
 module Ruby
   class Hash < DelimitedList
-    include Backfit::Hash
+    include Alternation::Hash
     
     def value
       code = to_ruby(false)

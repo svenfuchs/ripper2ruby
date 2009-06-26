@@ -1,5 +1,5 @@
 module Ruby
-  module Backfit
+  module Alternation
     module ArgsList
       def options
         last.arg.is_a?(Ruby::Hash) ? last : nil
