@@ -14,17 +14,9 @@ class Ripper
       end
 
       def on_paren(node)
-        if stack.last.type == :@rparen
-          # TODO crap. this should test more specifically for ArgList, Hash etc.
-          if node.is_a?(Ruby::List) && node.ldelim.nil? && node.rdelim.nil?
-            node.rdelim ||= pop_token(:@rparen)
-            node.ldelim ||= pop_token(:@lparen)
-          else
-            rdelim = pop_token(:@rparen)
-            ldelim = pop_token(:@lparen)
-            node = Ruby::Statements.new(node, ldelim, rdelim)
-          end
-        end
+        node = Ruby::Statements.new(node) if node.is_a?(Ruby::Hash)
+        node.rdelim ||= pop_token(:@rparen)
+        node.ldelim ||= pop_token(:@lparen)
         node
       end
 
