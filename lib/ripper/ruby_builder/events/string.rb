@@ -22,8 +22,7 @@ class Ripper
 
       def on_string_add(string, content)
         if string.is_a?(Ruby::HeredocBegin)
-          heredoc << content # TODO doesn't work when content spans multiple lines, or does it?
-          heredoc_pos(content.position.row, content.position.col + content.length) 
+          heredocs.last << content # TODO doesn't work when content spans multiple lines, or does it?
         elsif string && content
           string << content 
         end
@@ -47,7 +46,7 @@ class Ripper
 
       def on_string_content(*args)
         if ldelim = pop_token(:@heredoc_beg)
-          @heredoc_beg = Ruby::HeredocBegin.new(ldelim.token, ldelim.position, ldelim.context)
+          @heredoc_beg = Ruby::HeredocBegin.new(ldelim.token, ldelim.position, ldelim.prolog)
         else
           tstring_stack << Ruby::String.new(pop_token(:@tstring_beg))
           tstring_stack.last
@@ -55,7 +54,7 @@ class Ripper
       end
 
       def on_tstring_content(token)
-        content = Ruby::StringContent.new(token, position, pop_context)
+        content = Ruby::StringContent.new(token, position, prolog)
         content
       end
 
@@ -89,51 +88,54 @@ class Ripper
 
       def on_heredoc_beg(*args)
         token = push(super)
-        heredoc_pos(position.row + 1, 0)
+        heredocs << Ruby::Heredoc.new
+        heredoc_pos(position.row + 1, 0) unless heredoc_pos
       end
 
-      def on_heredoc_end(*args)
-        push(super)
-
-        if pos = heredoc.position # TODO position calculation, move to position
-          lines = heredoc.to_ruby.split("\n")
+      def on_heredoc_end(token)
+        if pos = heredocs.last.position # TODO position calculation, move to position
+          lines = heredocs.last.to_ruby.split("\n")
           row = pos.row + lines.size - 1
           col = lines.last.length
           heredoc_pos(row, col)
         end
 
-        heredoc.rdelim = pop_token(:@heredoc_end)
-        Ruby::StringContent.new(extract_src(heredoc_pos, heredoc.rdelim.position), heredoc_pos)
+        heredocs.last.rdelim = Ruby::Token.new(token, position)
+        # should be able to add the string in on_string_add instead, no?
+        content = Ruby::StringContent.new(extract_src(heredoc_pos, heredocs.last.rdelim.position), heredoc_pos)
+
+        heredoc_pos(heredocs.last.rdelim.position.row + 1, 0)
+        content
       end
 
       protected
 
-        def heredoc
-          @heredoc ||= Ruby::Heredoc.new
+        def heredocs
+          @heredoc ||= []
+        end
+
+        def heredoc?
+          !heredocs.empty?
         end
         
         def heredoc_pos(*pos)
           pos.empty? ? @heredoc_pos : @heredoc_pos = Ruby::Node::Position.new(*pos)
         end
-
-        def extra_heredoc_chars(token)
-          if extra_heredoc_stage? && extra_heredoc_char?(token)
-            token.token += @heredoc.to_ruby # BIG HACK! ... somehow bubble the heredoc up to a more reasonable place
-            clear_heredoc!
-          end
-          false
-        end
         
         def extra_heredoc_stage?
-          @heredoc && heredoc.rdelim
+          heredoc? && heredocs.last.rdelim
         end
         
         def extra_heredoc_char?(token)
           token && (token.newline? || token.comment?)
         end
         
-        def clear_heredoc!
-          @heredoc_pos = @heredoc_beg = @heredoc = nil
+        def end_heredoc(token)
+          if extra_heredoc_stage? && extra_heredoc_char?(token)
+            heredocs.each { |heredoc| push([:@heredoc, heredoc]) }
+            @heredoc.clear
+            @heredoc_beg = nil
+          end
         end
     end
   end

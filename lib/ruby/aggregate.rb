@@ -2,11 +2,9 @@ require 'ruby/node'
 
 module Ruby
   class Aggregate < Node
-    attr_writer :context
-
-    def position(context = false)
+    def position(prolog = false)
       nodes = self.nodes
-      nodes.unshift(self.context) if context
+      nodes.unshift(self.prolog) if prolog
       nodes.compact.each { |n| return n.position.dup if n } && nil
     end
 
@@ -14,17 +12,17 @@ module Ruby
       nodes.each { |n| return n.position = position if n }
     end
     
-    def context
-      nodes.each { |n| return n.context if n } && nil
+    def prolog
+      nodes.each { |n| return n.prolog if n } && nil
     end
     
-    def context=(context)
-      nodes.each { |n| return n.context = context if n }
+    def prolog=(prolog)
+      nodes.each { |n| return n.prolog = prolog if n }
     end
 
-    def to_ruby(context = false)
+    def to_ruby(prolog = false)
       nodes = self.nodes.compact
-      (nodes.shift.try(:to_ruby, context) || '') + nodes.map { |node| node.to_ruby(true) }.join
+      (nodes.shift.try(:to_ruby, prolog) || '') + nodes.map { |node| node.to_ruby(true) }.join
     end
   end
   

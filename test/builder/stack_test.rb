@@ -43,25 +43,25 @@ class StackTest < Test::Unit::TestCase
   #   assert_equal :@rbrace, stack.last.type
   # end
   
-  define_method "test push: opening tokens are queued and then pushed together with the next token" do
-    push([:@sp, ' '], [:@sp, ' '], :@lbrace)
-    assert_equal nil, stack.last
-    assert_equal :@lbrace, stack.queue.last.type
-    assert_equal nil,  @builder.send(:pop_context)
-    
-    push(:@rbrace)
-    assert_equal :@rbrace, stack[1].type
-    assert_equal :@lbrace, stack[0].type
-    assert_equal '  ', stack[0].context.whitespace.token
-    assert_equal nil,  stack.queue.last
-  end
-  
-  define_method "test push: context can be obtained by identifiers, keywords, etc." do
-    push([:@sp, ' '])
-    context = @builder.send(:pop_context)
-    assert_not_nil context.whitespace.token
-    assert_equal ' ',  context.whitespace.token
-  end
+  # define_method "test push: opening tokens are queued and then pushed together with the next token" do
+  #   push([:@sp, ' '], [:@sp, ' '], :@lbrace)
+  #   assert_equal nil, stack.last
+  #   assert_equal :@lbrace, stack.queue.last.type
+  #   assert_equal nil,  @builder.send(:pop_context)
+  #   
+  #   push(:@rbrace)
+  #   assert_equal :@rbrace, stack[1].type
+  #   assert_equal :@lbrace, stack[0].type
+  #   assert_equal '  ', stack[0].context.whitespace.token
+  #   assert_equal nil,  stack.queue.last
+  # end
+  # 
+  # define_method "test push: context can be obtained by identifiers, keywords, etc." do
+  #   push([:@sp, ' '])
+  #   context = @builder.send(:pop_context)
+  #   assert_not_nil context.whitespace.token
+  #   assert_equal ' ',  context.whitespace.token
+  # end
 end
 
 

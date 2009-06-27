@@ -4,16 +4,16 @@ module Ruby
   class Token < Node
     include Conversions::Token
 
-    attr_accessor :token, :position, :context
+    attr_accessor :token, :position, :prolog
 
-    def initialize(token = '', position = nil, context = nil)
+    def initialize(token = '', position = nil, prolog = nil)
       self.token = token
       self.position = position if position
-      self.context = context if context
+      self.prolog = prolog if prolog
     end
 
-    def position(context = false)
-      (self.context.try(:position) if context) || @position
+    def position(prolog = false)
+      (self.prolog.try(:position) if prolog) || @position
     end
 
     def position=(position)
@@ -24,8 +24,8 @@ module Ruby
       token.to_s
     end
 
-    def to_ruby(context = false)
-      (context && self.context.try(:to_ruby, context) || '') + token.to_s
+    def to_ruby(prolog = false)
+      (prolog && self.prolog.try(:to_ruby, prolog) || '') + token.to_s
     end
   end
 
@@ -43,6 +43,7 @@ module Ruby
   end
 
   class HeredocBegin < Token
+    attr_accessor :heredoc
   end
 
   class Identifier < Token

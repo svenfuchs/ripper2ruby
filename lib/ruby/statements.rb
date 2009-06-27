@@ -16,7 +16,7 @@ module Ruby
     
     alias :statements :elements
     
-    def to_ruby(context = false)
+    def to_ruby(prolog = false)
       super(true)
     end
     

@@ -2,8 +2,17 @@
   make it use a FileIO
   move Text, Position etc. to a new module Source
 
-* refactor RubyBuilder events to class methods on Ruby::Node classes
+* refactor RubyBuilder events to class methods on Ruby::Node classes?
 	e.g. Hash.on_paren would wrap into a Statement while ArgList.on_paren would set the delims
+
+
+* Maybe have a prefix and an suffix for each node so that all nodes would be
+  structured like this:
+  
+  	[prefix: separator, whitespace][ldelim][nodes][rdelim][suffix]
+  
+  Const namespace path operators could be prefixes. Heredocs could be suffixes.
+
 
 sexp("I18n::t()") # =>
 [:program,

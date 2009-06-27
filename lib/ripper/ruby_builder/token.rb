@@ -5,7 +5,7 @@ class Ripper
     class Token
       include Comparable
 
-      attr_accessor :type, :token, :position, :context
+      attr_accessor :type, :token, :position, :prolog
 
       def initialize(type = nil, token = nil, position = nil)
         @type = token_type(type, token)
@@ -37,8 +37,8 @@ class Ripper
         SEPARATORS.include?(type)
       end
       
-      def context?
-        whitespace? or separator?
+      def prolog?
+        whitespace? or separator? or heredoc?
       end
       
       def known?
@@ -48,13 +48,17 @@ class Ripper
       def comment?
         type == :@comment
       end
+      
+      def heredoc?
+        type == :@heredoc
+      end
 
       def to_sexp
         [type, token, [row + 1, column]]
       end
 
       def to_identifier
-        Ruby::Identifier.new(token, position, context)
+        Ruby::Identifier.new(token, position, prolog)
       end
     
       def <=>(other)
