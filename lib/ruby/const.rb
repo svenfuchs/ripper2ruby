@@ -32,19 +32,18 @@ module Ruby
     end
   end
 
-  class Class < DelimitedAggregate
-    child_accessor :const, :operator, :super_class, :body
+  class Class < NamedAggregate
+    child_accessor :operator, :super_class, :body
 
     def initialize(const, operator, super_class, body, ldelim, rdelim)
-      self.const = const
       self.operator = operator
       self.super_class = super_class
       self.body = body
-      super(ldelim, rdelim)
+      super(const, ldelim, rdelim)
     end
 
     def nodes
-      [ldelim, const, operator, super_class, body, rdelim].compact
+      [ldelim, identifier, operator, super_class, body, rdelim].compact
     end
   end
 end

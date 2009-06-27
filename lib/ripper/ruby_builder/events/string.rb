@@ -134,7 +134,7 @@ class Ripper
           if extra_heredoc_stage? && extra_heredoc_char?(token)
             heredocs.each { |heredoc| push([:@heredoc, heredoc]) }
             @heredoc.clear
-            @heredoc_beg = nil
+            @heredoc_pos = nil
           end
         end
     end

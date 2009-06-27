@@ -15,7 +15,7 @@ LIBS = {
   :ruby => {
     :path => '/usr/local/ruby19/lib/ruby/1.9.1',
     :exclude => [
-      'cgi/html.rb',     # uses stacked heredocs
+      # 'cgi/html.rb',     # uses stacked heredocs
       # 'tk/namespace.rb', # uses arg_ambiguous
       # 'tktable.rb',      # parse error
       # 'tktreectrl.rb'    # parse error
@@ -49,6 +49,7 @@ class BuildTest # < Test::Unit::TestCase
       filenames(File.expand_path(lib[:path])).each do |filename|
         next if excluded?(lib, filename)
         src = read_src(filename, lib)
+        # p filename
         begin
           result = build(src, filename).to_ruby(true)
           if src == result
@@ -84,3 +85,4 @@ class BuildTest # < Test::Unit::TestCase
 end
 
 BuildTest.new.test_library_build
+# BuildTest.new.test_tmp_file

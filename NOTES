@@ -14,6 +14,9 @@
   Const namespace path operators could be prefixes. Heredocs could be suffixes.
 
 
+PARSE_TYPE = :CTYPE # => from tmail ... what's that??
+
+
 sexp("I18n::t()") # =>
 [:program,
  [:stmts_add,
