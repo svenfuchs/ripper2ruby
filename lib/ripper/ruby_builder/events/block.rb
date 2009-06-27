@@ -70,7 +70,7 @@ class Ripper
         # gosh, yes. ripper regards empty block param delims (as in in do || ; end) as an operator
         def empty_block_params_delimiters(params)
           op = pop_token(:'@||')
-          ldelim = Ruby::Token.new('|', op.position, op.context)
+          ldelim = Ruby::Token.new('|', op.position, op.prolog)
           rdelim = Ruby::Token.new('|', op.position).tap { |o| o.position.col += 1 }
           [ldelim, rdelim]
         end

@@ -10,7 +10,7 @@ module Ruby
     include Composite
     include Source
     include Conversions::Node
-
+    
     def row
       position[0]
     end
@@ -19,8 +19,8 @@ module Ruby
       position[1]
     end
 
-    def length(context = false)
-      to_ruby(context).length
+    def length(prolog = false)
+      to_ruby(prolog).length
     end
     
     def nodes

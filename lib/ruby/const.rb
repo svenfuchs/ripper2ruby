@@ -4,8 +4,8 @@ module Ruby
   class Const < DelimitedAggregate
     child_accessor :identifier, :namespace
     
-    def initialize(token = nil, position = nil, context = nil, ldelim = nil)
-      self.identifier = Ruby::Identifier.new(token, position, context)
+    def initialize(token = nil, position = nil, prolog = nil, ldelim = nil)
+      self.identifier = Ruby::Identifier.new(token, position, prolog)
       super(ldelim)
     end
     

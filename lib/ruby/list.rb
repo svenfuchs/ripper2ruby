@@ -34,4 +34,7 @@ module Ruby
       ([ldelim] + super + [rdelim]).flatten.compact
     end
   end
+
+  class Prolog < List
+  end
 end

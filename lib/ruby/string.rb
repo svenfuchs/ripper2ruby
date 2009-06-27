@@ -15,6 +15,14 @@ module Ruby
   end
   
   class Heredoc < String
+    # def parent=(parent)
+    #   super
+    #   owner.appendix = self if owner = find_owner(parent)
+    # end
+    # 
+    # def find_owner(node)
+    #   node.is_a?(ArgsList) ? node : node.parent ? find_owner(node.parent) : nil
+    # end
   end
 
   class StringContent < Token

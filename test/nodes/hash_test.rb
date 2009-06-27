@@ -123,7 +123,7 @@ class HashTest < Test::Unit::TestCase
   # end
   
   def assert_whitespace(node, whitespace, length)
-    assert_equal whitespace, node.context.whitespace.to_s
+    assert_equal whitespace, node.prolog.whitespace.to_s
     assert_equal length, node.length
     assert_equal length + whitespace.to_s.length, node.length(true)
   end

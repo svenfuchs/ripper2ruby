@@ -1,6 +1,5 @@
 require 'ripper'
 require 'ruby'
-require 'ruby/node/context'
 require 'ripper/ruby_builder/token'
 require 'ripper/ruby_builder/stack'
 
@@ -65,9 +64,14 @@ class Ripper
         Ruby::Node::Position.new(lineno.to_i - 1, column)
       end
 
+      def prolog
+        Ruby::Prolog.new(stack.buffer.flush)
+      end
+
       def push(sexp = nil)
-        token = Token.new(sexp[0], sexp[1], position) if sexp
-        stack.push(token) unless extra_heredoc_chars(token)
+        token = Token.new(sexp[0], sexp[1], position) if sexp.is_a?(::Array)
+        stack.push(token)
+        end_heredoc(token)
         token
       end
 
@@ -109,19 +113,15 @@ class Ripper
         pop_token(*ASSIGN_OPERATORS, options)
       end
 
-      def pop_context
-        stack.context.get
-      end
-
       def build_token(token)
-        Ruby::Token.new(token.token, token.position, token.context) if token
+        Ruby::Token.new(token.token, token.position, token.prolog) if token
       end
 
       def build_keyword(token)
         klass = Ruby.const_get(token.token[0].upcase + token.token[1..-1])
-        klass.new(token, token.position, token.context)
+        klass.new(token, token.position, token.prolog)
       rescue NameError
-        Ruby::Keyword.new(token, token.position, token.context)
+        Ruby::Keyword.new(token, token.position, token.prolog)
       end
 
       def extract_src(from, to)

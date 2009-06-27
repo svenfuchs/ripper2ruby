@@ -7,30 +7,30 @@ module Ruby
     end
     
     module ClassMethods
-      def from_native(object, position = nil, context = nil)
-        from_ruby(object.inspect, position, context)
+      def from_native(object, position = nil, prolog = nil)
+        from_ruby(object.inspect, position, prolog)
       end
       
-      def from_ruby(src, position = nil, context = nil)
+      def from_ruby(src, position = nil, prolog = nil)
         Ripper::RubyBuilder.new(src).parse.statements.first.tap do |node|
           node.position = position if position
-          node.context = context if context
+          node.prolog = prolog if prolog
         end
       end
     end
     
     module Node
-      def to_node(node, position, context)
+      def to_node(node, position, prolog)
         node = from_native(node) unless node.is_a?(Node)
         node.position = position
-        node.context = context
+        node.prolog = prolog
         node
       end
     end
 
     module Token
       def to_identifier
-        Identifier.new(token, position, context)
+        Identifier.new(token, position, prolog)
       end
     end
 

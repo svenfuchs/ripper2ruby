@@ -17,12 +17,12 @@ class Ripper
 
       def on_int(token)
         push
-        Ruby::Integer.new(token, position, pop_context)
+        Ruby::Integer.new(token, position, prolog)
       end
       
       def on_float(token)
         push
-        Ruby::Float.new(token, position, pop_context)
+        Ruby::Float.new(token, position, prolog)
       end
       
       def on_dot2(left, right)
@@ -35,12 +35,12 @@ class Ripper
       
       def on_CHAR(token)
         push
-        Ruby::Char.new(token, position, pop_context)
+        Ruby::Char.new(token, position, prolog)
       end
       
       def on_label(label)
         push
-        Ruby::Label.new(label, position, pop_context)
+        Ruby::Label.new(label, position, prolog)
       end
     end
   end

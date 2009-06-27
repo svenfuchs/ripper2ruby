@@ -7,8 +7,8 @@ module Ruby
         root? ? @filename : root.filename
       end
 
-      def src(context = false)
-        root? ? @src : Ruby::Node::Text.new(root.src).clip(position(context), length(context)).to_s
+      def src(prolog = false)
+        root? ? @src : Ruby::Node::Text.new(root.src).clip(position(prolog), length(prolog)).to_s
       end
 
       def lines
@@ -19,7 +19,7 @@ module Ruby
         Ruby::Node::Text.new(lines[row]).clip([0, column], length)
       end
       
-      def context(options = {})
+      def prolog(options = {})
         filter = options.has_key?(:highlight) ? options[:highlight] : false
         line = filter ? self.line.head + filter.highlight(to_ruby) + self.line.tail : nil
         Ruby::Node::Text::Context.new(lines, row, options[:width] || 2, line).to_s

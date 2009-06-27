@@ -1,19 +1,19 @@
 require 'core_ext/hash/delete_at'
 require 'ripper/ruby_builder/queue'
-require 'ripper/ruby_builder/context'
+require 'ripper/ruby_builder/buffer'
 
 class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     class Stack < ::Array
-      attr_reader :queue, :context
+      attr_reader :queue, :buffer
 
       def initialize
         @queue = Queue.new
-        @context = Context.new
+        @buffer = Buffer.new
       end
       
       def push(token)
-        return if context.aggregate(token)
+        return token if buffer.aggregate(token)
         tokens = queue << token
         tokens.each do |token|
           self << token

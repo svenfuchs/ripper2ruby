@@ -3,7 +3,7 @@ class Ripper
     module Statements
       def on_program(statements)
         program = statements.to_program(src, filename)
-        program << Ruby::Token.new('', position, pop_context) unless stack.context.empty?
+        program << Ruby::Token.new('', position, prolog) unless stack.buffer.empty?
         program
       end
 
@@ -34,7 +34,7 @@ class Ripper
       end
 
       def on_var_ref(ref)
-        ref.instance_of?(Ruby::Identifier) ? Ruby::Variable.new(ref.token, ref.position, ref.context) : ref
+        ref.instance_of?(Ruby::Identifier) ? Ruby::Variable.new(ref.token, ref.position, ref.prolog) : ref
       end
 
       def on_const_ref(const)

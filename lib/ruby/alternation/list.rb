@@ -11,7 +11,7 @@ module Ruby
       end
     
       def []=(ix, element)
-        element = to_node(element, self[ix].position, self[ix].context)
+        element = to_node(element, self[ix].position, self[ix].prolog)
         super
       end
     end
