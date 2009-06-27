@@ -13,6 +13,7 @@ class Ripper
       end
 
       def on_dyna_symbol(symbol)
+        string_stack.pop if symbol == string_stack.last
         symbol.rdelim = pop_token(:@tstring_end)
         symbol
       end

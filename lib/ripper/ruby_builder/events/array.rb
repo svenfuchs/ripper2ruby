@@ -11,7 +11,7 @@ class Ripper
         rdelim = pop_token(:@words_end)
         ldelim = pop_token(:@words_beg)
         words = Ruby::Array.new(nil, ldelim, rdelim)
-        tstring_stack << words
+        string_stack << words
         words
       end
 
@@ -19,7 +19,7 @@ class Ripper
         rdelim = pop_token(:@words_end)
         ldelim = pop_token(:@qwords_beg)
         words = Ruby::Array.new(nil, ldelim, rdelim)
-        tstring_stack << words # there's no @qwords_end event, so we hook into @tstring_end
+        string_stack << words # there's no @qwords_end event, so we hook into @tstring_end
         words
       end
 
@@ -36,9 +36,9 @@ class Ripper
       end
 
       def on_words_end(rdelim = nil)
-        array = tstring_stack.pop
-        array.rdelim ||= pop_token(:@tstring_end, :@words_sep)
-        array
+        words = string_stack.pop
+        words.rdelim ||= pop_token(:@tstring_end, :@words_sep)
+        words
       end
 
       def on_aref(target, args)
@@ -60,8 +60,8 @@ class Ripper
         WORD_DELIMITER_MAP = { '(' => ')', '[' => ']', '{' => '}' }
       
         def closes_words?(token)
-          return false unless tstring_stack.last.try(:ldelim)
-          return false unless tstring_stack.last.ldelim.token =~ /^%w\s*([^\s]*)/i
+          return false unless string_stack.last.try(:ldelim)
+          return false unless string_stack.last.ldelim.token =~ /^%w\s*([^\s]*)/i
           (WORD_DELIMITER_MAP[$1] || $1) == token.gsub(/[%w\s]/i, '')
         end
     end
