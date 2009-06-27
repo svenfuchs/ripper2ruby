@@ -2,7 +2,6 @@ class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     module Case
       def on_case(args, when_block)
-        # args = Ruby::Statements.new(args) unless args.is_a?(Ruby::Statements)
         rdelim = pop_token(:@end)
         identifier = pop_token(:@case)
         Ruby::Case.new(identifier, args, when_block, rdelim)

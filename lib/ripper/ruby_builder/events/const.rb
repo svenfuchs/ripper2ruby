@@ -22,19 +22,19 @@ class Ripper
       end
       
       def on_const_path_ref(namespace, const)
-        const.ldelim ||= pop_token(:'@::')
+        const.prolog.unshift(pop_token(:'@::'))
         const.namespace = namespace
         const
       end
       
       def on_const_path_field(namespace, const)
-        const.ldelim ||= pop_token(:'@::')
+        const.prolog.unshift(pop_token(:'@::'))
         const.namespace = namespace
         const
       end
       
       def on_top_const_ref(const)
-        const.ldelim ||= pop_token(:'@::')
+        const.prolog.unshift(pop_token(:'@::'))
         const
       end
     end

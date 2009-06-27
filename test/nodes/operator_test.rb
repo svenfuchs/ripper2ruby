@@ -236,12 +236,8 @@ class OperatorTest < Test::Unit::TestCase
     assert_equal src, build(src).to_ruby(true)
   end
 
-  # TODO
-  # 
   # define_method :'test ambiguous argument' do
   #   src = 'a+ a +a'
   #   assert_equal src, build(src).to_ruby(true)
   # end
-  
-  
 end

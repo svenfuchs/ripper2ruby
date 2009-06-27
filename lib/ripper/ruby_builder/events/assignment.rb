@@ -23,10 +23,8 @@ class Ripper
       end
 
       def on_mlhs_paren(arg)
-        if arg.is_a?(Ruby::MultiAssignment)
-          arg.rdelim ||= pop_token(:@rparen) 
-          arg.ldelim ||= pop_token(:@lparen) 
-        end
+        arg.rdelim ||= pop_token(:@rparen) if arg.respond_to?(:rdelim)
+        arg.ldelim ||= pop_token(:@lparen) if arg.respond_to?(:ldelim)
         arg
       end
 

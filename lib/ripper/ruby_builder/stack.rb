@@ -1,4 +1,3 @@
-require 'core_ext/hash/delete_at'
 require 'ripper/ruby_builder/queue'
 require 'ripper/ruby_builder/buffer'
 

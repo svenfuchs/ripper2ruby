@@ -9,7 +9,7 @@ module Ruby
     def initialize(token = '', position = nil, prolog = nil)
       self.token = token
       self.position = position if position
-      self.prolog = prolog if prolog
+      self.prolog = prolog || Prolog.new
     end
 
     def position(prolog = false)
