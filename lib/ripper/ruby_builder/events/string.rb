@@ -30,21 +30,14 @@ class Ripper
       end
 
       def on_string_add(string, content)
-        if heredoc? && content
-          string_stack.last << content
-        elsif string && content
-          string << content
-        end
-        string
-      end
-
-      def on_word_add(string, content)
-        string << content
+        content = pop_string_content unless content
+        target = heredoc? ? string_stack.last : string
+        target << content
         string
       end
 
       def on_xstring_add(string, content)
-        string.tap { |s| s << content }
+        on_string_add(string, content)
       end
 
       def on_string_embexpr(expression)
@@ -54,26 +47,27 @@ class Ripper
       end
 
       def on_string_content(*args)
-        if ldelim = pop_token(:@heredoc_beg)
-          @heredoc_beg = Ruby::HeredocBegin.new(ldelim.token, ldelim.position, ldelim.prolog)
+        if token = pop_token(:@heredoc_beg)
+          Ruby::HeredocBegin.new(token.token, token.position, token.prolog)
         else
-          string_stack << Ruby::String.new(pop_token(:@tstring_beg))
+          string_stack << Ruby::String.new(nil, pop_token(:@tstring_beg))
           string_stack.last
         end
       end
 
       def on_tstring_content(token)
-        content = Ruby::StringContent.new(token, position, prolog)
-        if heredoc?
-          string_stack.last << content
-          nil
-        else
-          content
-        end
+        push(super)
+        nil
       end
 
       def on_word_new
         Ruby::String.new
+      end
+
+      def on_word_add(string, word)
+        word = pop_string_content unless word
+        string << word
+        string
       end
 
       def on_xstring_new(*args)
@@ -82,28 +76,21 @@ class Ripper
         string_stack.last
       end
 
-      def build_xstring(token)
-        case token.type
-        when :@symbeg
-          Ruby::DynaSymbol.new(build_token(token))
-        when :@regexp_beg
-          Ruby::Regexp.new(build_token(token))
-        else
-          Ruby::ExecutableString.new(build_token(token))
-        end
-      end
-
       def on_string_dvar(variable)
         variable = Ruby::DelimitedVariable.new(variable)
         ldelim = pop_token(:@embvar)
         variable.ldelim = ldelim
         variable
       end
+      
+      def on_heredoc_new
+        string_stack << Ruby::Heredoc.new
+        heredoc_pos(position.row + 1, 0) unless heredoc_pos
+      end
 
       def on_heredoc_beg(*args)
         token = push(super)
-        string_stack << Ruby::Heredoc.new
-        heredoc_pos(position.row + 1, 0) unless heredoc_pos
+        on_heredoc_new
       end
 
       def on_heredoc_end(token)

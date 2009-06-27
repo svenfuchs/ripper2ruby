@@ -21,7 +21,7 @@ class Ripper
       end
 
       def on_stmts_add(target, statement)
-        on_words_end if statement.is_a?(Ruby::Array) && !string_stack.empty?
+        on_words_end if statement.is_a?(Ruby::Array) && !string_stack.empty? # simulating on_words_end event
         target.elements << statement if statement
         target
       end

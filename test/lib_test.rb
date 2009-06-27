@@ -21,12 +21,13 @@ LIBS = {
   }
 }
 
-class BuildTest # < Test::Unit::TestCase
+class BuildTest
   include TestHelper, LibTestHelper
 
-  def test_library_build(options = {})
-    only = options[:only]
-    libs = Array(options[:only] || LIBS.keys)
+  def test_library_build(*libs)
+    options = libs.last.is_a?(Hash) ? libs.pop : {}
+    verbose = options[:verbose]
+    libs = LIBS.keys if libs.empty?
 
     puts "We're going to parse and rebuild the files from the following libraries: #{libs.join(', ')}."
     puts "We'll report an error if the rebuilt code is not exactly the same as the original source."
@@ -41,15 +42,14 @@ class BuildTest # < Test::Unit::TestCase
       filenames(File.expand_path(lib[:path])).each do |filename|
         next if excluded?(lib, filename)
         src = read_src(filename, lib)
-        p filename
+        p filename if verbose
         begin
           result = build(src, filename).to_ruby(true)
           if src == result
             putc '.'
           else
             errors[name] << filename + "\nresult differs from source:\n#{diff(src, result)}\n"
-            puts diff(src, result)
-            putc 'o'
+            verbose ? puts(diff(src, result)) : putc('o')
           end
         rescue RuntimeError => e
           line = e.message
@@ -77,5 +77,5 @@ class BuildTest # < Test::Unit::TestCase
   end
 end
 
-# BuildTest.new.test_library_build
-BuildTest.new.test_tmp_file
+BuildTest.new.test_library_build # (:verbose => true)
+# BuildTest.new.test_tmp_file
