@@ -92,6 +92,10 @@ class Ripper
         pop_token(type, options).to_identifier
       end
 
+      def pop_string_content
+        pop_token(:@tstring_content).to_string_content
+      end
+
       def pop_operator(options = {})
         pop_token(*OPERATORS, options)
       end
@@ -121,6 +125,17 @@ class Ripper
         klass.new(token, token.position, token.prolog)
       rescue NameError
         Ruby::Keyword.new(token, token.position, token.prolog)
+      end
+
+      def build_xstring(token)
+        case token.type
+        when :@symbeg
+          Ruby::DynaSymbol.new(nil, build_token(token))
+        when :@regexp_beg
+          Ruby::Regexp.new(nil, build_token(token))
+        else
+          Ruby::ExecutableString.new(nil, build_token(token))
+        end
       end
 
       def extract_src(from, to)

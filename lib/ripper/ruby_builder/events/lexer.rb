@@ -55,8 +55,7 @@ class Ripper
 
       def on_tstring_end(token)
         push(super)
-        # on_words_sep(token) && on_words_end(token) if closes_words?(token) # simulating words events
-        on_words_end(token) if closes_words?(token) # simulating words events
+        on_words_end(token) if closes_words?(token) # simulating on_words_end event
       end
 
       def on_qwords_beg(*args)
@@ -76,7 +75,7 @@ class Ripper
             push([:@sp, token, position])
           else
             push([:@words_end, token, position])
-            on_words_end(token) if closes_words?(token)
+            on_words_end(token) if closes_words?(token) # simulating on_words_end event
           end
         end
       end

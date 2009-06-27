@@ -67,6 +67,11 @@ class ArrayTest < Test::Unit::TestCase
     assert_equal src, build(src).to_ruby(true)
   end
   
+  define_method :'test a wordlist with an embedded expression (using brackets)' do
+    src = "%W[\#{foo}]"
+    assert_equal src, build(src).to_ruby(true)
+  end
+
   define_method :"test array access" do
     src = "foo[1]"
     call = build(src).first

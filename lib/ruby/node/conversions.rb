@@ -32,6 +32,10 @@ module Ruby
       def to_identifier
         Identifier.new(token, position, prolog)
       end
+      
+      def to_string_content
+        Ruby::StringContent.new(token, position, prolog)
+      end
     end
 
     module List

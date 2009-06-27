@@ -58,4 +58,9 @@ class SymbolTest < Test::Unit::TestCase
     assert_equal :'foo.bar', symbol.value
     assert_equal src, symbol.to_ruby
   end
+  
+  define_method :"test a double-quoted dyna-symbol w/ an embedded expression" do
+    src = ':"@#{token}"'
+    assert_equal src, build(src).first.to_ruby
+  end
 end
