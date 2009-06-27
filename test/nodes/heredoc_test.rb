@@ -102,16 +102,19 @@ class HeredocTest < Test::Unit::TestCase
     src = "<<-eos.foo\neos\nbar\n"
     assert_equal src, build(src).to_ruby(true)
   end
-    
+  
   define_method :"test a stacked quoted heredoc" do
-    src = '
-      heredocs = <<-"foo", <<-"bar"
+    src = 'heredocs = <<-"foo", <<-"bar"
         I said foo.
       foo
         I said bar.
       bar
     '
-    log(src)
+    assert_equal src, build(src).to_ruby(true)
+  end
+
+  define_method :"test multiple heredocs" do
+    src = "<<-end\nend\n<<-end\n\nend\n"
     assert_equal src, build(src).to_ruby(true)
   end
 end

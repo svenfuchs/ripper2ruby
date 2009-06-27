@@ -14,7 +14,7 @@ class Ripper
       end
 
       def on_paren(node)
-        node = Ruby::Statements.new(node) if node.is_a?(Ruby::Hash)
+        node = Ruby::Statements.new(node) unless node.is_a?(Ruby::ArgsList) || node.is_a?(Ruby::Params)
         node.rdelim ||= pop_token(:@rparen)
         node.ldelim ||= pop_token(:@lparen)
         node

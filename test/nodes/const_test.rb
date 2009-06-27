@@ -14,7 +14,7 @@ class ConstTest < Test::Unit::TestCase
   define_method :"test a class" do
     src = "class A::B < C ; end"
     const = build(src).first
-  
+
     assert_equal Ruby::Class, const.class
     assert_equal src, const.to_ruby
     assert_equal src, const.src
@@ -29,6 +29,13 @@ class ConstTest < Test::Unit::TestCase
     src = "class << self; self; end"
     const = build(src).first
   
+    assert_equal src, const.to_ruby
+    assert_equal src, const.src
+  end
+  
+  define_method :"test a metaclass inside of a call" do
+    src = "foo (class << @bar; self; end)"
+    const = build(src)
     assert_equal src, const.to_ruby
     assert_equal src, const.src
   end

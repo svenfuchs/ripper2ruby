@@ -69,6 +69,11 @@ class OperatorTest < Test::Unit::TestCase
     src = '(!1)'
     assert_equal src, build(src).to_ruby
   end
+
+  define_method :"test operator: enclosing parentheses with leading space" do
+    src = 'not (@main or @sub)'
+    assert_equal src, build(src).to_ruby
+  end
   
   # BINARY
   
