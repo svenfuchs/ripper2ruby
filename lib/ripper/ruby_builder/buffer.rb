@@ -1,10 +1,6 @@
 class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     class Buffer < Array
-      def flush(options = {})
-        self.dup.tap { self.clear }
-      end
-
       def aggregate(token)
         if token.nil?
           false

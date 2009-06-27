@@ -1,17 +1,15 @@
 require 'ruby/node'
 
 module Ruby
-  class Method < Aggregate
-    child_accessor :target, :separator, :identifier, :params, :block, :ldelim, :rdelim
+  class Method < NamedAggregate
+    child_accessor :target, :separator, :params, :block
 
     def initialize(target, separator, identifier, params, block, ldelim, rdelim)
       self.target = target
       self.separator = separator
-      self.identifier = identifier
       self.params = params
       self.block = block
-      self.ldelim = ldelim
-      self.rdelim = rdelim
+      super(identifier, ldelim, rdelim)
     end
     
     def nodes

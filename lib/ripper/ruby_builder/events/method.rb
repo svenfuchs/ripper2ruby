@@ -4,7 +4,7 @@ class Ripper
       def on_def(identifier, params, body)
         rdelim = pop_token(:@end)
         ldelim = pop_token(:@def, :pass => true)
-        # the identifier might be an opener, e.g. def class; end
+        # the identifier might be a keyword, e.g. def class; end
         identifier = pop_identifier(identifier.type, :left => ldelim, :right => rdelim) if identifier.is_a?(Ripper::RubyBuilder::Token)
         Ruby::Method.new(nil, nil, identifier, params, body, ldelim, rdelim)
       end

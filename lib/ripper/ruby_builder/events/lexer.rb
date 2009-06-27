@@ -53,6 +53,11 @@ class Ripper
         push(super)
       end
 
+      def on_tstring_content(token)
+        push(super)
+        nil
+      end
+
       def on_tstring_end(token)
         push(super)
         on_words_end(token) if closes_words?(token) # simulating on_words_end event

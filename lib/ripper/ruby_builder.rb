@@ -1,5 +1,9 @@
 require 'ripper'
 require 'ruby'
+
+require 'core_ext/hash/delete_at'
+require 'core_ext/array/flush'
+
 require 'ripper/ruby_builder/token'
 require 'ripper/ruby_builder/stack'
 
@@ -138,12 +142,11 @@ class Ripper
         end
       end
 
-      def extract_src(from, to)
-        # TODO make Clip work with start/end positions and use it
-        lines = Ruby::Node::Text.split(src)
-        lines[from.row] = lines[from.row][from.col..-1] # || ''
-        lines[to.row] = lines[to.row][0, to.col]
-        lines[from.row..to.row].join
-      end
+      # def extract_src(from, to)
+      #   lines = Ruby::Node::Text.split(src)
+      #   lines[from.row] = lines[from.row][from.col..-1] # || ''
+      #   lines[to.row] = lines[to.row][0, to.col]
+      #   lines[from.row..to.row].join
+      # end
   end
 end

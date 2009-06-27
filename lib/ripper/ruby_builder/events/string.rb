@@ -11,39 +11,11 @@ class Ripper
         string
       end
 
-      def on_xstring_literal(string)
-        string_stack.pop if string == string_stack.last # untested? xstring inside of heredoc or regular string
-        string.rdelim = pop_token(:@tstring_end)
-        string
-      end
-
-      def on_regexp_literal(string, rdelim)
-        string_stack.pop if string == string_stack.last # untested? regexp inside of heredoc or regular string
-        string.rdelim = pop_token(:@regexp_end)
-        string
-      end
-
-      def on_heredoc_literal(*args)
-        string_stack.each { |heredoc| push([:@heredoc, heredoc]) }
-        string_stack.clear
-        @heredoc_pos = nil
-      end
-
       def on_string_add(string, content)
         content = pop_string_content unless content
         target = heredoc? ? string_stack.last : string
         target << content
         string
-      end
-
-      def on_xstring_add(string, content)
-        on_string_add(string, content)
-      end
-
-      def on_string_embexpr(expression)
-        expression.ldelim = pop_token(:@embexpr_beg)
-        expression.rdelim = pop_token(:@rbrace)
-        expression
       end
 
       def on_string_content(*args)
@@ -55,9 +27,24 @@ class Ripper
         end
       end
 
-      def on_tstring_content(token)
-        push(super)
-        nil
+      def on_xstring_literal(string, type = :@tstring_end)
+        string_stack.pop if string == string_stack.last
+        string.rdelim = pop_token(type)
+        string
+      end
+      
+      def on_regexp_literal(string, rdelim)
+        on_xstring_literal(string, rdelim.type)
+      end
+
+      def on_xstring_new(*args)
+        ldelim = pop(:@symbeg, :@backtick, :@regexp_beg, :max => 1, :pass => true).first
+        string_stack << build_xstring(ldelim)
+        string_stack.last
+      end
+
+      def on_xstring_add(string, content)
+        on_string_add(string, content)
       end
 
       def on_word_new
@@ -67,25 +54,14 @@ class Ripper
       def on_word_add(string, word)
         word = pop_string_content unless word
         string << word
-        string
       end
 
-      def on_xstring_new(*args)
-        ldelim = pop(:@symbeg, :@backtick, :@regexp_beg, :max => 1, :pass => true).first
-        string_stack << build_xstring(ldelim)
-        string_stack.last
-      end
-
-      def on_string_dvar(variable)
-        variable = Ruby::DelimitedVariable.new(variable)
-        ldelim = pop_token(:@embvar)
-        variable.ldelim = ldelim
-        variable
+      def on_heredoc_literal(*args)
+        string_stack.flush.each { |heredoc| push([:@heredoc, heredoc]) }
       end
       
       def on_heredoc_new
         string_stack << Ruby::Heredoc.new
-        heredoc_pos(position.row + 1, 0) unless heredoc_pos
       end
 
       def on_heredoc_beg(*args)
@@ -98,6 +74,19 @@ class Ripper
         nil
       end
 
+      def on_string_embexpr(expression)
+        expression.ldelim = pop_token(:@embexpr_beg)
+        expression.rdelim = pop_token(:@rbrace)
+        expression
+      end
+
+      def on_string_dvar(variable)
+        variable = Ruby::DelimitedVariable.new(variable)
+        ldelim = pop_token(:@embvar)
+        variable.ldelim = ldelim
+        variable
+      end
+
       protected
 
         def heredocs
@@ -106,10 +95,6 @@ class Ripper
 
         def heredoc?
           string_stack.last.is_a?(Ruby::Heredoc)
-        end
-
-        def heredoc_pos(*pos)
-          pos.empty? ? @heredoc_pos : @heredoc_pos = Ruby::Node::Position.new(*pos)
         end
 
         def end_heredoc?(token)
