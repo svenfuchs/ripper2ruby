@@ -2,23 +2,49 @@ class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     module Lexer
       # unimplemented = :tlambda, :tlambeg
-      
+
       def on_parse_error(msg)
         raise ParseError.new("#{filename}:#{position.row + 1}: #{msg}")
       end
-      
+
+      def on_ignored_nl(*args)
+        token = push(super)
+        on_heredoc_literal if end_heredoc?(token)
+        token
+      end
+
+      def on_nl(*args)
+        token = push(super)
+        on_heredoc_literal if end_heredoc?(token)
+        token
+      end
+
+      def on_comment(*args)
+        token = push(super)
+        on_heredoc_literal if end_heredoc?(token)
+        token
+      end
+
       def on_sp(*args)
         push(super)
       end
 
-      def on_nl(*args)
+      def on_semicolon(*args)
         push(super)
       end
 
-      def on_ignored_nl(*args)
+      def on_period(*args)
         push(super)
       end
-      
+
+      def on_comma(*args)
+        push(super)
+      end
+
+      def on_backtick(*args)
+        push(super)
+      end
+
       def on_symbeg(*args)
         push(super)
       end
@@ -29,7 +55,8 @@ class Ripper
 
       def on_tstring_end(token)
         push(super)
-        on_words_sep(token) && on_words_end(token) if closes_words?(token)
+        # on_words_sep(token) && on_words_end(token) if closes_words?(token) # simulating words events
+        on_words_end(token) if closes_words?(token) # simulating words events
       end
 
       def on_qwords_beg(*args)
@@ -39,7 +66,7 @@ class Ripper
       def on_words_beg(*args)
         push(super)
       end
-      
+
       def on_words_sep(token)
         token.each_char do |token|
           case token
@@ -49,22 +76,23 @@ class Ripper
             push([:@sp, token, position])
           else
             push([:@words_end, token, position])
+            on_words_end(token) if closes_words?(token)
           end
         end
       end
-      
+
       def on_embexpr_beg(*args)
         push(super)
       end
-      
+
       def on_embexpr_end(*args)
         push(super)
       end
-      
+
       def on_regexp_beg(*args)
         push(super)
       end
-      
+
       def on_regexp_end(*args)
         push(super)
       end
@@ -88,7 +116,7 @@ class Ripper
       def on_lbrace(*args)
         push(super)
       end
-      
+
       def on_rbrace(*args)
         push(super)
       end
@@ -97,42 +125,22 @@ class Ripper
         push(super)
       end
 
-      def on_comma(*args)
-        push(super)
-      end
-      
-      def on_backtick(*args)
-        push(super)
-      end
-      
-      def on_period(*args)
-        push(super)
-      end
-      
-      def on_semicolon(*args)
-        push(super)
-      end
-      
-      def on_comment(*args)
-        push(super)
-      end
-      
       def on_embdoc(doc)
         push([:@comment, doc, position])
       end
-      
+
       def on_embdoc_beg(doc)
         push([:@comment, doc, position])
       end
-      
+
       def on_embdoc_end(doc)
         push([:@comment, doc, position])
       end
-      
+
       def on_embvar(*args)
         push(super)
       end
-      
+
       def on___end__(*args)
         # TODO
         super

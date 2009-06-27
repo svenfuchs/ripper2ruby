@@ -44,7 +44,7 @@ class Ripper
     include Lexer, Statements, Const, Method, Call, Block, Args, Assignment, Operator,
             If, Case, For, While, Identifier, Literal, String, Symbol, Array, Hash
 
-    attr_reader :src, :filename, :stack, :tstring_stack, :trailing_whitespace
+    attr_reader :src, :filename, :stack, :string_stack, :trailing_whitespace
 
     def initialize(src, filename = nil, lineno = nil)
       @src = src ||= filename && File.read(filename) || ''
@@ -53,7 +53,7 @@ class Ripper
       @filename = filename
       @stack = []
       @stack = Stack.new
-      @tstring_stack = []
+      @string_stack = []
 
       super
     end
@@ -71,7 +71,6 @@ class Ripper
       def push(sexp = nil)
         token = Token.new(sexp[0], sexp[1], position) if sexp.is_a?(::Array)
         stack.push(token)
-        end_heredoc(token)
         token
       end
 
