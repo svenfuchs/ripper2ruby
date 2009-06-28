@@ -60,8 +60,8 @@ module Ruby
         ChainedBlock.new(identifier, blocks, elements, params, ldelim, rdelim)
       end
 
-      def to_program(src, filename)
-        Program.new(src, filename, elements)
+      def to_program(src, filename, end_data)
+        Program.new(src, filename, elements, end_data)
       end
     end
   end

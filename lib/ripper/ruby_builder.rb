@@ -129,6 +129,12 @@ class Ripper
       def pop_assignment_operator(options = {})
         pop_token(*ASSIGN_OPERATORS, options)
       end
+      
+      def pop_end_data
+        token = pop_token(:@__end__)
+        token.token = Ruby::Node::Text::Clip.new(src, token.position).to_s if token # TODO clean up
+        token
+      end
 
       def build_token(token)
         Ruby::Token.new(token.token, token.position, token.prolog) if token

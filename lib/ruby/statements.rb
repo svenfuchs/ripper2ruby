@@ -6,12 +6,16 @@ module Ruby
   end
   
   class Program < Statements
+    child_accessor :end_data
     attr_accessor :filename
     attr_writer :src
 
-    def initialize(src, filename, statements)
+    def initialize(src, filename, statements, end_data)
+      # end_data.init(src) if end_data
+      
       self.src = src
       self.filename = filename
+      self.end_data = end_data
       super(statements)
     end
     
@@ -19,6 +23,10 @@ module Ruby
     
     def to_ruby(prolog = false)
       super(true)
+    end
+    
+    def nodes
+      super << end_data
     end
     
     # TODO replace this with Clip?

@@ -62,4 +62,9 @@ class StatementsTest < Test::Unit::TestCase
     src = "\n foo \n  \n"
     assert_node(src)
   end
+  
+  define_method :"test ruby code using the __END__ keyword" do
+    src = "foo\n__END__\nbar"
+    assert_node(src)
+  end
 end
