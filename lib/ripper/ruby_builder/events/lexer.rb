@@ -30,7 +30,9 @@ class Ripper
       end
 
       def on_sp(*args)
-        push(super)
+        token = push(super)
+        on_heredoc_literal if end_heredoc?(token) # ripper counts \ + nl ("\\\n") as whitespace
+        token
       end
 
       def on_semicolon(*args)

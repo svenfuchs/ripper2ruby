@@ -1,4 +1,4 @@
-# from parse_tree tests
+# from rubylexer tests
 
 print ',rekcah ybuR rehtona tsuJ'.reverse
 

@@ -110,7 +110,7 @@ class Ripper
         end
 
         def extra_heredoc_char?(token)
-          token && (token.newline? || token.comment?)
+          token && (token.newline? || token.comment? || token.token == "\\\n")
         end
     end
   end
