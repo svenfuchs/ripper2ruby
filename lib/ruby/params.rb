@@ -3,9 +3,18 @@ require 'ruby/list'
 
 module Ruby
   class Params < DelimitedList
+    def initialize(params = nil, ldelim = nil, rdelim = nil)
+      params = Array(params).map { |param| param.is_a?(Ruby::Param) ? param : Ruby::Param.new(param) }
+      super
+    end
+    
+    def <<(param)
+      param = Ruby::Param.new(param) unless param.is_a?(Ruby::Param)
+      super
+    end
   end
   
-  class RestParam < DelimitedAggregate
+  class Param < DelimitedAggregate
     child_accessor :param
     
     def initialize(param, ldelim = nil)
