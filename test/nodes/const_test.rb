@@ -5,47 +5,37 @@ class ConstTest < Test::Unit::TestCase
   
   define_method :"test a const" do
     src = 'A'
-    const = build(src).first
-    assert_equal Ruby::Const, const.class
-    assert_equal src, const.to_ruby
-    assert_equal src, const.src
-  end
-  
-  define_method :"test a class" do
-    src = "class A::B < C ; end"
-    const = build(src).first
-
-    assert_equal Ruby::Class, const.class
-    assert_equal src, const.to_ruby
-    assert_equal src, const.src
-  end
-  
-  define_method :"test const on self.class" do
-    src = 'self.class::A'
-    assert_equal src, build(src).first.to_ruby
-  end
-  
-  define_method :"test a metaclass" do
-    src = "class << self; self; end"
-    const = build(src).first
-  
-    assert_equal src, const.to_ruby
-    assert_equal src, const.src
-  end
-  
-  define_method :"test a metaclass inside of a call" do
-    src = "foo (class << @bar; self; end)"
-    const = build(src)
-    assert_equal src, const.to_ruby
-    assert_equal src, const.src
+    assert_node(src) do |node|
+      assert_equal Ruby::Const, node.first.class
+    end
   end
   
   define_method :"test a module" do
     src = "module A::B ; end"
-    const = build(src).first
+    assert_node(src) do |node|
+      assert_equal Ruby::Module, node.first.class
+    end
+  end
   
-    assert_equal Ruby::Module, const.class
-    assert_equal src, const.to_ruby
-    assert_equal src, const.src
+  define_method :"test a class" do
+    src = "class A::B < C ; end"
+    assert_node(src) do |node|
+      assert_equal Ruby::Class, node.first.class
+    end
+  end
+  
+  define_method :"test const on self.class" do
+    src = 'self.class::A'
+    assert_node(src)
+  end
+  
+  define_method :"test a metaclass" do
+    src = "class << self; self; end"
+    assert_node(src)
+  end
+  
+  define_method :"test a metaclass inside of a call" do
+    src = "foo (class << @bar; self; end)"
+    assert_node(src)
   end
 end

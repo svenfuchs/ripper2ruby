@@ -8,32 +8,64 @@ class WhileTest < Test::Unit::TestCase
   include TestHelper
 
   define_method :'test while block, semicolon separated' do
-    assert_compiles_to_original "while true; false end"
-    assert_compiles_to_original "while (true); false end"
-    assert_compiles_to_original "while (true;true); false end"
+    src = "while true; false end"
+    assert_node(src) do |node|
+      assert_equal Ruby::While, node.first.class
+    end
+  end
+  
+  define_method :'test while block, semicolon separated (2)' do
+    src = "while (true); false end"
+    assert_node(src)
+  end
+  
+  define_method :'test while block, semicolon separated (3)' do
+    src = "while (true;true); false end"
+    assert_node(src)
   end
 
   define_method :'test while block, newline separated' do
-    assert_compiles_to_original "while true\n false end"
-    assert_compiles_to_original "while (true)\n false end"
+    src = "while true\n false end"
+    assert_node(src)
+  end
+
+  define_method :'test while block, newline separated (2)' do
+    src = "while (true)\n false end"
+    assert_node(src)
   end
   
   define_method :'test while with do block' do
-    assert_compiles_to_original "while foo do ; end"
+    src = "while foo do ; end"
+    assert_node(src)
   end
   
   define_method :'test begin do while block, semicolon separated' do
-    assert_compiles_to_original "begin; false; end while true"
-    assert_compiles_to_original "begin; false; end while (true)"
+    src = "begin; false; end while true"
+    assert_node(src)
+  end
+  
+  define_method :'test begin do while block, semicolon separated (2)' do
+    src = "begin; false; end while (true)"
+    assert_node(src)
   end
   
   define_method :'test begin do while block, newline separated' do
-    assert_compiles_to_original "begin\n false\n end while true"
-    assert_compiles_to_original "begin\n false\n end while (true)"
+    src = "begin\n false\n end while true"
+    assert_node(src)
+  end
+  
+  define_method :'test begin do while block, newline separated (2)' do
+    src = "begin\n false\n end while (true)"
+    assert_node(src)
   end
   
   define_method :'test while modifier' do
-    assert_compiles_to_original "foo while true"
-    assert_compiles_to_original "foo while (true)"
+    src = "foo while true"
+    assert_node(src)
+  end
+  
+  define_method :'test while modifier (2)' do
+    src = "foo while (true)"
+    assert_node(src)
   end
 end

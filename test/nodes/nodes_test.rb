@@ -8,8 +8,7 @@ class NodesTest < Test::Unit::TestCase
     next if line =~ /^#/ || line.empty?
     define_method :"test: to_ruby(#{line}) compiles to the original src" do
       line.gsub!('\n', "\n")
-      assert_equal line, build(line).first.to_ruby
-      assert_equal line, build(line).first.src
+      assert_node(line)
     end
   end
   
@@ -18,7 +17,7 @@ class NodesTest < Test::Unit::TestCase
     define_method :"test: #{filename} compiles to the original src" do
       next if filename.index('tmp.rb')
       src = File.read(filename)
-      assert_equal src, build(src).to_ruby
+      assert_node(src)
     end
   end
 end

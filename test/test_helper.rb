@@ -19,10 +19,11 @@ module TestHelper
 	  Ripper::EventLog.out(src)
   end
   
-  def assert_compiles_to_original(src)
-    expr = build(src).statements.first
-    assert_equal src, expr.to_ruby
-    assert_equal src, expr.src
+  def assert_node(src)
+    expr = build(src)
+    assert_equal src, expr.to_ruby(true)
+    assert_equal src, expr.src(true)
+    yield(expr) if block_given?
   end
   
   def highlight_diff(str)

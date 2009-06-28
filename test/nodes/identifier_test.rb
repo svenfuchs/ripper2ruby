@@ -6,56 +6,46 @@ class IdentifierTest < Test::Unit::TestCase
   define_method :"test a variable" do
     src = 'foo'
     identifier = build(src).first
-    assert identifier.is_a?(Ruby::Variable)
-    assert_equal src, identifier.to_ruby
-    assert_equal src, identifier.src
+    assert_node(src) do |node|
+      assert_equal Ruby::Variable, node.first.class
+    end
   end
   
   define_method :"test an instance variable" do
     src = '@foo'
-    identifier = build(src).first
-    assert identifier.is_a?(Ruby::Variable)
-    assert_equal src, identifier.to_ruby
-    assert_equal src, identifier.src
+    assert_node(src) do |node|
+      assert_equal Ruby::Variable, node.first.class
+    end
   end
   
   define_method :"test a class variable" do
     src = '@@foo'
-    identifier = build(src).first
-    assert identifier.is_a?(Ruby::Variable)
-    assert_equal src, identifier.to_ruby
-    assert_equal src, identifier.src
+    assert_node(src) do |node|
+      assert_equal Ruby::Variable, node.first.class
+    end
   end
   
   define_method :"test a global variable" do
     src = '$foo'
-    identifier = build(src).first
-    assert identifier.is_a?(Ruby::Variable)
-    assert_equal src, identifier.to_ruby
-    assert_equal src, identifier.src
+    assert_node(src) do |node|
+      assert_equal Ruby::Variable, node.first.class
+    end
   end
   
   define_method :"test keyword __FILE__" do
     src = '__FILE__'
-    identifier = build(src).first
-    assert identifier.is_a?(Ruby::Keyword)
-    assert_equal src, identifier.to_ruby
-    assert_equal src, identifier.src
+    assert_node(src) do |node|
+      assert_equal Ruby::Keyword, node.first.class
+    end
   end
   
   define_method :"test keyword __LINE__" do
     src = '__LINE__'
-    identifier = build(src).first
-    assert identifier.is_a?(Ruby::Keyword)
-    assert_equal src, identifier.to_ruby
-    assert_equal src, identifier.src
+    assert_node(src)
   end
   
   define_method :"test keyword __ENCODING__" do
     src = '__ENCODING__'
-    identifier = build(src).first
-    assert identifier.is_a?(Ruby::Keyword)
-    assert_equal src, identifier.to_ruby
-    assert_equal src, identifier.src
+    assert_node(src)
   end
 end
