@@ -7,7 +7,7 @@ class BlockTest < Test::Unit::TestCase
     src = 'foo { |@a| }'
     assert_raises(Ripper::RubyBuilder::ParseError) { build(src) }
   end
-
+  
   define_method :"test method call block with 2 statements (newline delimited)" do
     src = "t do\nfoo\nbar\nend"
     assert_node(src)
@@ -95,6 +95,11 @@ class BlockTest < Test::Unit::TestCase
   
   define_method :"test: a begin block with multiple rescues and ensure" do
     src = "begin foo\n rescue A, B => e\n bar\nrescue C => e\n bam\nensure\nbaz\n end"
+    assert_node(src)
+  end
+  
+  define_method :"test: a begin block using rescue, then and else (from parse_tree tests)" do
+    src = "begin a; rescue NameError => e then e else :foo end"
     assert_node(src)
   end
   
