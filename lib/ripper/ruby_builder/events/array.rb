@@ -25,7 +25,7 @@ class Ripper
         rdelim = pop_token(:@words_end)
         ldelim = pop_token(:@qwords_beg)
         words = Ruby::Array.new(nil, ldelim, rdelim)
-        string_stack << words
+        string_stack << words unless rdelim
         words
       end
 
