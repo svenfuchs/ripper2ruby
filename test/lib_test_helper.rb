@@ -51,9 +51,15 @@ module LibTestHelper
   end
 
   def report(errors, name, path)
-    puts errors[name] && !errors[name].empty? ? 
-      "\n#{errors[name].count} problems found in #{name}:\n" + errors[name].map { |e| e.gsub(path, name.to_s) }.join + "\n":
+    errors = errors[name]
+    msg = if errors && !errors.empty?
+      # output the broken line
+      # suggest possible fixes
+      "#{errors.count} problems found in #{name}:\n" + errors.map { |e| e.gsub(path, name.to_s) }.join
+    else
       "no problems found in #{name}"
+    end
+    puts msg
   end
   
   def highlight_diff(str)
