@@ -8,7 +8,7 @@ $KCODE = 'u' if RUBY_VERSION < '1.9'
 module Erb
   class Scanner < ERB::Compiler::Scanner
     def scan
-      stag_reg = /(.*?)(^[ \t]*<%%|<%=|<%#|<%-|<%|\z)/m
+      stag_reg = /(.*?)(^[ \t]*<%%|<%%=|<%=|<%#|<%-|<%|\z)/m
       etag_reg = /(.*?)(%%>|\-%>|%>|\z)/m
       scanner = StringScanner.new(@src)
       while !scanner.eos?
@@ -29,8 +29,8 @@ module Erb
         comment = true if token == '<%#'
         if scanner.stag.nil?
           result << to_whitespace(token)
-          scanner.stag = token if ['<%', '<%-', '<%=', '<%#'].include?(token)
-        elsif ['%>', '-%>'].include?(token)
+          scanner.stag = token if ['<%', '<%%', '<%-', '<%=', '<%%=', '<%#'].include?(token.strip)
+        elsif ['%>', '%%>', '-%>'].include?(token.strip)
           result << to_whitespace(token.gsub(/>/, ';'))
           scanner.stag = nil
         else

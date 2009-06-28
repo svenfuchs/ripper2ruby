@@ -9,7 +9,7 @@ class Ripper
 
       def on_body_stmt(body, rescue_block, else_block, ensure_block)
         statements = [rescue_block, else_block, ensure_block].compact
-        body = body.to_chained_block(nil, statements) if rescue_block || ensure_block
+        body = body.to_chained_block(nil, statements) unless statements.empty?
         body
       end
 

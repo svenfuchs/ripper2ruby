@@ -37,6 +37,11 @@ class Ripper
         const.prolog.unshift(pop_token(:'@::'))
         const
       end
+      
+      def on_top_const_field(const)
+        const.prolog.unshift(pop_token(:'@::'))
+        const
+      end
     end
   end
 end

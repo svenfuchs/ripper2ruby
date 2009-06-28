@@ -38,4 +38,9 @@ class ConstTest < Test::Unit::TestCase
     src = "foo (class << @bar; self; end)"
     assert_node(src)
   end
+  
+  define_method :"test a top-level const ref after a class def" do
+    src = "class A ; end\n::B = 3"
+    assert_node(src)
+  end
 end

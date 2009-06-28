@@ -19,7 +19,7 @@ class Ripper
       end
 
       def on_begin(body)
-        body = body.to_named_block unless body.is_a?(Ruby::NamedBlock)
+        body = body.to_chained_block unless body.is_a?(Ruby::ChainedBlock)
         body.rdelim = pop_token(:@end)
         body.identifier = pop_token(:@begin)
         body

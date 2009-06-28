@@ -129,6 +129,11 @@ class HeredocTest < Test::Unit::TestCase
     assert_node(src)
   end
   
+  define_method :"test a heredoc with an xstring as a heredoc_beg token" do
+    src = "foo = <<-`foo`\nfoo"
+    assert_node(src)
+  end
+  
   define_method :"test multiple heredocs" do
     src = "<<-end\nend\n<<-end\n\nend\n"
     assert_node(src)
