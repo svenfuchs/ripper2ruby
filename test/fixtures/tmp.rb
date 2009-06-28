@@ -1,1 +1,6 @@
-begin a; rescue NameError => e then e else :foo end
+p(<<stuff+'foobar')\
++"more stuff"
+some stuff
+stuff
+
+

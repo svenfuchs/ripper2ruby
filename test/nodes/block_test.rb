@@ -98,7 +98,7 @@ class BlockTest < Test::Unit::TestCase
     assert_node(src)
   end
   
-  define_method :"test: a begin block using rescue, then and else (from parse_tree tests)" do
+  define_method :"test: a begin block using rescue, then and else (from rubylexer tests)" do
     src = "begin a; rescue NameError => e then e else :foo end"
     assert_node(src)
   end
