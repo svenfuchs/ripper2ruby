@@ -27,9 +27,10 @@ class Ripper
 
       def on_rescue(types, var, statements, block)
         identifier = pop_token(:@rescue)
+        ldelim = pop_token(:@then)
         operator = pop_token(:'@=>', :left => identifier)
         params = Ruby::RescueParams.new(types, var, operator)
-        statements.to_chained_block(identifier, block, nil, params)
+        statements.to_chained_block(identifier, block, params, ldelim)
       end
 
       def on_ensure(statements)
