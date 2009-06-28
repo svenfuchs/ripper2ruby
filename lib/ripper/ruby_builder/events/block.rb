@@ -58,7 +58,7 @@ class Ripper
       end
 
       def on_rest_param(param)
-        Ruby::RestParam.new(param, pop_token(:'@*'))
+        Ruby::Param.new(param, pop_token(:'@*'))
       end
       
       protected

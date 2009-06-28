@@ -24,7 +24,7 @@ class Ripper
       end
 
       def on_args_add(args, arg)
-        args << Ruby::Arg.new(arg)
+        args << arg
         args
       end
       
