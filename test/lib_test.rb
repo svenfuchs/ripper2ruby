@@ -1,26 +1,6 @@
 require File.dirname(__FILE__) + '/test_helper'
 require File.dirname(__FILE__) + '/lib_test_helper'
 
-LIBS = {
-  :self => {
-    :path => File.dirname(__FILE__) + '/../',
-    :exclude => []
-  },
-  :rails => {
-    :path => '~/Development/shared/rails/rails',
-    :erb => %r(/templates/|environment\.rb),
-    :exclude => []
-  },
-  :ruby => {
-    :path => '/usr/local/ruby19/lib/ruby/1.9.1'
-  },
-  :adva_cms => {
-    :path => '~/Development/projects/adva_cms/adva_cms/vendor/adva',
-    :erb => %r(/templates/|environment\.rb),
-    :exclude => []
-  }
-}
-
 class BuildTest
   include TestHelper, LibTestHelper
 
@@ -77,5 +57,38 @@ class BuildTest
   end
 end
 
-BuildTest.new.test_library_build # (:verbose => true)
+LIBS = {
+  :self => {
+    :path => File.dirname(__FILE__) + '/../',
+    :exclude => []
+  },
+  :rails => {
+    :path => '~/Development/shared/rails/rails',
+    :erb => %r(/templates/|environment\.rb),
+    :exclude => []
+  },
+  :ruby => {
+    :path => '/usr/local/ruby19/lib/ruby/1.9.1'
+  },
+  :parse_tree => {
+    :path => '/usr/local/lib/ruby/gems/1.8/gems/ParseTree-3.0.2'
+  },
+  :capistrano => {
+    :path => '/usr/local/lib/ruby/gems/1.8/gems/capistrano-2.5.3'
+  },
+  :cucumber => {
+    :path => '/usr/local/lib/ruby/gems/1.8/gems/cucumber-0.3.11',
+    :erb => %r(/templates/|environment\.rb)
+  },
+  :rack => {
+    :path => '/usr/local/lib/ruby/gems/1.8/gems/rack-0.9.1'
+  },
+  :adva_cms => {
+    :path => '~/Development/projects/adva_cms/adva_cms/vendor/adva',
+    :erb => %r(/templates/|environment\.rb),
+    :exclude => []
+  }
+}
+
+BuildTest.new.test_library_build #(:parse_tree)
 # BuildTest.new.test_tmp_file

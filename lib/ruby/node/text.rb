@@ -10,13 +10,25 @@ module Ruby
       end
 
       class Context
+        @@context_width = 2
+  
+        class << self
+          def context_width
+            @@context_width
+          end
+  
+          def context_width=(context_width)
+            @@context_width = context_width
+          end
+        end
+        
         attr_reader :lines, :line, :row, :width
 
-        def initialize(lines, row, width, line = nil)
+        def initialize(lines, row, width = nil, line = nil)
           @lines = lines
           @line = line || lines[row]
           @row = row
-          @width = width
+          @width = width || Context.width
         end
 
         def to_s(options = {})

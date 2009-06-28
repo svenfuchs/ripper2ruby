@@ -19,6 +19,14 @@ class SymbolTest < Test::Unit::TestCase
     assert_equal src, symbol.to_ruby
   end
   
+  define_method :"test a symbol that is wtf" do
+    src = ':-@'
+    symbol = build(src).first
+    assert symbol.is_a?(Ruby::Symbol)
+    assert_equal :-@, symbol.value
+    assert_equal src, symbol.to_ruby
+  end
+  
   define_method :'test a symbol that is also a keyword' do
     src = ":if"
     symbol = build(src).first

@@ -4,12 +4,12 @@ class ArgsTest < Test::Unit::TestCase
   include TestHelper
 
   define_method :'test call arguments: t("foo") (string)' do
-    src = '("foo")'
-    args = build('t' + src).first.arguments
-  
-    assert_equal Ruby::ArgsList, args.class
-    assert_equal src, args.to_ruby
-    assert_equal src, args.src
+    src = 't("foo")'
+    node = build(src)
+    
+    assert_equal Ruby::ArgsList, node.first.arguments.class
+    assert_equal src, node.to_ruby
+    assert_equal src, node.src
   end
   
   define_method :"test call arguments, 3 arguments and parentheses" do
@@ -59,7 +59,7 @@ class ArgsTest < Test::Unit::TestCase
     assert_equal src, call.to_ruby
     assert_equal src, call.src
   end
-
+  
   define_method :"test method call: t([:foo, :bar]) (array)" do
     src = "([:foo, :bar, :baz])"
     args = build('t' + src).first.arguments
