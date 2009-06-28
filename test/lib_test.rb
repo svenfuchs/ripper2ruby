@@ -23,8 +23,8 @@ class BuildTest
 
       lib = libs[name]
       lib[:exclude] ||= []
-      lib[:exclude] << "/vendor/"         # don't parse various plugins or frozen rails twice
-                    << "/simple_benches"  # looks like some pseudo code in merb
+      lib[:exclude] << "/vendor/" <<      # don't parse various plugins or frozen rails twice
+                       "/simple_benches"  # looks like some pseudo code in merb
       
       errors[name] = []
       filenames(File.expand_path(lib[:path])).each do |filename|
@@ -119,5 +119,5 @@ end
 # }
 
 # BuildTest.new.clone_libs
-BuildTest.new.test_library_build #(:active_shipping, :zentest)
-# BuildTest.new.test_tmp_file
+# BuildTest.new.test_library_build #(:active_shipping, :zentest)
+BuildTest.new.test_tmp_file
