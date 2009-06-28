@@ -82,4 +82,11 @@ class MethodTest < Test::Unit::TestCase
     src = "def end\nend"
     assert_node(src)
   end
+  
+  define_method :"test a method definition that returns a number" do
+    src = "def def; 234; end"
+    assert_node(src)
+  end
+  
+  
 end
