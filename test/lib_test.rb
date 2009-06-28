@@ -23,8 +23,9 @@ class BuildTest
 
       lib = libs[name]
       lib[:exclude] ||= []
-      lib[:exclude] << "/vendor/" <<      # don't parse various plugins or frozen rails twice
-                       "/simple_benches"  # looks like some pseudo code in merb
+      lib[:exclude] << "/vendor/"        <<  # don't parse various plugins or frozen rails twice
+                       "/simple_benches" <<  # looks like some pseudo code in merb
+                       "/test/hoge.rb"   <<  # an erubis file
       
       errors[name] = []
       filenames(File.expand_path(lib[:path])).each do |filename|
@@ -47,11 +48,12 @@ class BuildTest
         end
       end
       
-      # report(errors, name)
+      puts
+      report(errors, name, lib[:path])
     end
     
-    puts
-    names.each { |name| report(errors, name, libs[name][:path]) }
+    # puts
+    # names.each { |name| report(errors, name, libs[name][:path]) }
   end
 
   def test_tmp_file
@@ -85,39 +87,6 @@ class BuildTest
   end
 end
 
-# LIBS = {
-#   :self => {
-#     :path => File.dirname(__FILE__) + '/../',
-#     :exclude => []
-#   },
-#   :rails => {
-#     :path => '~/Development/shared/rails/rails',
-#     :erb => %r(/templates/|environment\.rb),
-#     :exclude => []
-#   },
-#   :ruby => {
-#     :path => '/usr/local/ruby19/lib/ruby/1.9.1'
-#   },
-#   :parse_tree => {
-#     :path => '/usr/local/lib/ruby/gems/1.8/gems/ParseTree-3.0.2'
-#   },
-#   :capistrano => {
-#     :path => '/usr/local/lib/ruby/gems/1.8/gems/capistrano-2.5.3'
-#   },
-#   :cucumber => {
-#     :path => '/usr/local/lib/ruby/gems/1.8/gems/cucumber-0.3.11',
-#     :erb => %r(/templates/|environment\.rb)
-#   },
-#   :rack => {
-#     :path => '/usr/local/lib/ruby/gems/1.8/gems/rack-0.9.1'
-#   },
-#   :adva_cms => {
-#     :path => '~/Development/projects/adva_cms/adva_cms/vendor/adva',
-#     :erb => %r(/templates/|environment\.rb),
-#     :exclude => []
-#   }
-# }
-
 # BuildTest.new.clone_libs
-# BuildTest.new.test_library_build #(:active_shipping, :zentest)
-BuildTest.new.test_tmp_file
+BuildTest.new.test_library_build
+# BuildTest.new.test_tmp_file
