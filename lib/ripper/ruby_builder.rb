@@ -9,6 +9,17 @@ require 'ripper/ruby_builder/stack'
 
 Dir[File.dirname(__FILE__) + '/ruby_builder/events/*.rb'].each { |file| require file }
 
+# Ripper::RubyBuilder extends Ripper's SexpBuilder and builds a rich, object
+# oriented representation of Ruby code.
+#
+#   code = Ripper::RubyBuilder.build("foo(1, :bar, %w(baz)"), filename)
+#   code.to_ruby # => "foo(1, :bar, %w(baz)"
+#
+# RubyBuilder uses SexpBuilder's lexing and parsing event callbacks (see
+# ruby_builder/events) and builds up Ruby::Nodes which can then be used.
+# See RubyBuilder::Stack, RubyBuilder::Queue, RubyBuilder::Buffer and
+# RubyBuilder::Token for more details about the parsing process.
+
 class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     class ParseError < RuntimeError
@@ -33,7 +44,7 @@ class Ripper
 
     SEPARATORS        = [:@semicolon, :@comma]
 
-    UNARY_OPERATORS   = [:'@+', :'@-', :'@!', :'@~', :@not]
+    UNARY_OPERATORS   = [:'@+', :'@-', :'@!', :'@~', :@not, :'@+@', :'@-@']
     BINARY_OPERATORS  = [:'@**', :'@*', :'@/', :'@%', :'@+', :'@-', :'@<<', :'@>>', :'@&', :'@|', :'@^',
                          :'@>', :'@>=', :'@<', :'@<=', :'@<=>', :'@==', :'@===', :'@!=', :'@=~', :'@!~',
                          :'@&&', :'@||', :@and, :@or]

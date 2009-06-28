@@ -1,6 +1,7 @@
 $: << File.expand_path(File.dirname(__FILE__) + '/../lib')
 
 require 'ripper/ruby_builder'
+require 'ripper/event_log'
 require 'test/unit'
 require 'pp'
 require 'highlighters/ansi'
@@ -11,13 +12,11 @@ module TestHelper
   end
 	
   def sexp(src)
-    puts
     pp Ripper::SexpBuilder.new(src).parse
   end
 
 	def log(src)
-	  puts '', src
-	  puts '', LogSexpBuilder.events(src), ''
+	  Ripper::EventLog.out(src)
   end
   
   def assert_compiles_to_original(src)
@@ -26,7 +25,7 @@ module TestHelper
     assert_equal src, expr.src
   end
   
-  def highlight(str)
+  def highlight_diff(str)
     green = Highlighters::Ansi.new(:green)
     red = Highlighters::Ansi.new(:red)
     str.split("\n").map do |line|
@@ -61,46 +60,9 @@ module TestHelper
 	    end
 	  end
 	  output << oldhunk.diff(format) << "\n"
-	  highlight(output)
+	  highlight_diff(output)
 	end
 end
 
-class LogSexpBuilder < Ripper::SexpBuilder
-  class << self
-    def events(src)
-      parser = new(src)
-      parser.parse
-      parser.events.join("\n")
-    end
-  end
-  
-  attr_reader :events
-  
-  def initialize(src)
-    @events = []
-    super
-  end
-  
-  def highlight(str)
-    Highlighters::Ansi.new(:bold, :green).highlight(str)
-  end
-  
-  { 'scanner' => SCANNER_EVENTS, 'parser' => PARSER_EVENTS }.each do |type, events|
-    events.each do |event|
-      define_method :"on_#{event}" do |*args|
-        event = super(*args).first
-
-        arg = args.first =~ /\s/ ? args.first.inspect : args.first
-        line = (event.to_s).ljust(20)
-        if type == 'scanner'
-          line = line + arg[0..30] 
-        else
-          line = highlight(line)
-        end
-        self.events << line
-      end
-    end
-  end
-end
 
 

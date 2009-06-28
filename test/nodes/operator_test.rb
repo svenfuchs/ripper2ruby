@@ -22,7 +22,7 @@ class OperatorTest < Test::Unit::TestCase
     
     assert_equal Ruby::Unary, expr.class
     assert_equal operator.to_s, expr.operator.token
-    assert_equal options[:value] || 1, expr.operand.value
+    # assert_equal options[:value] || 1, expr.operand.value
     
     assert_operator(expr, src, options)
   end
@@ -42,11 +42,11 @@ class OperatorTest < Test::Unit::TestCase
   # UNARY
   
   define_method :'test operator: +1 (+)' do
-    assert_unary_operator(:!)
+    assert_unary_operator(:+, :src => '+a')
   end
   
   define_method :'test operator: -1 (-)' do
-    assert_unary_operator(:!)
+    assert_unary_operator(:-, :src => '-b')
   end
   
   define_method :'test operator: !1 (!)' do
