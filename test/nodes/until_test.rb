@@ -8,30 +8,54 @@ class UntilTest < Test::Unit::TestCase
   include TestHelper
 
   define_method :'test until block, semicolon separated' do
-    assert_compiles_to_original "until true; false end"
-    assert_compiles_to_original "until (true); false end"
-    assert_compiles_to_original "until (true;); false end"
+    src = "until true; false end"
+    assert_node(src) do |node|
+      assert_equal Ruby::Until, node.first.class
+    end
+  end
+
+  define_method :'test until block, semicolon separated (2)' do
+    src = "until (true); false end"
+    assert_node(src)
+  end
+
+  define_method :'test until block, semicolon separated (3)' do
+    src = "until (true;); false end"
+    assert_node(src)
   end
 
   define_method :'test until block, newline separated' do
-    assert_compiles_to_original "until true\n false end"
-    assert_compiles_to_original "until (true)\n false end"
+    src = "until true\n false end"
+    assert_node(src)
+  end
+
+  define_method :'test until block, newline separated (2)' do
+    src = "until (true)\n false end"
+    assert_node(src)
   end
 
   define_method :'test until with do block' do
-    assert_compiles_to_original "until foo do ; end"
+    src = "until foo do ; end"
+    assert_node(src)
   end
   
   define_method :'test begin do until block, semicolon separated' do
-    assert_compiles_to_original "begin; false; end until true"
+    src = "begin; false; end until true"
+    assert_node(src)
   end
 
   define_method :'test begin do until block, newline separated' do
-    assert_compiles_to_original "begin\n false\n end until true"
+    src = "begin\n false\n end until true"
+    assert_node(src)
   end
   
   define_method :'test until modifier' do
-    assert_compiles_to_original "foo until true"
-    assert_compiles_to_original "foo until (true)"
+    src = "foo until true"
+    assert_node(src)
+  end
+  
+  define_method :'test until modifier (2)' do
+    src = "foo until (true)"
+    assert_node(src)
   end
 end

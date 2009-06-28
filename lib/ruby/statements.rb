@@ -6,7 +6,8 @@ module Ruby
   end
   
   class Program < Statements
-    attr_accessor :src, :filename
+    attr_accessor :filename
+    attr_writer :src
 
     def initialize(src, filename, statements)
       self.src = src

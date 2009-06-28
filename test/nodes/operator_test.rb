@@ -67,12 +67,12 @@ class OperatorTest < Test::Unit::TestCase
   
   define_method :'test operator: (!1) (complement/bitwise-not, enclosing parentheses)' do
     src = '(!1)'
-    assert_equal src, build(src).to_ruby
+    assert_node(src)
   end
 
   define_method :"test operator: enclosing parentheses with leading space" do
     src = 'not (@main or @sub)'
-    assert_equal src, build(src).to_ruby
+    assert_node(src)
   end
   
   # BINARY
@@ -105,7 +105,7 @@ class OperatorTest < Test::Unit::TestCase
   
   define_method :'test operator: (1 + 2) (plus, parentheses)' do
     src = '(1+2)'
-    assert_equal src, build(src).to_ruby
+    assert_node(src)
   end
   
   # logical
@@ -128,7 +128,7 @@ class OperatorTest < Test::Unit::TestCase
   
   define_method :'test operator: (1 and 2) (and, parentheses)' do
     src = '(1 and 2)'
-    assert_equal src, build(src).to_ruby
+    assert_node(src)
   end
   
   # bitwise
@@ -199,23 +199,21 @@ class OperatorTest < Test::Unit::TestCase
   
   define_method :'test ternary: 1 == 1 ? 2 : 3 (ifop)' do
     src = '1 == 1 ? 2 : 3'
-    expr = build(src).first
-  
-    assert_equal Ruby::IfOp, expr.class
-    assert_equal src, build(src).to_ruby
+    assert_node(src) do |node|
+      assert_equal Ruby::IfOp, node.first.class
+    end
   end
   
   define_method :'test ternary: ((1) ? 2 : (3)) (ifop, parentheses)' do
     src = '((1) ? 2 : (3))'
-    assert_equal src, build(src).to_ruby
+    assert_node(src)
   end
   
   # ======
   
   define_method :'test operator order in an expression with multiple identical operators' do
     src = 'foo + bar  + baz'
-    expr = build(src).first
-    assert_equal src, expr.to_ruby
+    assert_node(src)
     # FIXME positions are messed up!
     # assert_equal [0, 4], expr.left.operator.position.to_a
     # assert_equal [0, 10], expr.operator.position.to_a
@@ -223,17 +221,17 @@ class OperatorTest < Test::Unit::TestCase
   
   define_method :'test operator order in an expression with multiple different operators' do
     src = 'foo + bar - baz'
-    assert_equal src, build(src).to_ruby
+    assert_node(src)
   end
   
   define_method :'test operator order in an expression with multiple ternary operators (1)' do
     src = "a ? b : c ? d : e"
-    assert_equal src, build(src).to_ruby(true)
+    assert_node(src)
   end
   
   define_method :'test operator order in an expression with multiple ternary operators (2)' do
     src = "a ? b ? c : d : e"
-    assert_equal src, build(src).to_ruby(true)
+    assert_node(src)
   end
 
   # define_method :'test ambiguous argument' do
