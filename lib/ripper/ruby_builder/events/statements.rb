@@ -2,7 +2,7 @@ class Ripper
   class RubyBuilder < Ripper::SexpBuilder
     module Statements
       def on_program(statements)
-        program = statements.to_program(src, filename)
+        program = statements.to_program(src, filename, pop_end_data)
         program << Ruby::Token.new('', position, prolog) unless stack.buffer.empty?
         program
       end

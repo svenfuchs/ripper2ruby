@@ -150,8 +150,7 @@ class Ripper
       end
 
       def on___end__(*args)
-        # TODO
-        super
+        push(super)
       end
     end
   end

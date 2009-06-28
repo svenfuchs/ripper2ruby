@@ -51,10 +51,10 @@ module Ruby
       class Clip
         attr_reader :lines, :row, :col, :length, :end
       
-        def initialize(lines, pos, length)
-          @lines = lines
+        def initialize(lines, pos, length = nil)
+          @lines = lines.is_a?(::String) ? Text.split(lines) : lines
           @row, @col = *pos
-          @length = length
+          @length = length.nil? ? self.lines.join.length : length
           init
         end
         
