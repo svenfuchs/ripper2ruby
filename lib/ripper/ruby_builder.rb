@@ -74,7 +74,6 @@ class Ripper
     end
 
     protected
-
       def position
         Ruby::Node::Position.new(lineno.to_i - 1, column)
       end

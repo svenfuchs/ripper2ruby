@@ -29,7 +29,7 @@ class Ripper
 
       def on_xstring_literal(string, type = :@tstring_end)
         string_stack.pop if string == string_stack.last
-        string.rdelim = pop_token(type)
+        string.rdelim = pop_token(type) if string.respond_to?(:rdelim)
         string
       end
       
@@ -38,9 +38,13 @@ class Ripper
       end
 
       def on_xstring_new(*args)
-        ldelim = pop(:@symbeg, :@backtick, :@regexp_beg, :max => 1, :pass => true).first
-        string_stack << build_xstring(ldelim)
-        string_stack.last
+        if token = pop_token(:@heredoc_beg)
+          Ruby::HeredocBegin.new(token.token, token.position, token.prolog)
+        else
+          ldelim = pop(:@symbeg, :@backtick, :@regexp_beg, :max => 1, :pass => true).first
+          string_stack << build_xstring(ldelim)
+          string_stack.last
+        end
       end
 
       def on_xstring_add(string, content)

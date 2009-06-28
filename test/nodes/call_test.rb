@@ -56,6 +56,11 @@ class CallTest < Test::Unit::TestCase
     src = "foo.<=>(bar)"
     assert_node(src)
   end
+    
+  define_method :'test method call: foo.<< bar (sending an operator, srsly ... used in Redmine)' do
+    src = "foo.<< bar"
+    assert_node(src)
+  end
   
   define_method :"test call with a string with an embedded expression" do
     src = 'foo("#{bar}")'

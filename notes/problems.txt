@@ -1,0 +1,93 @@
+Do not use colons to separate if/unless/when conditions from expressions:
+
+	# e.g. adva_cms, ansuz, cruisecontrol, freemium, merb, paperclip, radiant, 
+	# rbot, rfpdf, rghost, rstomp, shoulda, typus
+	case true; when TrueClass: true; end
+
+	# ruby 1.8.7
+	=> true
+
+	# ruby 1.9.1
+	syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+
+
+Do not use instance_variables, constants or hash access as block parameters:
+
+	# e.g. in cruise_control, spree
+	lambda { |@foo| }
+
+	# ruby 1.8.7
+	=> #<Proc:0x00000000@(irb):1>
+
+	# ruby 1.9.1
+	formal argument cannot be an instance variable
+	
+	# e.g. in cruisecontrol (frozen rails)
+	lambda { |foo[:bar]| }
+	
+	# ruby 1.8.7
+	=> #<Proc:0x00000000@(irb):1>
+
+	# ruby 1.9.1
+	formal argument cannot be a constant
+
+	# e.g. in cruisecontrol (frozen rails)
+	lambda { |foo[:bar]| }
+	
+	# ruby 1.8.7
+	=> #<Proc:0x00000000@(irb):1>
+
+	# ruby 1.9.1
+	syntax error, unexpected '[', expecting '|'
+	
+	
+Do not use ...
+
+  # e.g. in cruisecontrol (frozen rails)
+	lambda { |(foo, )| }
+
+	# ruby 1.8.7
+	=> #<Proc:0x00000000@(irb):1>
+
+	# ruby 1.9.1
+	syntax error, unexpected ')'
+
+
+Do not use commas to separate key and value in a Hash:
+
+	# e.g. cosy, streamlined, webrat
+	{1, 2}
+
+	# ruby 1.8.7
+	=> {1 => 2}
+
+	# ruby 1.9.1
+	syntax error, unexpected ',', expecting tASSOC
+	
+	
+Do not put spaces in front of parentheses (method call arguments):
+	
+	# e.g. in exception_logger (logged_exceptions_controller.rb:40, logged_exceptions_helper.rb:9)
+	A.foo (:bar)
+	syntax error, unexpected ',', expecting ')'
+	
+	
+Do not put spaces in front of brackets (Hash access):
+
+	# e.g. in ultrasphinx (configure.rb:247)
+	
+	entry ['association_name']	
+	syntax error, unexpected tLBRACK, expecting keyword_do or '{' or '('
+	
+	
+Put a space between the operator and number when calculating:
+
+	# e.g. in liquid (htmltags.rb:49, for.rb:104, paginate.rb:61)
+	a - b -1
+	syntax error, unexpected tUMINUS_NUM, expecting keyword_do or '{' or '('
+	
+	# e.g. in prawn (span.rb:36)
+	a /2.0
+	syntax error, unexpected tREGEXP_BEG, expecting keyword_do or '{' or '('
+	
+	

@@ -6,6 +6,10 @@ class Ripper
       def on_parse_error(msg)
         raise ParseError.new("#{filename}:#{position.row + 1}: #{msg}")
       end
+      
+      def on_param_error(param)
+        raise ParseError.new("#{filename}:#{position.row + 1}: syntax error, invalid parameter type: #{param.to_ruby}")
+      end
 
       def on_ignored_nl(*args)
         token = push(super)

@@ -1,0 +1,1039 @@
+Going to parse and rebuild Ruby files from the following 225 libraries:
+
+aasm, active_fulfillment, active_merchant, active_scaffold, active_shipping, acts_as_paranoid, acts_as_versioned, acts_like_git, adva_cms, ajax-rdoc, altered_beast, amqp, ansuz, archaeopteryx, arel, asset_packager, attachment_fu, authlogic, autumn, backdrop, background-fu, bacon, bdoc, beanstalkd, bluecloth, bones, braid, browsercms, bundle-fu, cache-money, cache_fu, cacheable, cached_externals, can_search, cap_gun, capistrano, cerberus, chronic, classy_resources, clearance, context, cosy, crap4r, cruisecontrol.rb, cucumber, cucumber_rails, curb, daemon-kit, daemon-spawn, daemon_controller, daemon_generator, daemons, daiquiri, delayed_job, diff-lcs, docbox, dryopteris, echoe, enki, exception_logger, exception_notification, exceptional, externals, facon, factory_girl, fast_gettext, fat_free_crm, fixture-scenarios, flay, flexmock, flog, freemium, gamebox, gembox, git_store, giternal, globalize2, god, gosu, graticule, grit, gruff, hacketyhack, haml, heckle, highline, hobix, hoe, hoptoad_notifier, hpricot, httparty, i18n, im_magick, image_science, innate, insoshi, integrity, isaac, jazztoolbox, jekyll, jeweler, ji, job_fu, less, lipsiadmin, liquid, looper, machinist, makura, markaby, matchy, mechanical_github, mephisto, merb, merb-extlib, merb-plugins, merb_cucumber, merb_dm_rest, metric_fu, midiator, midilib, mini_magick, mocha, model_translations, mongrel, moonshine, music_player, nanite, newgem, nokogiri, object_daddy, open_id_authentication, paipr, paperclip, parsetree, passenger, permalink_fu, piston, prawn, prawnto, princely, rack, rack-bug, rack-contrib, rack-test, radiant, railfrog, rails, rails-templates, rake, ramaze, rbot, rcov, rcov_plugin, rdiscount, redcloth, redis-rb, redmine, reek, Refinery, rest-client, restful-authentication, rghost, rifgraf, rip, ripper2ruby, roodi, rpeg-markdown, rr, rspec, rspec-rails, rubber, ruby-1.9.1, ruby-processing, ruby2ruby, ruby_music_projects, ruby_parser, ruby_to_c, rubygame, rubygems, rubylexer, rubyzip, ruport, sake, sanitize, sass, sdoc, seinfeld, sentry, sequel, shoes, shoulda, simple-daemon, simple-gem, sinatra, sinatra-rubygems, smqueue, spawn, spree, sprinkles, squirrel, starling, streamlined, stump, superdeploy, thin, thinking-sphinx, thor, translate, treetop, twitter, typhoeus, typo, typus, ultrasphinx, unholy, viking, vlad, webby, webrat, whenever, will_paginate, yard, zentest, zippy
+
+Will report an o if the rebuilt code is not exactly the same as the original source.
+Will report an x if the code can not be parsed by Ripper (most probably Ruby 1.9 incompatible).
+Let's go ...
+
+aasm
+.................
+active_fulfillment
+.........................
+active_merchant
+.....................................................................................................................................................................................................................................................................................
+active_scaffold
+...................................................................................................................
+active_shipping
+................x..x..................
+acts_as_paranoid
+........
+acts_as_versioned
+..........
+acts_like_git
+...............
+adva_cms
+.......................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................x..............................................................................................................................................................................................................................................................................................................................................................................
+ajax-rdoc
+..
+altered_beast
+....................................................x.........................
+amqp
+....................................
+ansuz
+.................................................................................x....................................
+archaeopteryx
+............................................
+arel
+............................................................................................................................
+asset_packager
+........
+attachment_fu
+..............................
+authlogic
+............................................................................................................
+autumn
+............................
+backdrop
+.............
+background-fu
+................
+bacon
+.......
+bdoc
+...
+beanstalkd
+
+bluecloth
+............
+bones
+..................
+braid
+..................
+browsercms
+.......................................................................................................................................................................................................................
+bundle-fu
+..............
+cache-money
+.............................
+cache_fu
+....................
+cacheable
+.......
+cached_externals
+.
+can_search
+.........
+cap_gun
+.......
+capistrano
+................................................................................................
+cerberus
+..................................................
+chronic
+................................................
+classy_resources
+..........x..
+clearance
+.....................................................
+context
+....................
+cosy
+.....................x..
+crap4r
+
+cruisecontrol.rb
+..................x............................x.....................................................................................
+cucumber
+.........................................................................................................................................................................................................
+cucumber_rails
+.............................
+curb
+................
+daemon-kit
+..........................................................................
+daemon-spawn
+...
+daemon_controller
+.....
+daemon_generator
+...
+daemons
+..............................
+daiquiri
+......x.
+delayed_job
+...........
+diff-lcs
+......e..
+docbox
+..................................................................................................
+dryopteris
+...........
+echoe
+......
+enki
+..........................................................................................................
+exception_logger
+......xx..
+exception_notification
+......
+exceptional
+....................
+externals
+.......................
+facon
+.............
+factory_girl
+.....................................
+fast_gettext
+.....................................
+fat_free_crm
+.x..............................................................................................................................................................................................................
+fixture-scenarios
+.....
+flay
+.....
+flexmock
+................................................
+flog
+.....................
+freemium
+....x.....................
+gamebox
+...............................................................................................................................
+gembox
+.........
+git_store
+...............
+giternal
+............
+globalize2
+...............................
+god
+..............................................................................................
+gosu
+..................................
+graticule
+......................................
+grit
+.................................................................
+gruff
+.................................................
+hacketyhack
+.....................xx..x............................
+haml
+.........................................................................
+heckle
+.......
+highline
+......................
+hobix
+......................................................
+hoe
+..............
+hoptoad_notifier
+............
+hpricot
+........................
+httparty
+............................
+i18n
+..................
+im_magick
+..........................
+image_science
+...
+innate
+.........................................................................................
+insoshi
+............................................................................................................................................................................................
+integrity
+.........................................................
+isaac
+...........
+jazztoolbox
+..............................................................................................
+jekyll
+..............................
+jeweler
+..............................................................................
+ji
+..
+job_fu
+..................
+less
+........
+lipsiadmin
+...................................................................................
+liquid
+..............x.........x............x..............................
+looper
+.
+machinist
+.............
+makura
+.............
+markaby
+...............
+matchy
+............................
+mechanical_github
+........
+mephisto
+..............................................................................................................................................................................................................................................................................................
+merb
+.....................................................................................................................................................x....................x......................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................x......................x..............................................................................x...............................................................................................................................................................................x....................................................................................x.................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+merb-extlib
+....................
+merb-plugins
+.....................................................................................
+merb_cucumber
+.................
+merb_dm_rest
+.......................
+metric_fu
+..................................
+midiator
+...........................
+midilib
+...........................
+mini_magick
+.....
+mocha
+......................................................................................................................................................................
+model_translations
+....
+mongrel
+...........................................x.............................
+moonshine
+..........................
+music_player
+............
+nanite
+........................................................................
+newgem
+......................................................
+nokogiri
+.....................................................................................................................................e......................e.....
+object_daddy
+......
+open_id_authentication
+...............
+paipr
+...............................................................
+paperclip
+................................
+parsetree
+..........
+passenger
+...........................................................................................................
+permalink_fu
+...
+piston
+......................................................................
+prawn
+......................................................x...............................e......
+prawnto
+.............
+princely
+...
+rack
+.............................................................................................
+rack-bug
+.........................................
+rack-contrib
+......................................................
+rack-test
+..............
+radiant
+...............................................................................................................................................................................................................x........................................
+railfrog
+......................................................
+rails
+..........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+rails-templates
+.........
+rake
+...........................................................................................
+ramaze
+............................................................................................................................................................................o.............................................................................................................................................
+rbot
+..............x.................................x...............................x.........................................
+rcov
+................................
+rcov_plugin
+
+rdiscount
+......
+redcloth
+..............................
+redis-rb
+................
+redmine
+......................................................................................................................................................................................................................................................................................................................................................................................................................................................
+reek
+........................................................................
+Refinery
+...........
+rest-client
+................
+restful-authentication
+........................................
+rghost
+..x.x.........x.......................x.....xx........x.x............
+rifgraf
+.
+rip
+..........................................
+ripper2ruby
+......................................................................x.............................
+roodi
+...............................................
+rpeg-markdown
+.....
+rr
+...................................................................................................................................
+rspec
+.....................................................................................................................................................................................................................................................................................................................
+rspec-rails
+......................................................................................................
+rubber
+...................................
+ruby-1.9.1
+.................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................x...........................................................................................................................................................................................................................................................x.....x....................................................................................................
+ruby-processing
+................x............................................................................
+ruby2ruby
+..
+ruby_music_projects
+..............
+ruby_parser
+......
+ruby_to_c
+..............................
+rubygame
+...............................................................
+rubygems
+..................................................................................................x...................o............................................
+rubylexer
+.xx.....xx.x.x.xx.xx.x....x..xxxx.x...xx.x........x.....x.oo.oo.o....o....x...xxx..x....oooo.o..o..
+rubyzip
+.....................
+ruport
+........................................................
+sake
+....
+sanitize
+......
+sass
+...................
+sdoc
+........
+seinfeld
+.........
+sentry
+.................
+sequel
+......................................................................................................................................e....
+shoes
+..................................................................................................................................................................e...................
+shoulda
+......................................................................................................................................
+simple-daemon
+.....
+simple-gem
+....
+sinatra
+............................
+sinatra-rubygems
+.....
+smqueue
+..x......
+spawn
+...
+spree
+..........................................................................................................................................................................................................................................x................................................................................................................................
+sprinkles
+.......
+squirrel
+.......
+starling
+.......
+streamlined
+................................x......................................................................................................................................
+stump
+...............
+superdeploy
+........
+thin
+........................................................................
+thinking-sphinx
+.....................................................................................................................................
+thor
+..................
+translate
+.......x........
+treetop
+................................................................................
+twitter
+.........................
+typhoeus
+........................
+typo
+......x...........................................................................................................x......e...................................................................................................x....x............................................................................
+typus
+..x..xx..........x..........x.....................e.e............
+ultrasphinx
+.......x................................................................
+unholy
+..........
+viking
+..................
+vlad
+........................
+webby
+......................................................................
+webrat
+............................................................................................................................................................
+whenever
+................
+will_paginate
+..........................
+yard
+......................................................................................................................................................................
+zentest
+....................
+zippy
+....
+no problems found in aasm
+no problems found in active_fulfillment
+no problems found in active_merchant
+no problems found in active_scaffold
+
+2 problems found in active_shipping:
+active_shipping/lib/active_shipping/shipping/carriers/ups.rb:355: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+active_shipping/lib/active_shipping/shipping/package.rb:119: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+
+no problems found in acts_as_paranoid
+no problems found in acts_as_versioned
+no problems found in acts_like_git
+
+1 problems found in adva_cms:
+adva_cms/plugins/adva_cells/lib/contact_mail_form_builder.rb:14: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+
+no problems found in ajax-rdoc
+
+1 problems found in altered_beast:
+altered_beast/spec/controllers/users_controller_spec.rb:145: syntax error, unexpected ',', expecting tASSOC
+
+no problems found in amqp
+
+1 problems found in ansuz:
+ansuz/lib/ansuz/installer.rb:131: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+
+no problems found in archaeopteryx
+no problems found in arel
+no problems found in asset_packager
+no problems found in attachment_fu
+no problems found in authlogic
+no problems found in autumn
+no problems found in backdrop
+no problems found in background-fu
+no problems found in bacon
+no problems found in bdoc
+no problems found in beanstalkd
+no problems found in bluecloth
+no problems found in bones
+no problems found in braid
+no problems found in browsercms
+no problems found in bundle-fu
+no problems found in cache-money
+no problems found in cache_fu
+no problems found in cacheable
+no problems found in cached_externals
+no problems found in can_search
+no problems found in cap_gun
+no problems found in capistrano
+no problems found in cerberus
+no problems found in chronic
+
+1 problems found in classy_resources:
+classy_resources/test/sequel_errors_to_xml_test.rb:15: syntax error, unexpected $end, expecting tSTRING_CONTENT or tSTRING_DBEG or tSTRING_DVAR or tSTRING_END
+
+no problems found in clearance
+no problems found in context
+
+1 problems found in cosy:
+cosy/test/test_symbol_table.rb:16: syntax error, unexpected ',', expecting tASSOC
+
+no problems found in crap4r
+
+2 problems found in cruisecontrol.rb:
+cruisecontrol.rb/app/models/project.rb:391: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+cruisecontrol.rb/lib/commands/cruise_plugin.rb:381: syntax error, invalid parameter type: @rails_root
+
+no problems found in cucumber
+no problems found in cucumber_rails
+no problems found in curb
+no problems found in daemon-kit
+no problems found in daemon-spawn
+no problems found in daemon_controller
+no problems found in daemon_generator
+no problems found in daemons
+
+1 problems found in daiquiri:
+daiquiri/lib/daiquiri/router.rb:13: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+
+no problems found in delayed_job
+
+1 problems found in diff-lcs:
+diff-lcs/lib/diff/lcs/ldiff.rb: incompatible character encodings: ISO-8859-1 and ASCII-8BIT
+
+no problems found in docbox
+no problems found in dryopteris
+no problems found in echoe
+no problems found in enki
+
+2 problems found in exception_logger:
+exception_logger/lib/logged_exceptions_controller.rb:40: syntax error, unexpected ',', expecting ')'
+exception_logger/lib/logged_exceptions_helper.rb:9: syntax error, unexpected ',', expecting ')'
+
+no problems found in exception_notification
+no problems found in exceptional
+no problems found in externals
+no problems found in facon
+no problems found in factory_girl
+no problems found in fast_gettext
+
+1 problems found in fat_free_crm:
+fat_free_crm/app/controllers/application_controller.rb:90: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+
+no problems found in fixture-scenarios
+no problems found in flay
+no problems found in flexmock
+no problems found in flog
+
+1 problems found in freemium:
+freemium/lib/freemium.rb:24: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+
+no problems found in gamebox
+no problems found in gembox
+no problems found in git_store
+no problems found in giternal
+no problems found in globalize2
+no problems found in god
+no problems found in gosu
+no problems found in graticule
+no problems found in grit
+no problems found in gruff
+
+3 problems found in hacketyhack:
+hacketyhack/h-ety-h/sequel/database.rb:43: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+hacketyhack/h-ety-h/sequel/dataset.rb:76: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+hacketyhack/h-ety-h/sequel/schema.rb:24: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+
+no problems found in haml
+no problems found in heckle
+no problems found in highline
+no problems found in hobix
+no problems found in hoe
+no problems found in hoptoad_notifier
+no problems found in hpricot
+no problems found in httparty
+no problems found in i18n
+no problems found in im_magick
+no problems found in image_science
+no problems found in innate
+no problems found in insoshi
+no problems found in integrity
+no problems found in isaac
+no problems found in jazztoolbox
+no problems found in jekyll
+no problems found in jeweler
+no problems found in ji
+no problems found in job_fu
+no problems found in less
+no problems found in lipsiadmin
+
+3 problems found in liquid:
+liquid/lib/liquid/htmltags.rb:49: syntax error, unexpected tUMINUS_NUM, expecting keyword_do or '{' or '('
+liquid/lib/liquid/tags/for.rb:104: syntax error, unexpected tUMINUS_NUM, expecting keyword_do or '{' or '('
+liquid/performance/shopify/paginate.rb:61: syntax error, unexpected tUMINUS_NUM, expecting keyword_do or '{' or '('
+
+no problems found in looper
+no problems found in machinist
+no problems found in makura
+no problems found in markaby
+no problems found in matchy
+no problems found in mechanical_github
+no problems found in mephisto
+
+7 problems found in merb:
+merb/merb-core/experimentation/simple_benches/inflector.rb:504: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+merb/merb-core/experimentation/simple_benches/throw.rb:13: syntax error, unexpected tDOT3, expecting ')'
+merb/merb-core/spec10/public/webrat/test_app/gems/gems/erubis-2.6.2/lib/erubis/helpers/rails_form_helper.rb:127: syntax error, unexpected ':', expecting keyword_do_cond or ';' or '\n'
+merb/merb-core/spec10/public/webrat/test_app/gems/gems/erubis-2.6.2/test/hoge.rb:1: syntax error, unexpected '<'
+merb/merb-core/spec10/public/webrat/test_app/gems/gems/merb-core-0.9.14/lib/merb-core/controller/abstract_controller.rb:417: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+merb/merb-core/spec10/public/webrat/test_app/gems/gems/mongrel-1.1.5/lib/mongrel/handlers.rb:208: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+merb/merb-core/spec10/public/webrat/test_app/gems/gems/rack-0.4.0/test/spec_rack_response.rb:85: syntax error, unexpected ',', expecting tASSOC
+
+no problems found in merb-extlib
+no problems found in merb-plugins
+no problems found in merb_cucumber
+no problems found in merb_dm_rest
+no problems found in metric_fu
+no problems found in midiator
+no problems found in midilib
+no problems found in mini_magick
+no problems found in mocha
+no problems found in model_translations
+
+1 problems found in mongrel:
+mongrel/projects/mongrel_config/lib/mongrel_config/app.rb:108: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+
+no problems found in moonshine
+no problems found in music_player
+no problems found in nanite
+no problems found in newgem
+
+2 problems found in nokogiri:
+nokogiri/test/test_reader.rb: incompatible character encodings: UTF-8 and ASCII-8BIT
+nokogiri/test/xml/test_reader_encoding.rb: incompatible character encodings: UTF-8 and ASCII-8BIT
+
+no problems found in object_daddy
+no problems found in open_id_authentication
+no problems found in paipr
+no problems found in paperclip
+no problems found in parsetree
+no problems found in passenger
+no problems found in permalink_fu
+no problems found in piston
+
+2 problems found in prawn:
+prawn/lib/prawn/document/span.rb:36: syntax error, unexpected tREGEXP_BEG, expecting keyword_do or '{' or '('
+prawn/spec/pdf_object_spec.rb: incompatible character encodings: UTF-8 and ASCII-8BIT
+
+no problems found in prawnto
+no problems found in princely
+no problems found in rack
+no problems found in rack-bug
+no problems found in rack-contrib
+no problems found in rack-test
+
+1 problems found in radiant:
+radiant/spec/matchers/render_matcher.rb:17: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+
+no problems found in railfrog
+no problems found in rails
+no problems found in rails-templates
+no problems found in rake
+
+1 problems found in ramaze:
+ramaze/lib/ramaze/snippets/fiber.rb
+result differs from source:
+
+@@ -46,19 +46,4 @@
+   p f.resume(2)
+ end
+ 
+-__END__
+-
+-$ ruby fbr.rb 
+-hi
+-1
+-2
+-bye
+-:done
+-
+-$ ruby1.9 fbr.rb 
+-hi
+-1
+-2
+-bye
+-:done
+
+
+3 problems found in rbot:
+rbot/data/rbot/plugins/delicious.rb:81: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+rbot/data/rbot/plugins/markov.rb:391: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+rbot/data/rbot/plugins/weather.rb:38: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+
+no problems found in rcov
+no problems found in rcov_plugin
+no problems found in rdiscount
+no problems found in redcloth
+no problems found in redis-rb
+no problems found in redmine
+no problems found in reek
+no problems found in Refinery
+no problems found in rest-client
+no problems found in restful-authentication
+
+8 problems found in rghost:
+rghost/lib/rghost/callback.rb:48: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+rghost/lib/rghost/color.rb:38: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+rghost/lib/rghost/font.rb:37: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+rghost/lib/rghost/image.rb:16: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+rghost/lib/rghost/paper.rb:90: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+rghost/lib/rghost/parse_text.rb:8: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+rghost/lib/rghost/ruby_ghost_engine.rb:57: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+rghost/lib/rghost/ruby_to_ps.rb:42: syntax error, unexpected tLABEL
+
+no problems found in rifgraf
+no problems found in rip
+
+1 problems found in ripper2ruby:
+ripper2ruby/test/fixtures/tmp.rb:3: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+
+no problems found in roodi
+no problems found in rpeg-markdown
+no problems found in rr
+no problems found in rspec
+no problems found in rspec-rails
+no problems found in rubber
+
+3 problems found in ruby-1.9.1:
+ruby-1.9.1/tk/namespace.rb:267: syntax error, unexpected tUPLUS, expecting keyword_do or '{' or '('
+ruby-1.9.1/tkextlib/tktable/tktable.rb:790: syntax error, unexpected tLBRACK, expecting keyword_do or '{' or '('
+ruby-1.9.1/tkextlib/treectrl/tktreectrl.rb:1250: syntax error, unexpected tSTAR, expecting keyword_do or '{' or '('
+
+
+1 problems found in ruby-processing:
+ruby-processing/samples/bezier_playground.rb:186: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+
+no problems found in ruby2ruby
+no problems found in ruby_music_projects
+no problems found in ruby_parser
+no problems found in ruby_to_c
+no problems found in rubygame
+
+2 problems found in rubygems:
+rubygems/test/simple_gem.rb:7: syntax error, unexpected $end, expecting tSTRING_CONTENT or tSTRING_DBEG or tSTRING_DVAR or tSTRING_END
+rubygems/test/test_gem_commands_query_command.rb
+result differs from source:
+
+@@ -340,7 +340,7 @@
+     end
+ 
+     expected = <<-EOF
+-a (3.a, 2, 1)
++ %w[]a (3.a, 2, 1)
+ a_evil (9)
+ b (2)
+ c (1.2)
+
+
+39 problems found in rubylexer:
+rubylexer/lib/rubylexer.rb:387: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+rubylexer/lib/rubylexer/0.6.2.rb:31: syntax error, unexpected tIDENTIFIER, expecting '}'
+rubylexer/lib/rubylexer/context.rb:286: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+rubylexer/lib/rubylexer/lextable.rb:61: syntax error, unexpected ']', expecting keyword_end
+rubylexer/lib/rubylexer/rulexer.rb:242: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+rubylexer/lib/rubylexer/test/illegal_oneliners.rb:1: syntax error, unexpected ',', expecting ')'
+rubylexer/lib/rubylexer/test/oneliners.rb:13: numeric literal without digits
+rubylexer/lib/rubylexer/test/stanzas.rb:199: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+rubylexer/lib/rubylexer/token.rb:258: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+rubylexer/lib/rubylexer/tokenprinter.rb:90: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+rubylexer/test/code/all_the_gems.rb:30: syntax error, unexpected ':', expecting keyword_then or ';' or '\n'
+rubylexer/test/code/isolate_error.rb:34: syntax error, unexpected ':', expecting keyword_then or ';' or '\n'
+rubylexer/test/code/rubylexervsruby.rb:197: syntax error, unexpected ':', expecting keyword_then or ';' or '\n'
+rubylexer/test/code/strgen.rb:28: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+rubylexer/test/code/tarball.rb:81: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+rubylexer/test/code/tokentest.rb:69: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+rubylexer/test/data/23.rb:2: syntax error, unexpected ':', expecting keyword_then or ';' or '\n'
+rubylexer/test/data/__eof5.rb:1: syntax error, unexpected $undefined, expecting $end
+rubylexer/test/data/__eof6.rb:1: syntax error, unexpected $undefined, expecting $end
+rubylexer/test/data/blockassigntest.rb:12: syntax error, unexpected '=', expecting '|'
+rubylexer/test/data/g.rb:1: syntax error, unexpected tCHAR, expecting keyword_do or '{' or '('
+rubylexer/test/data/hdr_dos2.rb:1: syntax error, unexpected tINTEGER, expecting $end
+rubylexer/test/data/here_escnl.rb
+result differs from source:
+
+
+
+
+@@ -1,13 +1,13 @@
+ p(<<stuff+'foobar')\
++
+ +"more stuff"
+ some stuff
+ stuff
+-
+ p <<stuff+'foobar'\
++
+ +"more stuff"
+ some stuff
+ stuff
+-
+ p <<stuff+'foobar'+
+ some stuff
+ stuff
+rubylexer/test/data/here_escnl_dos.rb
+result differs from source:
+
+
+@@ -1,8 +1,8 @@
+ p <<stuff+'foobar'\
++
+ +"more stuff"
+ some stuff
+ stuff
+-
+ p <<stuff+'foobar'+
+ some stuff
+ stuff
+rubylexer/test/data/heremonsters.rb
+result differs from source:
+
+
+@@ -53,11 +53,11 @@
+ end
+ 
+ p <<stuff+'foobar'.tr('j-l','d-f')\
++
+ +"more stuff"
+ 12345678
+ the quick brown fox jumped over the lazy dog
+ stuff
+-
+ p <<simple1
+ foo
+ bar
+rubylexer/test/data/heremonsters_dos.rb
+result differs from source:
+
+
+@@ -53,11 +53,11 @@
+ end
+ 
+ p <<stuff+'foobar'.tr('j-l','d-f')\
++
+ +"more stuff"
+ 12345678
+ the quick brown fox jumped over the lazy dog
+ stuff
+-
+ p <<simple1
+ foo
+ bar
+rubylexer/test/data/jarh.rb
+result differs from source:
+
+@@ -310,7 +310,7 @@
+ 
+ begin print 'Just another Ruby hacker,' end while false
+ 
+-begin rescue then else print 'Just another Ruby hacker,' end
++begin rescue else print 'Just another Ruby hacker,' end
+ 
+ print //.match('Just another Ruby hacker,').string
+ 
+rubylexer/test/data/migration.rb
+result differs from source:
+
+@@ -3,8943 +3,4 @@
+ E
+-__END__
+...
+-END_OF_DATA
+-  end  
+-end
+rubylexer/test/data/newsyntax.rb:11: syntax error, unexpected ';', expecting ')'
+rubylexer/test/data/pleac.rb:1368: syntax error, unexpected ',', expecting tASSOC
+rubylexer/test/data/pre.rb:10: syntax error, invalid parameter type: $_
+rubylexer/test/data/pre.unix.rb:10: syntax error, invalid parameter type: $_
+rubylexer/test/data/s.rb:67: syntax error, unexpected tIDENTIFIER, expecting keyword_end
+rubylexer/test/data/stuff.rb
+result differs from source:
+
+@@ -1,6 +1,2 @@
+ p <<stuff+'foobar'.tr('j-l','d-f')\
+-+"more stuff"
+-12345678
+-the quick brown fox jumped over the lazy dog
+-stuff
+rubylexer/test/data/stuff2.rb
+result differs from source:
+
+@@ -1,6 +1,2 @@
+ p <<stuff+'foobar'.tr('j-l','d-f')\
+-+"more stuff"
+-12345678
+-the quick brown fox jumped over the lazy dog
+-stuff
+rubylexer/test/data/stuff3.rb
+result differs from source:
+
+@@ -1,7 +1,3 @@
+ p <<stuff+'foobar'.tr('j-l','d-f')\
+-+"more stuff"
+-12345678
+-the quick brown fox jumped over the lazy dog
+-stuff
+ +"even more"
+rubylexer/test/data/stuff4.rb
+result differs from source:
+
+@@ -1,7 +1,3 @@
+ p <<stuff+'foobar'.tr('j-l','d-f')\
+-+"more stuff"
+-12345678
+-the quick brown fox jumped over the lazy dog
+-stuff
+ +"even more"
+rubylexer/test/data/unending_stuff.rb
+result differs from source:
+
+@@ -1,6 +1,2 @@
+ p <<stuff+'foobar'.tr('j-l','d-f')\
+-+"more stuff"
+-12345678
+-the quick brown fox jumped over the lazy dog
+-stuff
+rubylexer/test/data/whatnot.rb
+result differs from source:
+
+
+@@ -1,9 +1,9 @@
+ aaa=<<whatnot; p "#{'uh,yeah'
++}"
+ gonna take it down, to the nitty-grit
+ gonna tell you mother-fuckers why you ain't shit
+ cause suckers like you just make me strong
+ you been pumpin' that bullshit all day long
+ whatnot
+-}"
+ p aaa
+
+no problems found in rubyzip
+no problems found in ruport
+no problems found in sake
+no problems found in sanitize
+no problems found in sass
+no problems found in sdoc
+no problems found in seinfeld
+no problems found in sentry
+
+1 problems found in sequel:
+sequel/spec/model/plugins_spec.rb: undefined method `to_identifier' for nil:NilClass
+
+
+1 problems found in shoes:
+shoes/samples/simple-accordion.rb: incompatible character encodings: UTF-8 and ASCII-8BIT
+
+no problems found in shoulda
+no problems found in simple-daemon
+no problems found in simple-gem
+no problems found in sinatra
+no problems found in sinatra-rubygems
+
+1 problems found in smqueue:
+smqueue/lib/rstomp.rb:533: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+
+no problems found in spawn
+
+1 problems found in spree:
+spree/lib/commands/extension.rb:145: syntax error, invalid parameter type: @spree_root
+
+no problems found in sprinkles
+no problems found in squirrel
+no problems found in starling
+
+1 problems found in streamlined:
+streamlined/lib/streamlined/controller/crud_methods.rb:61: syntax error, unexpected ',', expecting tASSOC
+
+no problems found in stump
+no problems found in superdeploy
+no problems found in thin
+no problems found in thinking-sphinx
+no problems found in thor
+
+1 problems found in translate:
+translate/lib/translate_controller.rb:73: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+
+no problems found in treetop
+no problems found in twitter
+no problems found in typhoeus
+
+5 problems found in typo:
+typo/app/controllers/admin/blacklist_controller.rb:11: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+typo/db/converters/mt3.rb:165: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+typo/db/migrate/004_add_sidebars.rb: incompatible character encodings: UTF-8 and ASCII-8BIT
+typo/lib/rails_patch/active_record.rb:5: syntax error, unexpected tSTAR, expecting ')'
+typo/lib/spam_protection.rb:19: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+
+
+7 problems found in typus:
+typus/app/helpers/admin/form_helper.rb:18: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+typus/app/helpers/admin/sidebar_helper.rb:126: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+typus/app/helpers/admin/table_helper.rb:21: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+typus/lib/typus/active_record.rb:48: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+typus/lib/typus/user.rb:76: syntax error, unexpected ':', expecting keyword_then or ',' or ';' or '\n'
+typus/test/helpers/admin/sidebar_helper_test.rb: incompatible character encodings: UTF-8 and ASCII-8BIT
+typus/test/helpers/typus_helper_test.rb: incompatible character encodings: UTF-8 and ASCII-8BIT
+
+
+1 problems found in ultrasphinx:
+ultrasphinx/lib/ultrasphinx/configure.rb:258: syntax error, unexpected tLBRACK, expecting keyword_do or '{' or '('
+
+no problems found in unholy
+no problems found in viking
+no problems found in vlad
+no problems found in webby
+no problems found in webrat
+no problems found in whenever
+no problems found in will_paginate
+no problems found in yard
+no problems found in zentest
+no problems found in zippy

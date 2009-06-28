@@ -2,6 +2,11 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class BlockTest < Test::Unit::TestCase
   include TestHelper
+  
+  define_method :"test a block with an invalid param" do
+    src = 'foo { |@a| }'
+    assert_raises(Ripper::RubyBuilder::ParseError) { build(src) }
+  end
 
   define_method :"test method call block with 2 statements (newline delimited)" do
     src = "t do\nfoo\nbar\nend"
@@ -38,12 +43,12 @@ class BlockTest < Test::Unit::TestCase
     assert_node(src)
   end
   
-  define_method :"test: method call do_block with a block_arg" do
+  define_method :"test: method call do_block with a block_param" do
     src = "t do |*a, &c| end"
     assert_node(src)
   end
   
-  define_method :"test: an empty method call brace_block w/ arg and parenthesed arg" do
+  define_method :"test: an empty method call brace_block w/ arg and parenthesed param" do
     src = 't {|a, (b)| }'
     assert_node(src)
   end
@@ -60,6 +65,11 @@ class BlockTest < Test::Unit::TestCase
   
   define_method :"test: a begin foo; end block" do
     src = "begin foo; end"
+    assert_node(src)
+  end
+  
+  define_method :"test: a begin block with an else block" do
+    src = "begin\nfoo\nelse\nbar\nend"
     assert_node(src)
   end
   

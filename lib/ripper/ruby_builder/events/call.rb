@@ -6,12 +6,14 @@ class Ripper
       end
 
       def on_command_call(target, separator, identifier, args)
+        # happens for identifiers that are operators, e.g. a.<<(foo)
+        identifier = pop_identifier(identifier.type) if identifier.try(:known?)
         separator = pop_token(:@period, :"@::")
         Ruby::Call.new(target, separator, identifier, args)
       end
 
       def on_call(target, separator, identifier)
-        # happens for symbols that are also keywords, e.g. :if
+        # happens for identifiers that are also keywords, e.g. :if
         identifier = pop_identifier(identifier.type) if identifier.try(:known?)
         separator = pop_token(:@period, :"@::", :left => target, :right => identifier)
         Ruby::Call.new(target, separator, identifier)
