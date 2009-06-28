@@ -35,7 +35,6 @@ module LibTestHelper
   def read_src(filename, lib = nil)
     src = read_file(filename)
     src = strip_erb(src) if lib && erb?(lib, filename)
-    src = src.split(/^__END__$/).first
     src || ''
   end
 

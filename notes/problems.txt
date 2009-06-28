@@ -1,3 +1,9 @@
+typo (active_record.rb:5)
+
+	self.find(find_type, :conditions => ["#{field} = ?", value], *options)
+	syntax error, unexpected tSTAR, expecting ')'
+
+
 Do not use colons to separate if/unless/when conditions from expressions:
 
 	# e.g. adva_cms, ansuz, cruisecontrol, freemium, merb, paperclip, radiant, 
