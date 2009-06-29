@@ -11,11 +11,9 @@ module Ruby
     attr_writer :src
 
     def initialize(src, filename, statements, end_data)
-      # end_data.init(src) if end_data
-      
       self.src = src
-      self.filename = filename
-      self.end_data = end_data
+      self.filename = filename if filename
+      self.end_data = end_data if end_data
       super(statements)
     end
     
@@ -26,7 +24,7 @@ module Ruby
     end
     
     def nodes
-      super << end_data
+      [super, end_data].flatten.compact
     end
     
     # TODO replace this with Clip?
