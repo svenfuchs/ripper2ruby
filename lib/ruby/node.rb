@@ -2,6 +2,7 @@ require 'core_ext/object/meta_class'
 require 'core_ext/object/try'
 require 'ruby/node/composite'
 require 'ruby/node/source'
+require 'ruby/node/traversal'
 require 'ruby/node/conversions'
 
 module Ruby
@@ -9,6 +10,7 @@ module Ruby
     include Comparable
     include Composite
     include Source
+    include Traversal
     include Conversions::Node
     
     def row
@@ -32,7 +34,6 @@ module Ruby
     end
     
     protected
-
       def update_positions(row, column, offset_column)
         pos = self.position
         pos[1] += offset_column if pos && self.row == row && self.column > column
