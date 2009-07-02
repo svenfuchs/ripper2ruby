@@ -4,16 +4,19 @@ module Ruby
       def select(*args)
         result = []
         result << self if matches?(args.dup) || block_given? && yield(self)
-        nodes.inject(result) { |result, node| result + node.select(*args) }
+        children = (prolog.try(:elements).to_a || []) + nodes
+        children.flatten.compact.inject(result) { |result, node| result + node.select(*args) }
       end
 
       def matches?(args)
         conditions = args.last.is_a?(::Hash) ? args.pop : {}
-        conditions[:type] = args unless args.empty?
+        conditions[:is_a] = args unless args.empty?
         conditions.inject(true) do |result, (type, value)|
           result && case type
-          when :type
+          when :is_a
             has_type?(value)
+          when :class
+            is_instance_of?(value)
           when :token
             has_token?(value)
           when :value
@@ -28,32 +31,35 @@ module Ruby
         end
       end
 
-      def has_type?(type)
-        case type
+      def has_type?(klass)
+        case klass
         when ::Array
-          type.each { |type| return true if is_a?(type) }
-          false
+          klass.each { |klass| return true if has_type?(klass) } and false
         else
-          is_a?(type) # allow to pass a symbol or string, too
+          is_a?(klass) # allow to pass a symbol or string, too
+        end 
+      end
+      
+      def is_instance_of?(klass)
+        case klass
+        when ::Array
+          klass.each { |klass| return true if has_type?(klass) } and false
+        else
+          instance_of?(klass) # allow to pass a symbol or string, too
         end 
       end
 
       def has_token?(token)
         case token
         when ::Array
-          token.include?(self.token)
+          type.each { |type| return true if has_token?(token) } and false
         else
-          self.token == token 
+          self.token == token
         end if respond_to?(:token)
       end
 
       def has_value?(value)
-        case value
-        when ::Array
-          value.include?(self.value)
-        else
-          self.value == value 
-        end if respond_to?(:value)
+        self.value == value if respond_to?(:value)
       end
       
       def position?(pos)

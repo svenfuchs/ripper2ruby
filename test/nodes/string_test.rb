@@ -4,7 +4,7 @@ class StringTest < Test::Unit::TestCase
   include TestHelper
   
   def assert_string(src, value = nil, klass = Ruby::String)
-    assert_node(src) do |node|
+    assert_build(src) do |node|
       assert_equal klass, node.first.class
       assert_equal value, node.first.value if value
     end
@@ -52,41 +52,41 @@ class StringTest < Test::Unit::TestCase
   
   define_method :"test a percent-parentheses delimited string after a word-list" do
     src = "%w(a)\n%(b)"
-    assert_node(src)
+    assert_build(src)
   end
   
   define_method :"test a backtick delimited string" do
     src = "`foo`"
-    assert_node(src)
+    assert_build(src)
   end
   
   define_method :"test a percent-x delimited string" do
     src = "%x(foo)"
-    assert_node(src)
+    assert_build(src)
   end
   
   define_method :"test a slash delimited regexp" do
     src = "/foo/"
-    assert_node(src)
+    assert_build(src)
   end
   
   define_method :"test a percent-r delimited regexp" do
     src = "%r(foo)"
-    assert_node(src)
+    assert_build(src)
   end
   
   define_method :"test a string with a backreference" do
     src = '"#{$1}"'
-    assert_node(src)
+    assert_build(src)
   end
   
   define_method :"test a string with a dvar" do
     src = '"#$0"'
-    assert_node(src)
+    assert_build(src)
   end
   
   define_method :'test string concat' do
     src = "'a' 'b'"
-    assert_node(src)
+    assert_build(src)
   end
 end

@@ -1,6 +1,3 @@
-http://gist.github.com/137398
-http://gist.github.com/137401
-
 Do not use colons to separate if/unless/when conditions from expressions:
 
   # e.g. adva_cms, ansuz, cruisecontrol, freemium, merb, paperclip, radiant, 

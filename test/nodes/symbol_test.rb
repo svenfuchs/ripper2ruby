@@ -4,7 +4,7 @@ class SymbolTest < Test::Unit::TestCase
   include TestHelper
 
   def assert_symbol(src, value = nil, klass = Ruby::Symbol)
-    assert_node(src) do |node|
+    assert_build(src) do |node|
       assert_equal klass, node.first.class
       assert_equal value, node.first.value if value
     end

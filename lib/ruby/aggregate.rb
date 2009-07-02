@@ -43,4 +43,29 @@ module Ruby
       super(ldelim, rdelim)
     end
   end
+
+  require 'ruby/token'
+  class Variable < Token # TODO join with DelimitedVariable
+  end
+  
+  class DelimitedVariable < DelimitedAggregate
+    child_accessor :identifier
+    
+    def initialize(identifier, ldelim = nil)
+      self.identifier = identifier
+      super(ldelim)
+    end
+    
+    def value
+      identifier.token.to_sym
+    end
+    
+    def nodes
+      [ldelim, identifier].compact
+    end
+
+    def method_missing(method, *args, &block)
+      identifier.respond_to?(method) ? identifier.send(method, *args, &block) : super
+    end
+  end
 end

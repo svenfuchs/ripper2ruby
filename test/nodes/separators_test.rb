@@ -5,12 +5,12 @@ class SeparatorsTest < Test::Unit::TestCase
 
   define_method :"test separators in method definition (1)" do
     src = "def foo\n  ;bar\nend"
-    assert_node(src)
+    assert_build(src)
   end
 
   define_method :"test separators in method definition (2)" do
     src = "def foo;\nend"
-    assert_node(src)
+    assert_build(src)
   end
 end
 

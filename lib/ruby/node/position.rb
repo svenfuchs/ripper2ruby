@@ -19,8 +19,9 @@ module Ruby
       end
       
       def ==(other)
-        to_a == other
+        to_a == other.to_a
       end
+      alias eql? ==
       
       def to_a
         [row, col]

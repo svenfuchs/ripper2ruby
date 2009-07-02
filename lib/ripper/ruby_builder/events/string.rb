@@ -85,7 +85,7 @@ class Ripper
       end
 
       def on_string_dvar(variable)
-        variable = Ruby::DelimitedVariable.new(variable)
+        variable = Ruby::DelimitedVariable.new(variable.to_identifier)
         ldelim = pop_token(:@embvar)
         variable.ldelim = ldelim
         variable

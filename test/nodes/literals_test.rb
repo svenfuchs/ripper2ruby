@@ -5,42 +5,42 @@ class LiteralsTest < Test::Unit::TestCase
 
   define_method :"test an integer" do
     src = '1'
-    assert_node(src) do |node|
+    assert_build(src) do |node|
       assert_equal Ruby::Integer, node.first.class
     end
   end
 
   define_method :"test a float" do
     src = '1.1'
-    assert_node(src) do |node|
+    assert_build(src) do |node|
       assert_equal Ruby::Float, node.first.class
     end
   end
 
   define_method :"test nil" do
     src = 'nil'
-    assert_node(src) do |node|
+    assert_build(src) do |node|
       assert_equal Ruby::Nil, node.first.class
     end
   end
 
   define_method :"test true" do
     src = 'true'
-    assert_node(src) do |node|
+    assert_build(src) do |node|
       assert_equal Ruby::True, node.first.class
     end
   end
 
   define_method :"test false" do
     src = 'false'
-    assert_node(src) do |node|
+    assert_build(src) do |node|
       assert_equal Ruby::False, node.first.class
     end
   end
 
   define_method :"test range (..)" do
     src = '1..2'
-    assert_node(src) do |node|
+    assert_build(src) do |node|
       assert_equal Ruby::Range, node.first.class
     end
   end

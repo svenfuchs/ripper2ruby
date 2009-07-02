@@ -9,7 +9,7 @@ class HashTest < Test::Unit::TestCase
 
   define_method :'test a hash: { :foo => :bar }' do
     src = '{ :foo => :bar }'
-    assert_node(src) do |node|
+    assert_build(src) do |node|
       assert_equal Ruby::Hash, node.first.class
       assert_equal({ :foo => :bar }, node.first.value)
     end
@@ -17,7 +17,7 @@ class HashTest < Test::Unit::TestCase
 
   define_method :'test a nested hash: { :a => { :b => { :b => :c, }, }, } (w/ dangling commas)' do
     src = '{ :a => { :b => { :b => :c, }, }, }'
-    assert_node(src) do |node|
+    assert_build(src) do |node|
       assert_equal Ruby::Hash, node.first.class
       assert_equal({ :a => { :b => { :b => :c } } }, node.first.value)
     end
@@ -25,32 +25,32 @@ class HashTest < Test::Unit::TestCase
   
   define_method :'test a bare nested hash: t(:a => { :b => :b, :c => { :d => :d } })' do
     src = 't(:a => { :b => :b, :c => { :d => :d } })'
-    assert_node(src)
+    assert_build(src)
   end
   
   define_method :'test a hash: { :if => :delete } (symbol that is a keyword)' do
     src = "{ :if => :foo }"
-    assert_node(src)
+    assert_build(src)
   end
   
   define_method :'test a hash: { :if => :delete } (symbol that is a keyword)' do
     src = '{ :a => :a, :b => "#{b 1}" }'
-    assert_node(src)
+    assert_build(src)
   end
   
   define_method :'test a hash: { foo: bar } (Ruby 1.9 labels)' do
     src = "{ foo: bar }"
-    assert_node(src)
+    assert_build(src)
   end
   
   define_method :'test a bare hash: t(:foo => :bar)' do
     src = 't(:a => :a, :b => :b)'
-    assert_node(src)
+    assert_build(src)
   end
   
   define_method :'test hash assignment' do
     src = "foo[:bar] = :baz"
-    assert_node(src)
+    assert_build(src)
   end
   
   define_method :'test hash length: with and without whitespace' do

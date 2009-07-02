@@ -5,19 +5,19 @@ class AssignmentTest < Test::Unit::TestCase
 
   define_method :'test assignment: a = b' do
     src = 'a = b'
-    assert_node(src) do |node|
+    assert_build(src) do |node|
       assert_equal Ruby::Assignment, node.first.class
     end
   end
   
   define_method :'test assignment: a ||= b' do
     src = 'a ||= b'
-    assert_node(src)
+    assert_build(src)
   end
   
   define_method :'test assignment: a, b = c' do
     src = 'a, b = c'
-    assert_node(src) do |node|
+    assert_build(src) do |node|
       assert_equal Ruby::Assignment, node.first.class
       assert_equal Ruby::MultiAssignment, node.first.left.class
     end
@@ -25,7 +25,7 @@ class AssignmentTest < Test::Unit::TestCase
   
   define_method :'test assignment: a, b = c, d' do
     src = 'a, b = c, d'
-    assert_node(src) do |node|
+    assert_build(src) do |node|
       assert_equal Ruby::Assignment, node.first.class
       assert_equal Ruby::MultiAssignment, node.first.left.class
       assert_equal Ruby::MultiAssignment, node.first.right.class
@@ -34,16 +34,16 @@ class AssignmentTest < Test::Unit::TestCase
   
   define_method :'test assignment: a, *b = c' do
     src = 'a, *b = c'
-    assert_node(src)
+    assert_build(src)
   end
   
   define_method :'test assignment: a, b = *c' do
     src = 'a, b = *c'
-    assert_node(src)
+    assert_build(src)
   end
   
   define_method :'test assignment to namespaced const: A::B = 1' do
     src = 'A::B = 1'
-    assert_node(src)
+    assert_build(src)
   end
 end

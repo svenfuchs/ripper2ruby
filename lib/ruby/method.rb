@@ -2,7 +2,7 @@ require 'ruby/node'
 
 module Ruby
   class Method < NamedAggregate
-    child_accessor :target, :separator, :params, :block
+    child_accessor :target, :separator, :params, :block # TODO rename block to body
 
     def initialize(target, separator, identifier, params, block, ldelim, rdelim)
       self.target = target

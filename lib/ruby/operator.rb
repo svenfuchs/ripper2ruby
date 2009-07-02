@@ -14,7 +14,7 @@ module Ruby
     end
     
     def nodes
-      [operator, ldelim, operand, rdelim]
+      [operator, ldelim, operand, rdelim].compact
     end
   end
   
@@ -28,7 +28,7 @@ module Ruby
     end
     
     def nodes
-      [left, operator, right]
+      [left, operator, right].compact
     end
   end
   

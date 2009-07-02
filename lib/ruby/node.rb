@@ -11,7 +11,7 @@ module Ruby
     include Composite
     include Source
     include Traversal
-    include Conversions::Node
+    include Conversions
     
     def row
       position[0]
@@ -29,6 +29,10 @@ module Ruby
       []
     end
     
+    def all_nodes
+      nodes + nodes.map { |node| node.all_nodes }.flatten
+    end
+    
     def <=>(other)
       position <=> (other.respond_to?(:position) ? other.position : other)
     end
@@ -36,7 +40,7 @@ module Ruby
     protected
       def update_positions(row, column, offset_column)
         pos = self.position
-        pos[1] += offset_column if pos && self.row == row && self.column > column
+        pos.col += offset_column if pos && self.row == row && self.column > column
         nodes.each { |c| c.send(:update_positions, row, column, offset_column) }
       end
   end

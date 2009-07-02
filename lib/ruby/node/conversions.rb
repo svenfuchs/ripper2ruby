@@ -5,6 +5,13 @@ module Ruby
         target.send(:extend, ClassMethods)
       end
     end
+
+    def to_node(node, position, prolog)
+      node = self.class.from_native(node) unless node.is_a?(Node)
+      node.position = position
+      node.prolog = prolog
+      node
+    end
     
     module ClassMethods
       def from_native(object, position = nil, prolog = nil)
@@ -19,15 +26,6 @@ module Ruby
       end
     end
     
-    module Node
-      def to_node(node, position, prolog)
-        node = from_native(node) unless node.is_a?(Node)
-        node.position = position
-        node.prolog = prolog
-        node
-      end
-    end
-
     module Token
       def to_identifier
         Identifier.new(token, position, prolog)
