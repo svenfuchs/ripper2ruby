@@ -7,6 +7,8 @@ require 'core_ext/array/flush'
 require 'ripper/ruby_builder/token'
 require 'ripper/ruby_builder/stack'
 
+require 'erb/stripper'
+
 Dir[File.dirname(__FILE__) + '/ruby_builder/events/*.rb'].each { |file| require file }
 
 # Ripper::RubyBuilder extends Ripper's SexpBuilder and builds a rich, object
@@ -25,9 +27,15 @@ class Ripper
     class ParseError < RuntimeError
     end
 
+    @@filters = [lambda { |src, file| file && File.extname(file) == '.erb' ? Erb::Stripper.new.to_ruby(src) : src }]
+
     class << self
       def build(src, filename = nil)
         new(src, filename).parse
+      end
+
+      def filters
+        @@filters
       end
     end
 
@@ -63,17 +71,27 @@ class Ripper
 
     def initialize(src, filename = nil, lineno = nil)
       @src = src ||= filename && File.read(filename) || ''
-      @src.gsub!(/([\s\n]*)\Z/) { |s| @trailing_whitespace = Ruby::Whitespace.new(s) and nil }
 
       @filename = filename
       @stack = []
       @stack = Stack.new
       @string_stack = []
 
+      src.gsub!(/([\s\n]*)\Z/) { |s| @trailing_whitespace = Ruby::Whitespace.new(s) and nil }
+      src = filter(src, filename)
+
       super
+    rescue ArgumentError => e
+      p filename
+      raise e
     end
 
     protected
+      def filter(src, filename)
+        self.class.filters.each { |filter| src = filter.call(src, filename) }
+        src
+      end
+
       def position
         Ruby::Node::Position.new(lineno.to_i - 1, column)
       end
@@ -129,7 +147,7 @@ class Ripper
       def pop_assignment_operator(options = {})
         pop_token(*ASSIGN_OPERATORS, options)
       end
-      
+
       def pop_end_data
         token = pop_token(:@__end__)
         token.token = Ruby::Node::Text::Clip.new(src, token.position).to_s if token # TODO clean up
@@ -157,12 +175,5 @@ class Ripper
           Ruby::ExecutableString.new(nil, build_token(token))
         end
       end
-
-      # def extract_src(from, to)
-      #   lines = Ruby::Node::Text.split(src)
-      #   lines[from.row] = lines[from.row][from.col..-1] # || ''
-      #   lines[to.row] = lines[to.row][0, to.col]
-      #   lines[from.row..to.row].join
-      # end
   end
 end

@@ -10,7 +10,7 @@ module Ruby
     attr_accessor :filename
     attr_writer :src
 
-    def initialize(src, filename, statements, end_data)
+    def initialize(src, filename, statements = [], end_data = nil)
       self.src = src
       self.filename = filename if filename
       self.end_data = end_data if end_data
