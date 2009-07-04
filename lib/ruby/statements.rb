@@ -33,8 +33,7 @@ module Ruby
     end
     
     def replace_src(row, column, length, src)
-      @src[line_pos(row) + column, length] = src 
-      save_src if filename
+      self.src[line_pos(row) + column, length] = src 
       offset_column = src.length - length
       update_positions(row, column + length, offset_column)
     end

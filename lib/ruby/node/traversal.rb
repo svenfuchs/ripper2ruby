@@ -1,17 +1,21 @@
 module Ruby
   class Node
     module Traversal
-      def select(*args)
+      def select(*args, &block)
         result = []
-        result << self if matches?(args.dup) || block_given? && yield(self)
+        result << self if matches?(args.dup, &block)
+
         children = (prolog.try(:elements).to_a || []) + nodes
-        children.flatten.compact.inject(result) { |result, node| result + node.select(*args) }
+        children.flatten.compact.inject(result) do |result, node|
+          result + node.select(*args, &block)
+        end
       end
 
-      def matches?(args)
+      def matches?(args, &block)
         conditions = args.last.is_a?(::Hash) ? args.pop : {}
         conditions[:is_a] = args unless args.empty?
-        conditions.inject(true) do |result, (type, value)|
+
+        conditions.inject(!conditions.empty?) do |result, (type, value)|
           result && case type
           when :is_a
             has_type?(value)
@@ -28,7 +32,7 @@ module Ruby
           when :left_of
             left_of?(value)
           end
-        end
+        end && (!block_given? || block.call(self))
       end
 
       def has_type?(klass)
@@ -37,16 +41,16 @@ module Ruby
           klass.each { |klass| return true if has_type?(klass) } and false
         else
           is_a?(klass) # allow to pass a symbol or string, too
-        end 
+        end
       end
-      
+
       def is_instance_of?(klass)
         case klass
         when ::Array
           klass.each { |klass| return true if has_type?(klass) } and false
         else
           instance_of?(klass) # allow to pass a symbol or string, too
-        end 
+        end
       end
 
       def has_token?(token)
@@ -61,7 +65,7 @@ module Ruby
       def has_value?(value)
         self.value == value if respond_to?(:value)
       end
-      
+
       def position?(pos)
         position == pos
       end
