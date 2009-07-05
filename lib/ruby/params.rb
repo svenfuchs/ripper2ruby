@@ -34,7 +34,7 @@ module Ruby
   class RescueParams < Params
     def initialize(types, var, operator)
       types = Ruby::Array.new(types) if types
-      errors = Ruby::Assoc.new(types, var, operator)
+      errors = var ? Ruby::Assoc.new(types, var, operator) : types
       super(errors)
     end
   end
