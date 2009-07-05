@@ -75,7 +75,9 @@ class BlockTest < Test::Unit::TestCase
   
   define_method :"test: a begin block with rescue without error_type" do
     src = "begin\nfoo\nrescue\nbar\nend"
-    assert_build(src)
+    assert_build(src) do |code|
+      assert code.select(Ruby::Assoc).empty?, "should not add an Assoc to the params list"
+    end
   end
   
   define_method :"test: a begin block with rescue without an error_type" do

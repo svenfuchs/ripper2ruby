@@ -10,15 +10,15 @@ module Ruby
       end
 
       class Context
-        @@context_width = 2
+        @@width = 2
   
         class << self
-          def context_width
-            @@context_width
+          def width
+            @@width
           end
   
-          def context_width=(context_width)
-            @@context_width = context_width
+          def width=(width)
+            @@width = width
           end
         end
         
@@ -71,7 +71,7 @@ module Ruby
         end
       
         def tail
-          lines[self.end.row][self.end.col..-1] + lines[(self.end.row + 1)..-1].join
+          lines[self.end.row][self.end.col..-1].to_s + lines[(self.end.row + 1)..-1].join
         end
       
         def src

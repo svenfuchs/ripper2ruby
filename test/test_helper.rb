@@ -1,4 +1,4 @@
-$: << File.expand_path(File.dirname(__FILE__) + '/../lib')
+$:.unshift File.expand_path(File.dirname(__FILE__) + '/../lib')
 
 require 'ripper/ruby_builder'
 require 'ripper/event_log'
@@ -25,6 +25,7 @@ module TestHelper
     assert_equal src, expr.src(true)
     #   expr.all_nodes.each { |node| assert_equal Ruby::Program, node.root.class }
     yield(expr) if block_given?
+    expr
   end
 
   def assert_node(node, assertions)
