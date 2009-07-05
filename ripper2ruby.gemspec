@@ -16,7 +16,6 @@ Gem::Specification.new do |s|
     lib/erb/stripper.rb
     lib/highlighters/ansi.rb
     lib/ripper/event_log.rb
-    lib/ripper/ruby_builder.rb
     lib/ripper/ruby_builder/buffer.rb
     lib/ripper/ruby_builder/events/args.rb
     lib/ripper/ruby_builder/events/array.rb
@@ -40,8 +39,8 @@ Gem::Specification.new do |s|
     lib/ripper/ruby_builder/queue.rb
     lib/ripper/ruby_builder/stack.rb
     lib/ripper/ruby_builder/token.rb
+    lib/ripper/ruby_builder.rb
     lib/ripper2ruby.rb
-    lib/ruby.rb
     lib/ruby/aggregate.rb
     lib/ruby/alternation/args.rb
     lib/ruby/alternation/hash.rb
@@ -60,13 +59,13 @@ Gem::Specification.new do |s|
     lib/ruby/list.rb
     lib/ruby/literal.rb
     lib/ruby/method.rb
-    lib/ruby/node.rb
     lib/ruby/node/composite.rb
     lib/ruby/node/conversions.rb
     lib/ruby/node/position.rb
     lib/ruby/node/source.rb
     lib/ruby/node/text.rb
     lib/ruby/node/traversal.rb
+    lib/ruby/node.rb
     lib/ruby/operator.rb
     lib/ruby/params.rb
     lib/ruby/statements.rb
@@ -74,10 +73,11 @@ Gem::Specification.new do |s|
     lib/ruby/symbol.rb
     lib/ruby/token.rb
     lib/ruby/while.rb
-    MIT-LICENSE
-    README.markdown )
+    lib/ruby.rb
+  )
   s.test_files = %w(
     test/all.rb
+    test/builder/source_test.rb
     test/builder/stack_test.rb
     test/builder/text_test.rb
     test/context_test.rb
@@ -87,10 +87,11 @@ Gem::Specification.new do |s|
     test/fixtures/source_2.rb
     test/fixtures/stuff.rb
     test/fixtures/template.html.erb
+    test/fixtures/template.iso-8859-1.html.erb
     test/fixtures/tmp.rb
-    test/libs.txt
     test/lib_test.rb
     test/lib_test_helper.rb
+    test/libs.txt
     test/nodes/args_test.rb
     test/nodes/array_test.rb
     test/nodes/assignment_test.rb
@@ -108,8 +109,8 @@ Gem::Specification.new do |s|
     test/nodes/literals_test.rb
     test/nodes/method_test.rb
     test/nodes/namespaces_test.rb
-    test/nodes/nodes_test.rb
     test/nodes/node_test.rb
+    test/nodes/nodes_test.rb
     test/nodes/operator_test.rb
     test/nodes/separators_test.rb
     test/nodes/statements_test.rb
@@ -119,5 +120,6 @@ Gem::Specification.new do |s|
     test/nodes/until_test.rb
     test/nodes/while_test.rb
     test/test_helper.rb
-    test/traversal_test.rb )
+    test/traversal_test.rb
+  )
 end
