@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "ripper2ruby"
-  s.version = "0.0.1"
+  s.version = "0.0.2"
   s.date = "2009-07-04"
   s.summary = "Ripper2Ruby builds an object-oriented representation of Ruby code that you can modify and recompile back to Ruby"
   s.email = "svenfuchs@artweb-design.de"
