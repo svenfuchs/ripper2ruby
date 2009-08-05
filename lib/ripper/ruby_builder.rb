@@ -9,7 +9,7 @@ require 'ripper/ruby_builder/stack'
 
 require 'erb/stripper'
 
-Dir[File.dirname(__FILE__) + '/ruby_builder/events/*.rb'].each { |file| require file }
+Dir[File.dirname(__FILE__) + '/ruby_builder/events/*.rb'].sort.each { |file| require file }
 
 # Ripper::RubyBuilder extends Ripper's SexpBuilder and builds a rich, object
 # oriented representation of Ruby code.

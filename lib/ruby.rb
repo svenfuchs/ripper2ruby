@@ -1,4 +1,4 @@
-Dir[File.dirname(__FILE__) + '/ruby/*.rb'].each do |file|
+Dir[File.dirname(__FILE__) + '/ruby/*.rb'].sort.each do |file|
   require "ruby/#{File.basename(file)}"
 end
 
